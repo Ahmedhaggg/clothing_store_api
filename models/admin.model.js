@@ -10,15 +10,16 @@ let Admin = db.define("admins", {
     },
     email: {
         type: DataTypes.STRING(70),
-        unique: true,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     password: {
         type: DataTypes.STRING(120),
         allowNull: false
     }
 }, {
-    timestamps: false
+    timestamps: false,
+    unique: ["email"]
 });
 
 

@@ -30,8 +30,20 @@ db.authenticate()
 
 
 // create tables in database
-// let admin = require("./models/admin.model");
-// db.sync();
+/* 
+    let {
+    Admin,
+    Category,
+    Subcategory,
+    Product,
+    ProductColor,
+    ProductDiscount,
+    Inventory
+// } = require("./models/index")
+
+db.sync({ force: true});
+*/
+
 
 // include routes
 let authAdminRouter = require("./routes/admin/auth.admin.router");

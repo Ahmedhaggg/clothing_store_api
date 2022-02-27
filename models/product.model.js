@@ -25,14 +25,8 @@ let Product = db.define("products", {
         type: DataTypes.TEXT,
         allowNull: false
     },
-    code: {
-        type: DataTypes.STRING(8),
-        unique: true,
-        allowNull: false
-    },
     image: {
         type: DataTypes.STRING(70),
-        unique: true,
         allowNull: false
     },
 }, {
