@@ -1,5 +1,10 @@
+let path = require("path");
 let env = require("dotenv");
 env.config();
+
+let ROOT = path.dirname(__dirname);
+let UPLOADSDIR = path.join( path.dirname(__dirname), "productsImages")
+console.log(UPLOADSDIR)
 let { 
     PORT,
     DB_HOST,
@@ -8,7 +13,7 @@ let {
     DB_PASS,
     DB,
     BCRYPT_SALT,
-    JWT_SECRET
+    JWT_SECRET,
 } = process.env;
 
 
@@ -20,5 +25,7 @@ module.exports =  {
     DB_PASS,
     DB,
     BCRYPT_SALT,
-    JWT_SECRET
-}
+    JWT_SECRET,
+    ROOT,
+    UPLOADSDIR
+};

@@ -17,6 +17,11 @@ let Product = db.define("products", {
         type: DataTypes.STRING(100),
         allowNull: false
     },
+    active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false
+    },
     price: {
         type: DataTypes.DECIMAL(4,2),
         allowNull: false
