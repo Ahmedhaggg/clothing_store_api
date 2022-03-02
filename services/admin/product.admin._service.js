@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
-let { Product, ProductColor, ProductDiscount, Inventory } = require("../../models/index");
+let { Product, ProductColor, ProductDiscount, Inventory, Category, Subcategory } = require("../../models/index");
 let db = require("../../config/database");
+let { ForeignKeyConstraintError } = require("sequelize")
 
 exports.getAllActiveProducts = async () => {
     let products = await Product.findAll({
@@ -53,3 +54,45 @@ exports.createProduct = async (product, discount, inventory, colors) => {
 
 }
 
+exports.updateProduct = async (id, newDate) => {
+    try {
+        let updatedProduct = await Product.update(newDate, {
+            where: { id }
+        });
+
+        if (updatedProduct[0] === 0) 
+            return false;
+        
+        return true
+    } catch (error) {
+        return false
+    }
+}
+
+exports.getSomeProductData = async (id, fields) => {
+    let product = await Product.findOne({
+        where: {id},
+        attributes: fields
+    });
+    return product;
+}
+
+exports.checkActivityOfProduct = async (id) => {
+    let product = await Product.findOne({
+        where: {id},
+        attributes: ["active"]
+    });
+    return product.getDataValue("active");
+}
+// let product = await Product.findOne({
+        //     where: { id },
+        //     attributes: ["name", "slug", "price", "description", "image"],
+        //     include: [
+        //         {
+        //             model: Category
+        //         },
+        //         {
+        //             model: Subcategory
+        //         }
+        //     ]
+        // })

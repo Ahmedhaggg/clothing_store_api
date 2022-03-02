@@ -15,23 +15,27 @@ router.post("/",
     use(adminProductController.store)
 );
 
+// not implemented
 router.get("/:id", 
     use(adminProductController.show)
 );
 
-router.put("/", 
-    // adminProductValidation.validate("updateProduct"),
+router.put("/:productId", 
+    adminProductValidation.validate("updateProduct"),
     checkValidationError,
     use(adminProductController.update)
 );
 
-router.put("/image/:id", 
-    uploader.uploadFile("product_image"),
-    // adminProductValidation.validate("updateProductImage"),
-    use(adminProductController.updateImage)
+router.put("/image/:productId", 
+    uploader.uploadFile("image"),
+    adminProductValidation.validate("updateProductImage"),
+    use(adminProductController.updateProductImage)
 );
-router.delete("/:id",
-    use(adminProductController.destroy)
+router.put("/active/:productId",
+    use(adminProductController.active)
 );
+router.put("/unactive/:productId",
+    use(adminProductController.unactive)
+)
 
 module.exports = router;

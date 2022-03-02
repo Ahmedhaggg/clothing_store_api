@@ -57,3 +57,98 @@ exports.store = async (req, res, next) => {
     })
 }
 
+exports.update = async (req, res, next) => {
+    let { productId } = req.params
+    let { name, price, description, categoryId, subcategoryId } = req.body;
+    let slug = slugify(name);
+
+    let updateProduct = await productAdminService.updateProduct(productId, {
+        name,
+        slug,
+        price,
+        description, 
+        categoryId, 
+        subcategoryId
+    });
+    
+    if (updateProduct === false)
+        return res.status(404).json({
+            success: false,
+            message: "can't update this product, verify from data"
+        }); 
+
+    res.status(200).json({
+        success: true,
+        message: "product is updated successfully"
+    }); 
+}
+
+exports.updateProductImage = async (req, res, next) => {
+    let { productId } = req.params;
+    let image = req.file.filename;
+
+    let lastProductData = await productAdminService.getSomeProductData(productId, ["image"]);
+    
+    if (!lastProductData) 
+        return res.status(404).json({
+            success: false,
+            message: "product is not found"
+        });
+
+    let updateProduct = await productAdminService.updateProduct(productId, { image });
+
+    if (updateProduct === false) {
+        await fs.unlinkSync(path.join(UPLOADSDIR, image));
+        return res.status(404).json({
+            success: false,
+            message: "can't update image of this product now"
+        }); 
+    }
+
+    await fs.unlinkSync(path.join(UPLOADSDIR, lastProductData.image));
+
+    res.status(200).json({
+        success: true,
+        message: "product image is updated successfully"
+    });
+
+}
+
+/*
+*   delete => update product and make active = false 
+*/
+exports.active = async (req, res, next) => {
+    let { productId } = req.params;
+
+    let activeProduct = await productAdminService.updateProduct(productId, { active: true });
+    
+    if (activeProduct === true) {
+        return res.status(200).json({
+            success: true,
+            message: "product is active now"
+        }); 
+    }
+
+    res.status(404).json({
+        success: false,
+        message: "can't unactive unactive this product"
+    });
+}
+
+exports.unactive = async (req, res, next) => {
+    let { productId } = req.params;
+    
+    let unactiveProduct = await productAdminService.updateProduct(productId, { active: false });
+    
+    if (unactiveProduct === true) {
+        return res.status(200).json({
+            success: true,
+            message: "product is unactive successfully"
+        }); 
+    }
+
+    res.status(404).json({
+        success: false,
+        message: "can't unactive this product"
+    });
+}
