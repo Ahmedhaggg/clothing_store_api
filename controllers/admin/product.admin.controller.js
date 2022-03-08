@@ -40,12 +40,13 @@ exports.store = async (req, res, next) => {
             quantity
         },
         colors
-    );
+    ); 
     
-    if (newProduct === true) 
+    if (newProduct) 
         return res.status(200).json({
             success: true,
-            message: "product is added successfully"
+            message: "product is added successfully",
+            newProduct
         });
 
     await fs.unlinkSync(path.join(UPLOADSDIR, image));

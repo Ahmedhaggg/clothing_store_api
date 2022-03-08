@@ -1,4 +1,4 @@
-let { check } = require("express-validator");
+let { check, body } = require("express-validator");
 let isUnique = require("../custom/unique");
 let isArray = require("../custom/isArray");
 let isFile = require("../custom/isFile");
@@ -15,13 +15,19 @@ exports.validate = (action) => {
                 check("subcategoryId").not().isEmpty().withMessage("can't be empty"),
                 check("quantity").not().isEmpty().withMessage("can't be empty")
                     .isInt().withMessage("can't be number"),
-                check("discountExpiresin").not().isEmpty().withMessage("can't be empty")
+                check("discount.expiresin")
+                    .if(body("discount")).exists()
+                    .not().isEmpty().withMessage("can't be empty")
                     .isDate().withMessage("should be date"),
-                check("discountPercent").not().isEmpty().withMessage("can't be empty")
+                check("discount.percent")
+                    .if(body("discount")).exists()
+                    .not().isEmpty().withMessage("can't be empty")
                     .isInt().withMessage("can't be number"),
-                check("discountDescription").not().isEmpty().withMessage("can't be empty"),
+                check("discount.description")
+                    .if(body("discount")).exists()
+                    .not().isEmpty().withMessage("can't be empty"),
                 check("colors.*.name").not().isEmpty().withMessage("can't be empty"),
-                isArray("colors", { min: 1, max: 5}),
+                isArray("colors", { min: 1, max: 6}),
                 isUnique("products", "name"),
                 isFile("image")
             ];

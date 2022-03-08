@@ -8,6 +8,11 @@ exports.validate = (action) => {
                 check("name").not().isEmpty().withMessage("can't be empty"),
                     isUnique("subcategories", "name")
             ];
+        case "updateSubcategory":
+            return [
+                check("name").not().isEmpty().withMessage("can't be empty"),
+                    isUnique("subcategories", "name")
+            ];
         default:
             throw new Error("something went wrong");
     }

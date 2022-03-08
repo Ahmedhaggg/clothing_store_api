@@ -5,7 +5,7 @@ exports.login = async (req, res, next) => {
     let { email, password } = req.body;
 
     let admin = await authAdminService.getAdmin(email);
-    console.log(admin.id)
+    
     if (!admin) 
         return res.status(400).json({
             success: false,
@@ -34,8 +34,7 @@ exports.login = async (req, res, next) => {
 exports.register = async (req, res, next) => {
     let { email, password } = req.body;
     password =  await hash(password);
-    let newU =  await authAdminService.createAdmin({email, password});
-    console.log(newU);
+    await authAdminService.createAdmin({email, password});
     res.status(200).json({
         success: true,
         message: "admin created successfully"

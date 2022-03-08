@@ -50,7 +50,6 @@ let authAdminRouter = require("./routes/admin/auth.admin.router");
 let productAdminRouter = require("./routes/admin/product.admin.router");
 let categoryAdminRouter = require("./routes/admin/category.admin.router");
 let subcategoryAdminRouter = require("./routes/admin/subcategory.admin.router");
-
 // using routes
 app.use("/api/admin/auth", authAdminRouter);
 app.use("/api/admin/products", productAdminRouter)

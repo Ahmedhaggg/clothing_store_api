@@ -32,41 +32,43 @@ exports.createProduct = async (product, discount, inventory, colors) => {
         let newProduct = await Product.create(product, {transaction: newTransaction});
         
         inventory.productId = newProduct.id;
-        await Inventory.create(inventory, {transaction: newTransaction});
+        let newProductInventory = await Inventory.create(inventory, {transaction: newTransaction});
 
-        discount.productId = newProduct.id;
-        await ProductDiscount.create(discount, {transaction: newTransaction});
-
+        let newProductDiscount;
+        if (discount) {
+            discount.productId = newProduct.id;
+            newProductDiscount = await ProductDiscount.create(discount, {transaction: newTransaction});
+        }
+        
         colors.forEach(color => {
             color.productId = newProduct.id;
         });
 
-        await ProductColor.bulkCreate(colors, {transaction: newTransaction});
+        let newProductColors = await ProductColor.bulkCreate(colors, {transaction: newTransaction});
         
         await newTransaction.commit();
         
-        return true;
+        return {
+            product: newProduct,
+            inventory: newProductInventory,
+            discount : newProductDiscount || null,
+            colors: newProductColors
+        };
     } catch (error) {
         await newTransaction.rollback();
         
-        return false;
+        return null;
     }
 
 }
 
 exports.updateProduct = async (id, newDate) => {
-    try {
-        let updatedProduct = await Product.update(newDate, {
-            where: { id }
-        });
+    let updatedProduct = await Product.update(newDate, {
+        where: { id }
+    });
 
-        if (updatedProduct[0] === 0) 
-            return false;
-        
-        return true
-    } catch (error) {
-        return false
-    }
+    return updatedProduct[0] === 1 ? true : false;
+            
 }
 
 exports.getSomeProductData = async (id, fields) => {

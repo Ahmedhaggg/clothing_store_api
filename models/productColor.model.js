@@ -10,8 +10,7 @@ let ProductColor = db.define("product_colors", {
     },
     name: {
         type: DataTypes.STRING(20),
-        allowNull: false,
-        unique: true
+        allowNull: false
     }
 }, {
     timestamps: false,

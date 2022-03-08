@@ -31,11 +31,13 @@ router.put("/image/:productId",
     adminProductValidation.validate("updateProductImage"),
     use(adminProductController.updateProductImage)
 );
+
 router.put("/active/:productId",
     use(adminProductController.active)
 );
+
 router.put("/unactive/:productId",
     use(adminProductController.unactive)
-)
+);
 
 module.exports = router;
