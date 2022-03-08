@@ -14,6 +14,9 @@ let {
     DB,
     BCRYPT_SALT,
     JWT_SECRET,
+    EMAIL,
+    EMAIL_PASS,
+    EMAIL_SERVICE
 } = process.env;
 
 
@@ -27,5 +30,8 @@ module.exports =  {
     BCRYPT_SALT,
     JWT_SECRET,
     ROOT,
-    UPLOADSDIR
+    UPLOADSDIR,
+    EMAIL,
+    EMAIL_PASS,
+    EMAIL_SERVICE
 };

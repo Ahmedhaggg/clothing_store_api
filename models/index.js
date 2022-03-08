@@ -5,6 +5,9 @@ let ProductDiscount = require("./productDiscount.model");
 let Inventory = require("./inventory.model");
 let Category = require("./category.model");
 let Subcategory = require("./subcategory.model");
+let User = require("./user.model");
+let ResetPassword = require("./resetPassword.model");
+let EmailVerification = require("./emailVerification.model");
 
 
 /* =================== realtions ====================*/
@@ -34,6 +37,14 @@ Product.hasMany(Inventory, { foreignKey: "productId", onUpdate: "cascade", onDel
 Inventory.belongsTo(Product);
 
 
+// user and verificationCode realtion
+User.hasOne(EmailVerification, { foreignKey: "userId", onUpdate: "cascade", onDelete: "cascade" });
+EmailVerification.belongsTo(User);
+
+// user and verificationCode realtion
+User.hasOne(ResetPassword, { foreignKey: "userId", onUpdate: "cascade", onDelete: "cascade" });
+ResetPassword.belongsTo(User);
+
 module.exports = {
     Admin,
     Category,
@@ -41,5 +52,8 @@ module.exports = {
     Product,
     ProductColor,
     ProductDiscount,
-    Inventory
-}
+    Inventory,
+    User,
+    EmailVerification,
+    ResetPassword
+};
