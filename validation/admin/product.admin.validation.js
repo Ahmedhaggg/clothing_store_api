@@ -13,7 +13,9 @@ exports.validate = (action) => {
                 check("description").not().isEmpty().withMessage("can't be empty"),
                 check("categoryId").not().isEmpty().withMessage("can't be empty"),
                 check("subcategoryId").not().isEmpty().withMessage("can't be empty"),
-                check("quantity").not().isEmpty().withMessage("can't be empty")
+                check("inventory.*.quantity").not().isEmpty().withMessage("can't be empty")
+                    .isInt().withMessage("can't be number"),
+                check("inventory.*.size").not().isEmpty().withMessage("can't be empty")
                     .isInt().withMessage("can't be number"),
                 check("discount.expiresin")
                     .if(body("discount")).exists()
@@ -28,6 +30,7 @@ exports.validate = (action) => {
                     .not().isEmpty().withMessage("can't be empty"),
                 check("colors.*.name").not().isEmpty().withMessage("can't be empty"),
                 isArray("colors", { min: 1, max: 6}),
+                isArray("inventory", { min: 1, max: 6}),
                 isUnique("products", "name"),
                 isFile("image")
             ];

@@ -5,7 +5,16 @@ exports.createJwtToken = async (data, expire) => {
         let token = await jwt.sign(data, JWT_SECRET, { expiresIn: expire});
 
         return token;
-    } catch (error) {
+    } catch (_) {
         throw new Error("something went wrong")
     }
-} 
+};
+exports.getDataFromJwtToken = async (token) => {
+    try {
+        let data = await jwt.verify(token, JWT_SECRET);
+
+        return data;
+    } catch(_) {
+        throw new Error("something went wrong")
+    }
+}

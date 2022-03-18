@@ -28,8 +28,17 @@ let User = db.define("users", {
         type: DataTypes.STRING(200),
         allowNull: false
     },
+    gender: {
+        type: DataTypes.ENUM,
+        values: ["male", "female"],
+        allowNull: false
+    },
     phoneNumber: {
         type: DataTypes.STRING(11),
+        allowNull: false
+    },
+    birthDay: {
+        type: DataTypes.DATE,
         allowNull: false
     },
     verified: {

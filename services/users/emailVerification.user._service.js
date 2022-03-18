@@ -1,6 +1,5 @@
 let { EmailVerification } = require("../../models/index");
 
-
 exports.updateEmailVerification = async (email, newData) => {
     let updatedEmailVerification = await EmailVerification.update({});
 

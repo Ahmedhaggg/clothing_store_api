@@ -16,7 +16,7 @@ exports.getAllActiveProducts = async () => {
             },
             {
                 model: Inventory,
-                attributes: ["quantity"]
+                attributes: ["quantity", "size"]
             }
         ]
     });
@@ -24,15 +24,17 @@ exports.getAllActiveProducts = async () => {
     return products;
 }
 
-exports.createProduct = async (product, discount, inventory, colors) => {
+exports.createProduct = async (product, discount, inventories, colors) => {
     let newTransaction = await db.transaction();
     
     try {
         
         let newProduct = await Product.create(product, {transaction: newTransaction});
         
-        inventory.productId = newProduct.id;
-        let newProductInventory = await Inventory.create(inventory, {transaction: newTransaction});
+        inventories.forEach( item => {
+            item.productId = newProduct.id;
+        });
+        let newProductInventory = await Inventory.bulkCreate(inventories, {transaction: newTransaction});
 
         let newProductDiscount;
         if (discount) {
@@ -50,7 +52,7 @@ exports.createProduct = async (product, discount, inventory, colors) => {
         
         return {
             product: newProduct,
-            inventory: newProductInventory,
+            inventories: newProductInventory,
             discount : newProductDiscount || null,
             colors: newProductColors
         };

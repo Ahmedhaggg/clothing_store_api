@@ -15,7 +15,7 @@ exports.index = async (req, res, next) => {
 exports.store = async (req, res, next) => {
     let image = req.file.filename;
     
-    let { name, price, description, categoryId, subcategoryId, quantity, discountExpiresin, discountPercent, discountDescription, colors } = req.body;
+    let { name, price, description, categoryId, subcategoryId, inventory, discountExpiresin, discountPercent, discountDescription, colors } = req.body;
 
     let slug = slugify(name);
     
@@ -36,9 +36,7 @@ exports.store = async (req, res, next) => {
             percent: discountPercent,
             description: discountDescription
         },
-        {
-            quantity
-        },
+        inventory,
         colors
     ); 
     

@@ -1,10 +1,10 @@
 let { check } = require("express-validator");
 
-let passwordIsConfirmed = 
+let passwordIsConfirmed = field =>
     check("confirmPassword")
         .custom((value, { req }) => {
-            if (req.body.password !== req.body.confirmPassword)
-                throw new Error("confirm password is differante about password");
+            if (value !== req.body[field])
+                throw new Error("password isn't confirmed");
             return true
         });
 

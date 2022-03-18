@@ -12,13 +12,13 @@ exports.validate = (action) => {
                     .isEmail().withMessage("should be email"),
                 check("password").not().isEmpty().withMessage("can't be empty")
                     .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i"),
-                check("birthday").not().isEmpty().withMessage("can't be empty"),
+                check("birthDay").not().isEmpty().withMessage("can't be empty"),
                 check("gender").not().isEmpty().withMessage("can't be empty"),
                 check("phoneNumber").not().isEmpty().withMessage("can't be empty"),
                 isUnique("users", "userName"),
                 isUnique("users", "email"),
                 isUnique("users", "phoneNumber"),
-                passwordIsConfirmed()
+                passwordIsConfirmed("password")
             ];
         case "login": 
             return [
@@ -26,7 +26,7 @@ exports.validate = (action) => {
                     .isEmail().withMessage("should be email"),
                 check("password").not().isEmpty().withMessage("can't be empty")
             ];
-        case "confirm": 
+        case "verifyEmail": 
             return [
                 check("code").not().isEmpty().withMessage("can't be empty")
             ];

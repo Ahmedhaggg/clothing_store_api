@@ -44,18 +44,32 @@ db.authenticate()
 db.sync({ force: true});
 */
 // include routes
+db.sync();
 
+// admin routes
+let adminAuthRouter = require("./routes/admin/auth.admin.router");
+let adminProductRouter = require("./routes/admin/product.admin.router");
+let adminCategoryRouter = require("./routes/admin/category.admin.router");
+let adminSubcategoryRouter = require("./routes/admin/subcategory.admin.router");
+let adminproductColorsRouter = require("./routes/admin/productColor.admin.router");
+let adminInventoryRouter = require("./routes/admin/inventory.admin.router");
+let adminProductDiscountRouter = require("./routes/admin/productDiscount.admin.router");
+// users routes
+let authUserRouter = require("./routes/users/auth.user.router");
+let resetPasswordUserRouter = require("./routes/users/resetPassword.user.router");
 
-let authAdminRouter = require("./routes/admin/auth.admin.router");
-let productAdminRouter = require("./routes/admin/product.admin.router");
-let categoryAdminRouter = require("./routes/admin/category.admin.router");
-let subcategoryAdminRouter = require("./routes/admin/subcategory.admin.router");
-// using routes
-app.use("/api/admin/auth", authAdminRouter);
-app.use("/api/admin/products", productAdminRouter)
-app.use("/api/admin/categories", categoryAdminRouter);
-app.use("/api/admin/subcategories", subcategoryAdminRouter);
+// using admin routes
+app.use("/api/admin/auth", adminAuthRouter);
+app.use("/api/admin/products", adminProductRouter)
+app.use("/api/admin/categories", adminCategoryRouter);
+app.use("/api/admin/subcategories", adminSubcategoryRouter);
+app.use("/api/admin/products/colors", adminproductColorsRouter);
+app.use("/api/admin/products/discounts", adminProductDiscountRouter);
+app.use("/api/admin/inventories", adminInventoryRouter);
 
+// using users routes
+app.use("/api/users/auth", authUserRouter);
+app.use("/api/users/password/reset/", resetPasswordUserRouter);
 
 
 app.use(errorHandler);

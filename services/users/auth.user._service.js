@@ -1,5 +1,6 @@
 let { User, EmailVerification } = require("../../models/index");
 let db = require("../../config/database");
+const { Op } = require("sequelize");
 
 
 exports.createUser = async (newUserData, emailVerificationData) => {
@@ -8,21 +9,20 @@ exports.createUser = async (newUserData, emailVerificationData) => {
     try {
         let newUser = await User.create(newUserData, { transaction: newTransaction });
         
-        emailVerificationData.userId = newUser.isSoftDeleted;
-        await EmailVerification.create(emailVerificationData);
+        emailVerificationData.userId = newUser.id;
+        await EmailVerification.create(emailVerificationData, { transaction: newTransaction});
 
         await newTransaction.commit();
         
-        return true;
     } catch (error) {
         await newTransaction.rollback();
 
-        return false;
+        throw new Error("something wen wrong");
     }
 }
 
-exports.updateUser = async (email, newData) => {
-    let updatedUser = await User.update(newData, { where: { email }} );
+exports.updateUser = async (query, newData) => {
+    let updatedUser = await User.update(newData, { where: query } );
     
     return updatedUser[0] === 1 ? true : false; 
 }
@@ -34,4 +34,36 @@ exports.getUser = async query => {
     });
     
     return user;
+}
+
+exports.getUserIdAndEmailVerificationCode = async query => {
+    let user = await User.findOne({
+        where: query,
+        attributes: ["id"],
+        include: {
+            required: false,
+            where: { 
+                expiresin: { [Op.gt]: new Date()}
+            },
+            model: EmailVerification,
+            attributes: ["code"]
+        }
+    });
+
+    return  {
+        code: user.email_verification.code,
+        id: user.id
+    };
+}
+
+exports.updateEmailVerification = async (query, newData) => {
+    let d = await EmailVerification.update(newData, { where: query});
+
+    // return updatedEmailVerification === 1 ? true : false;
+}
+
+exports.deleteEmailVerification = async query => {
+    await EmailVerification.destroy({
+        where: query
+    });
 }

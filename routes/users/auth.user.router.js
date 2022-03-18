@@ -1,6 +1,6 @@
 let router = require("express").Router();
 let userAuthValidation = require("../../validation/users/auth.user.validation");
-let userAuthController = require("../../controller/users/auth.user.controller");
+let userAuthController = require("../../controllers/users/auth.user.controller");
 let checkValidationError = require("../../middlewares/checkValidationError");
 
 router.post("/register", 
@@ -15,10 +15,10 @@ router.post("/login",
     userAuthController.login
 );
 
-router.post("/confirm", 
-    userAuthController.validate("confirmEmail"),
+router.post("/verify", 
+    userAuthController.validate("verifyEmail"),
     checkValidationError,
-    userAuthController.confirm
+    userAuthController.verify
 );
 
 module.exports = router;

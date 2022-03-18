@@ -11,6 +11,11 @@ let Inventory = db.define("inventories", {
     quantity: {
         type: DataTypes.TINYINT,
         allowNull: false
+    },
+    size: {
+        type: DataTypes.ENUM,
+        values: ["sm", "md", "l", "sl", "xl", "xx", "3x"],
+        allowNull: false
     }
 }, {
     timestamps: false
