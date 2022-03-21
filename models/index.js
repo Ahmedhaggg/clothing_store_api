@@ -8,7 +8,8 @@ let Subcategory = require("./subcategory.model");
 let User = require("./user.model");
 let ResetPassword = require("./resetPassword.model");
 let EmailVerification = require("./emailVerification.model");
-
+let Offer = require("./offer.model");
+let OfferProducts = require("./offer_product.model");
 
 /* =================== realtions ====================*/
 
@@ -36,6 +37,9 @@ ProductDiscount.belongsTo(Product);
 Product.hasMany(Inventory, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade" });
 Inventory.belongsTo(Product);
 
+// product color and inventory
+ProductColor.hasOne(Inventory, { foreignKey: "colorId", onUpdate: "cascade", onDelete: "cascade" });
+Inventory.belongsTo(ProductColor);
 
 // user and verificationCode realtion
 User.hasOne(EmailVerification, { foreignKey: "userId", onUpdate: "cascade", onDelete: "cascade" });
@@ -44,6 +48,15 @@ EmailVerification.belongsTo(User);
 // user and verificationCode realtion
 User.hasOne(ResetPassword, { foreignKey: "userId", onUpdate: "cascade", onDelete: "cascade" });
 ResetPassword.belongsTo(User);
+
+// offer and offer Products realtion
+Offer.hasMany(OfferProducts, { foreignKey: "offerId", onUpdate: "cascade", onDelete: "cascade" });
+OfferProducts.belongsTo(Offer);
+
+// offer Products and products realtion
+Product.hasMany(OfferProducts, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade" })
+OfferProducts.belongsTo(Product);
+
 
 module.exports = {
     Admin,
@@ -55,5 +68,7 @@ module.exports = {
     Inventory,
     User,
     EmailVerification,
-    ResetPassword
+    ResetPassword,
+    Offer,
+    OfferProducts
 };

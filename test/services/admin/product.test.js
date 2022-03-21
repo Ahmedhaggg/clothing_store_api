@@ -2,36 +2,10 @@ let productService = require("../../../services/admin/product.admin._service");
 let categoryService = require("../../../services/admin/category.admin._service");
 let subcategoryService = require("../../../services/admin/subcategory.admin_service");
 let db = require("../../../config/database");
-const { QueryTypes } = require("sequelize");
-
+const { QueryTypes } = require("sequelize"); 
+let { productData, productColorsData, productDiscountData, categoryData, subcategoryData, inventoryData } = require("../../test.data")
 describe("test all method in product service", () => {
-    let productData = {
-        name: "sweet shirt",
-        slug: "sweet-shirt",
-        description: "new style sweet shirt",
-        price: 4.2,
-        image: "newProduct.jpeg"
-    };
-    let discountData = {
-        percent: 10,
-        description: "this is new description",
-        expiresin: "2022-12-14"
-    };
-    let inventoryData = {
-        quantity: 10
-    }
-    let colorsData = [
-        {name: "red"},
-        {name: "green"}
-    ];
-    let categoryData = {
-        name: "sweet shirt",
-        slug: "sweet-shirt"
-    };
-    let subcategoryData = {
-        name: "sweet shirt",
-        slug: "sweet-shirt"
-    };
+    
 
     beforeAll( async () => {
         let newCategory = await categoryService.createCategory(categoryData);
@@ -40,7 +14,6 @@ describe("test all method in product service", () => {
         let newSubcategory = await subcategoryService.createSubcategory(subcategoryData);
         productData.subcategoryId = newSubcategory.id;
         let newProduct = await productService.createProduct(productData, discountData, inventoryData, colorsData);
-        console.log(newProduct.product.id)
         productData.id = newProduct.product.id;
     });
     
@@ -48,9 +21,8 @@ describe("test all method in product service", () => {
         await db.query("DELETE FROM products", { type: QueryTypes.DELETE});
         await db.query("DELETE FROM categories", { type: QueryTypes.DELETE});
         await db.query("DELETE FROM subcategories", { type: QueryTypes.DELETE});
-        // await db.query("DELETE FROM products_discounts", { type: QueryTypes.DELETE});
     });
-
+    
     it('createProduct should return object', async () => {
         let newProduct = await productService.createProduct({
             name: "black sweet shirt",
@@ -60,7 +32,7 @@ describe("test all method in product service", () => {
             image: "newProduct.jpeg",
             categoryId: productData.categoryId,
             subcategoryId: productData.subcategoryId,
-        }, discountData, inventoryData, colorsData);
+        }, productDiscountData, inventoryData, productColorsData);
         expect(newProduct).toHaveProperty("product");
         expect(newProduct).toHaveProperty("colors");
         expect(newProduct).toHaveProperty("inventory");
