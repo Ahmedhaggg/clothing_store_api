@@ -24,17 +24,14 @@ exports.getAllActiveProducts = async () => {
     return products;
 }
 
-exports.createProduct = async (product, discount, inventories, colors) => {
+exports.createProduct = async (product, discount, productDetails) => {
+    console.log(productDetails)
     let newTransaction = await db.transaction();
     
     try {
         
         let newProduct = await Product.create(product, {transaction: newTransaction});
         
-        inventories.forEach( item => {
-            item.productId = newProduct.id;
-        });
-        let newProductInventory = await Inventory.bulkCreate(inventories, {transaction: newTransaction});
 
         let newProductDiscount;
         if (discount) {
@@ -42,21 +39,31 @@ exports.createProduct = async (product, discount, inventories, colors) => {
             newProductDiscount = await ProductDiscount.create(discount, {transaction: newTransaction});
         }
         
-        colors.forEach(color => {
-            color.productId = newProduct.id;
-        });
+        let colorsData = productDetails.map(color => { return { name: color.name, productId: newProduct.id} });
 
-        let newProductColors = await ProductColor.bulkCreate(colors, {transaction: newTransaction});
+        let newProductColors = await ProductColor.bulkCreate(colorsData, {transaction: newTransaction});
+
+        let inventories = productDetails.map(productDetail => {
+            let colorId = (newProductColors.find(color => color.name === productDetail.name)).id
+            return {
+                colorId,
+                productId: newProduct.id,
+                quantity: productDetail.quantity
+            }
+        })
         
+        let newProductInventory = await Inventory.bulkCreate(inventories, {transaction: newTransaction});
         await newTransaction.commit();
         
         return {
             product: newProduct,
-            inventories: newProductInventory,
+            inventory: newProductInventory,
             discount : newProductDiscount || null,
             colors: newProductColors
         };
     } catch (error) {
+        console.log("error")
+        console.log(error);
         await newTransaction.rollback();
         
         return null;

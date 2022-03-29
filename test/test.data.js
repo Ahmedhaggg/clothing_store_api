@@ -1,6 +1,6 @@
 let { hash, compare } = require("../helpers/hash");
-let { addHoursToDate } = require("../../../helpers/date.handler")
-let generateRandomToken = require("../../../helpers/generateRandomToken")
+let { addHoursToDate } = require("../helpers/date.handler")
+let generateRandomToken = require("../helpers/generateRandomToken")
 let password = async () => await hash("Ahmed@12345");
 // product`
 exports.productData = {
@@ -42,19 +42,19 @@ exports.subcategoryData = {
     name: "sweet shirt",
     slug: "sweet-shirt"
 }
-exports.newSubategoryData = {
+exports.newSubcategoryData = {
     name: "new sweet shirt",
     slug: "new-sweet-shirt"
 }
 
 // product color
-exports.productColorsData = [
-    {name: "red"},
-    {name: "green"}
+exports.productDetails = [
+    {name: "blue", size: "xl", quantity: 10},
+    {name: "yellow", size: "lg", quantity: 10}
 ]
-exports.newProductColorsData = [
-    {name: "blue"},
-    {name: "yellow"}
+exports.productDetails = [
+    {name: "green", size: "xl", quantity: 10},
+    {name: "red", size: "lg", quantity: 10}
 ]
 
 // inventory

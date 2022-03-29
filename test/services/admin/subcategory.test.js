@@ -1,19 +1,11 @@
 let subcategoryService = require("../../../services/admin/subcategory.admin_service");
 let categoryService = require("../../../services/admin/category.admin._service");
+let { categoryData, newCategoryData , subcategoryData, newSubcategoryData} = require("../../test.data")
 
 let db = require("../../../config/database");
 const { QueryTypes } = require("sequelize");
 
 describe("test all method in subcategory service", () => {
-    let subcategoryData = {
-        name: "sweet shirt",
-        slug: "sweet-shirt"
-    };
-    let categoryData = {
-        name: "sweet shirt",
-        slug: "sweet-shirt"
-    };
-
     beforeAll(async () => {
         let newCategory = await categoryService.createCategory(categoryData);
         categoryData.id = newCategory.id;
@@ -41,7 +33,6 @@ describe("test all method in subcategory service", () => {
 
     it('getSubcategory should return object', async () => {
         let subcategory = await subcategoryService.getSubcategory(subcategoryData.id);
-        console.log(subcategory)
         expect(subcategory).toHaveProperty("id")
         expect(subcategory).toHaveProperty("name", subcategoryData.name)
         expect(subcategory).toHaveProperty("slug", subcategoryData.slug)
@@ -49,11 +40,7 @@ describe("test all method in subcategory service", () => {
     });
 
     it('updateSubcategory should return true', async () => {
-        let updateSubcategory = await subcategoryService.updateSubcategory(subcategoryData.id, {
-            name: "new sweet shirt",
-            slug: "new-sweet-shirt",
-            categoryId: categoryData.id
-        });
+        let updateSubcategory = await subcategoryService.updateSubcategory(subcategoryData.id, newSubcategoryData);
         expect(updateSubcategory).toBe(true);
     });
 }); 

@@ -10,6 +10,17 @@ let ResetPassword = require("./resetPassword.model");
 let EmailVerification = require("./emailVerification.model");
 let Offer = require("./offer.model");
 let OfferProducts = require("./offer_product.model");
+let Order = require("./order.model");
+let OrderOffer = require("./orderOffer.model");
+let OrderProduct = require("./orderProduct.model");
+let OrderProductColor = require("./colorOrderProduct.model");
+let Address = require("./address.model");
+let City = require("./city.model");
+let Governorate = require("./emailVerification.model")
+let Shipper = require("./shipper.model")
+let Shipping = require("./shipping.model")
+
+const db = require("../config/database");
 
 /* =================== realtions ====================*/
 
@@ -57,6 +68,47 @@ OfferProducts.belongsTo(Offer);
 Product.hasMany(OfferProducts, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade" })
 OfferProducts.belongsTo(Product);
 
+// user and address realtion
+User.hasMany(Address, { foreignKey: "userId", onUpdate: "cascade", onDelete: "cascade"});
+Address.belongsTo(User);
+
+// city and address realtion
+Governorate.hasMany(City, { foreignKey: "governorateId", onUpdate: "cascade", onDelete: "cascade"})
+City.belongsTo(Governorate);
+
+// city and address realtion
+City.hasMany(Address, { foreignKey: "cityId", onUpdate: "cascade", onDelete: "cascade"})
+Address.belongsTo(City);
+
+// governorate and address realtion
+Governorate.hasMany(Address, { foreignKey: "governorateId", onUpdate: "cascade", onDelete: "cascade"})
+Address.belongsTo(Governorate);
+
+// order and order offer realtion
+Order.hasMany(OrderOffer, { foreignKey: "orderId", onUpdate: "cascade", onDelete: "cascade"});
+OrderOffer.belongsTo(Order);
+
+// order and order product realtion
+Order.hasMany(OrderProduct, { foreignKey: "orderId", onUpdate: "cascade", onDelete: "cascade"});
+OrderProduct.belongsTo(Order);
+
+// order and order product realtion
+OrderProduct.hasMany(OrderProductColor, { foreignKey: "orderProductId", onUpdate: "cascade", onDelete: "cascade" });
+OrderProductColor.belongsTo(OrderProduct);
+
+// order offer and order product realtion
+OrderOffer.hasMany(OrderProduct, { foreignKey: "orderOfferId", onUpdate: "cascade", onDelete: "cascade" });
+OrderProduct.belongsTo(OrderOffer);
+
+Order.hasOne(Shipping, { foreignKey: "orderId", onUpdate: "cascade", onDelete: "cascade" })
+Shipping.belongsTo(Order);
+
+Shipper.hasOne(Shipping, { foreignKey: "shipperId", onUpdate: "cascade", onDelete: "cascade" })
+Shipping.belongsTo(Shipper);
+
+Address.hasMany(Shipping, { foreignKey: "addressId", onUpdate: "cascade", onDelete: "cascade" })
+Shipping.belongsTo(Address);
+// db.drop();
 
 module.exports = {
     Admin,
@@ -70,5 +122,14 @@ module.exports = {
     EmailVerification,
     ResetPassword,
     Offer,
-    OfferProducts
+    OfferProducts,
+    Order,
+    OrderProduct,
+    OrderOffer,
+    OrderProductColor,
+    Address,
+    City,
+    Governorate,
+    Shipping,
+    Shipper
 };

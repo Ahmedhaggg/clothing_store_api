@@ -11,7 +11,7 @@ exports.show = async (req, res, next) => {
     });
 }
 
-exports.create = (req, res, next) => {
+exports.create = async (req, res, next) => {
     let { productId, name } = req.body;
 
     let newProductColor = await productColorsServices.createColor({ productId, name});
@@ -23,7 +23,7 @@ exports.create = (req, res, next) => {
     });
 }
 
-exports.update = (req, res, next) => {
+exports.update = async (req, res, next) => {
     let { colorId } = req.params;
     let { name } = req.body;
 

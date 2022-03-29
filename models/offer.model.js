@@ -10,7 +10,6 @@ let Offer = db.define("offers", {
     },
     name: {
         type: DataTypes.STRING(100),
-        unique: true,
         allowNull: false
     },
     slug: {

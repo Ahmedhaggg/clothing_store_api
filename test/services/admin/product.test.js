@@ -3,7 +3,7 @@ let categoryService = require("../../../services/admin/category.admin._service")
 let subcategoryService = require("../../../services/admin/subcategory.admin_service");
 let db = require("../../../config/database");
 const { QueryTypes } = require("sequelize"); 
-let { productData, productColorsData, productDiscountData, categoryData, subcategoryData, inventoryData } = require("../../test.data")
+let { productData, productDetails, productDiscountData , categoryData, subcategoryData, inventoryData } = require("../../test.data")
 describe("test all method in product service", () => {
     
 
@@ -13,7 +13,7 @@ describe("test all method in product service", () => {
         subcategoryData.categoryId = newCategory.id;
         let newSubcategory = await subcategoryService.createSubcategory(subcategoryData);
         productData.subcategoryId = newSubcategory.id;
-        let newProduct = await productService.createProduct(productData, discountData, inventoryData, colorsData);
+        let newProduct = await productService.createProduct(productData, productDiscountData, productDetails);
         productData.id = newProduct.product.id;
     });
     
@@ -32,7 +32,7 @@ describe("test all method in product service", () => {
             image: "newProduct.jpeg",
             categoryId: productData.categoryId,
             subcategoryId: productData.subcategoryId,
-        }, productDiscountData, inventoryData, productColorsData);
+        }, productDiscountData, productDetails);
         expect(newProduct).toHaveProperty("product");
         expect(newProduct).toHaveProperty("colors");
         expect(newProduct).toHaveProperty("inventory");

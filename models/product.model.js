@@ -10,7 +10,6 @@ let Product = db.define("products", {
     },
     name: {
         type: DataTypes.STRING(100),
-        unique: true,
         allowNull: false
     },
     slug: {

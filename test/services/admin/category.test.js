@@ -1,11 +1,8 @@
 let categoryService = require("../../../services/admin/category.admin._service");
 let db = require("../../../config/database");
 const { QueryTypes } = require("sequelize");
+let { categoryData, newCategoryData } = require("../../test.data")
 describe("test all method in category service", () => {
-    let categoryData = {
-        name: "sweet shirt",
-        slug: "sweet-shirt"
-    };
 
     beforeAll(async () => {
         let newCategory = await categoryService.createCategory(categoryData);
@@ -38,10 +35,7 @@ describe("test all method in category service", () => {
     });
 
     it('updateCategory should return true', async () => {
-        let updateCategory = await categoryService.updateCategory(categoryData.id, {
-            name: "new sweet shirt",
-            slug: "new-sweet-shirt"
-        });
+        let updateCategory = await categoryService.updateCategory(categoryData.id, newCategoryData);
         expect(updateCategory).toBe(true);
     });
 
