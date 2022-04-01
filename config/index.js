@@ -16,7 +16,8 @@ let {
     JWT_SECRET,
     EMAIL,
     EMAIL_PASS,
-    EMAIL_SERVICE
+    EMAIL_SERVICE,
+    STRIPE_KEY
 } = process.env;
 
 
@@ -33,5 +34,6 @@ module.exports =  {
     UPLOADSDIR,
     EMAIL,
     EMAIL_PASS,
-    EMAIL_SERVICE
+    EMAIL_SERVICE,
+    STRIPE_KEY
 };
