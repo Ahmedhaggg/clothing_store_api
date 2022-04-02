@@ -1,22 +1,10 @@
 let orderService = require("../../services/users/order.user._service");
-
+let inventoryService = require("../../services/users/inventory.user._service")
 let payment = require("../../helpers/payment");
 
-class Order { 
-    
-    static getTotalPrice(totalPrice, cityShippingCost) {
-        return totalPrice + cityShippingCost * 100;
-    } 
-    static async pay(data) {
-        return await payment.pay(data);
-    }
-    static chec
-    static filterOfferData(offersData) {
-        let offerProductsColors = [];
-        let offerProducts = [];
-
-        
-
+let processOffersData = offersData => {
+        let offers = []
+        let offersProducts = [];
         offersData.forEach(offer => {
             offers.push({
                 offerId: offer.id,
@@ -24,72 +12,108 @@ class Order {
                 pricePerUnit: offer.pricePerUnit,
                 totalPrice: offer.totalPrice
             });
-            offer.products.forEach(product => {
-                offerProducts.push({
-                    productId: product.id,
-                    quantity: product.quantity,
-                    pricePerUnit: product.pricePerUnit,
-                    totalPrice: product.totalPrice,
-                    offerId: offer.id
-                });
-            })
+            offer.products.forEach(offerProduct => {
+                orderProduct.offerId = offer.id;
+                offersProducts.push(offerProduct);
+            }) 
         });
-    }
+        return {
+            offers,
+            offersProducts,
+        }
 }
-
 
 exports.store = async (req, res, res) => {
     let { userId } = req.user;
-    let { paymentToken, orderProducts, orderOffers, addressId, cityShippingCost, totalPrice } = req.body
+    let { paymentToken, products, offers, addressId, cityShippingCost, totalPrice } = req.body
     
-    let amount = totalPrice + cityShippingCost;
-    let checkout = await stripe.charges.create({
+    if (products) {
+        let checkProductIsAvailable = await inventoryService.checkProductsIsAvailable(products);
+        
+        if (checkProductIsAvailable !== true) 
+            return res.status(400).json({
+                success: false,
+                message: checkProductIsAvailable.getMessage
+            })
+    }
+
+    if (offers) {
+        let checkOfferIAvailable = await inventoryService.checkProductsIsAvailable(productsIdList);
+
+        if (checkOfferIAvailable !== true) 
+            return res.status(400).json({
+                success: false,
+                message: checkProductIsAvailable.getMessage
+            })
+        
+        let processOffers = processOffersData(offers);
+
+        offers = processOffers.offers;
+        products.push(...processOffers.offersProducts);
+    }
+
+
+    let amount = totalPrice + cityShippingCost * 100;
+    
+    let checkout = await payment.pay({
         amount,
         source: paymentToken,
         currency: "usd"
-    }); 
+    });
+
+    if (checkout === false)
+        return res.status(400).json({
+            success: false,
+            message: "something happend in payment"
+        })
     
-    let newOrder = await orderService.createOrder(
+    let order = await orderService.createOrder(
         {
             userId,
             totalPrice: amount,
             amount,
             addressId
         },
-        orderProducts,
-        orderOffers
+        products,
+        offers
     )
+
+    res.status(200).json({
+        success: true, 
+        message: "your order is added successfully",
+        order
+    })
 }
 
- {
-    paymentToken: "",
-    totalPrice,
-    cityShippingCost,
-    addressId,
-    offers: {
-        offerId,
-        offerProducts: [
-            {
-                productId,
-                quantity: 10,
-                colors: [
-                    {color: "red", quantity: 5},
-                    {color: "blue", quantity: 5},
-                ]
-            }
+//  {
+//     paymentToken: "",
+//     totalPrice,
+//     cityShippingCost,
+//     addressId,
+//     offers: {
+//         offerId,
+//         offerProducts: [
+//             {
+//                 productId,
+//                 quantity: 10,
+//                 colors: [
+//                     {color: "red", quantity: 5},
+//                     {color: "blue", quantity: 5},
+//                 ]
+//             }
 
-        ],
+//         ],
         
-    },
-    products: [
-            {
-                productId,
-                quantity: 10,
-                colors: [
-                    {color: "red", quantity: 5},
-                    {color: "blue", quantity: 5},
-                ]
-            }
+//     },
+//     products: [
+//             {
+//                 productId,
+//                 quantity: 10,
+//                 colors: [
+//                     {color: "red", quantity: 5},
+//                     {color: "blue", quantity: 5},
+//                 ]
+//             }
 
-        ],
-}
+//         ],
+// }
