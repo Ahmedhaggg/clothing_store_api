@@ -2,26 +2,62 @@ let orderService = require("../../services/users/order.user._service");
 let inventoryService = require("../../services/users/inventory.user._service")
 let payment = require("../../helpers/payment");
 
-let processOffersData = offersData => {
-        let offers = []
-        let offersProducts = [];
-        offersData.forEach(offer => {
-            offers.push({
-                offerId: offer.id,
-                quantity: offer.quantity,
-                pricePerUnit: offer.pricePerUnit,
-                totalPrice: offer.totalPrice
-            });
-            offer.products.forEach(offerProduct => {
-                orderProduct.offerId = offer.id;
-                offersProducts.push(offerProduct);
-            }) 
+
+exports.index = async (req, res, next) => {
+    let { userId } = req.user;
+
+    let orders = await orderService.getUserOrders({ userId });
+
+    if (orders.length === 0)
+        res.status(404).json({
+            success: false,
+            message: "you don't have any orders"
         });
-        return {
-            offers,
-            offersProducts,
-        }
+    else 
+        res.status(200).json({
+            success: true,
+            orders
+        })
 }
+exports.show = async (req, res, next) => {
+    let { id } = req.params;
+
+    let order = await orderService.getOrder({ id });
+
+    if (!order) 
+        res.status(404).json({
+            success: false,
+            message: "order is not found"
+        });
+    else 
+        res.status(200).json({
+            success: true,
+            order
+        });
+}
+
+
+
+// let processOffersData = offersData => {
+//         let offers = []
+//         let offersProducts = [];
+//         offersData.forEach(offer => {
+//             offers.push({
+//                 offerId: offer.id,
+//                 quantity: offer.quantity,
+//                 pricePerUnit: offer.pricePerUnit,
+//                 totalPrice: offer.totalPrice
+//             });
+//             offer.products.forEach(offerProduct => {
+//                 orderProduct.offerId = offer.id;
+//                 offersProducts.push(offerProduct);
+//             }) 
+//         });
+//         return {
+//             offers,
+//             offersProducts,
+//         }
+// }
 
 exports.store = async (req, res, res) => {
     let { userId } = req.user;
@@ -38,18 +74,13 @@ exports.store = async (req, res, res) => {
     }
 
     if (offers) {
-        let checkOfferIAvailable = await inventoryService.checkProductsIsAvailable(productsIdList);
+        let checkOfferIAvailable = await inventoryService.checkProductsIsAvailable(offers);
 
         if (checkOfferIAvailable !== true) 
             return res.status(400).json({
                 success: false,
                 message: checkProductIsAvailable.getMessage
             })
-        
-        let processOffers = processOffersData(offers);
-
-        offers = processOffers.offers;
-        products.push(...processOffers.offersProducts);
     }
 
 
@@ -58,7 +89,7 @@ exports.store = async (req, res, res) => {
     let checkout = await payment.pay({
         amount,
         source: paymentToken,
-        currency: "usd"
+        currency: "usd" 
     });
 
     if (checkout === false)
@@ -72,19 +103,21 @@ exports.store = async (req, res, res) => {
             userId,
             totalPrice: amount,
             amount,
-            addressId
+            addressId,
+            paymentId: checkout.id
         },
-        products,
-        offers
+        offers,
+        products
     )
 
+    // await inventoryService.updateInventory(products);
+    // await inventoryService.upd
     res.status(200).json({
         success: true, 
         message: "your order is added successfully",
         order
-    })
+    });
 }
-
 //  {
 //     paymentToken: "",
 //     totalPrice,

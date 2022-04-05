@@ -1,5 +1,5 @@
 let cityService = require("../../services/admin/city.admin._service");
-
+ 
 exports.show = async (req, res, next) => {
     let { id } = req.params;
     let city = await cityService.getCity({ id });
@@ -34,11 +34,9 @@ exports.store = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
     let { id } = req.params;
-    let { name, shippingTime, shippingCost } = req.body;
+    let { shippingTime, shippingCost } = req.body;
 
     let updateCity = await cityService.updateCity({ id },{
-        governorateId,
-        name,
         shippingTime,
         shippingCost
     });

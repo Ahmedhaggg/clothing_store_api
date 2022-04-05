@@ -25,7 +25,6 @@ exports.getAllActiveProducts = async () => {
 }
 
 exports.createProduct = async (product, discount, productDetails) => {
-    console.log(productDetails)
     let newTransaction = await db.transaction();
     
     try {

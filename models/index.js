@@ -13,13 +13,12 @@ let OfferProducts = require("./offer_product.model");
 let Order = require("./order.model");
 let OrderOffer = require("./orderOffer.model");
 let OrderProduct = require("./orderProduct.model");
-let OrderProductColor = require("./colorOrderProduct.model");
 let Address = require("./address.model");
 let City = require("./city.model");
-let Governorate = require("./emailVerification.model")
-let Shipper = require("./shipper.model")
-let Shipping = require("./shipping.model")
-
+let Governorate = require("./emailVerification.model");
+let Shipper = require("./shipper.model");
+let Shipping = require("./shipping.model");
+let OrderOfferProduct = require("./orderOfferProdcut.model");
 const db = require("../config/database");
 
 /* =================== realtions ====================*/
@@ -92,9 +91,9 @@ OrderOffer.belongsTo(Order);
 Order.hasMany(OrderProduct, { foreignKey: "orderId", onUpdate: "cascade", onDelete: "cascade"});
 OrderProduct.belongsTo(Order);
 
-// order and order product realtion
-OrderProduct.hasMany(OrderProductColor, { foreignKey: "orderProductId", onUpdate: "cascade", onDelete: "cascade" });
-OrderProductColor.belongsTo(OrderProduct);
+// order and order offer realtion
+Offer.hasMany(OrderOffer, { foreignKey: "offerId", onUpdate: "cascade", onDelete: "cascade"});
+OrderOffer.belongsTo(Offer);
 
 // order offer and order product realtion
 OrderOffer.hasMany(OrderProduct, { foreignKey: "orderOfferId", onUpdate: "cascade", onDelete: "cascade" });
@@ -106,8 +105,19 @@ Shipping.belongsTo(Order);
 Shipper.hasOne(Shipping, { foreignKey: "shipperId", onUpdate: "cascade", onDelete: "cascade" })
 Shipping.belongsTo(Shipper);
 
-Address.hasMany(Shipping, { foreignKey: "addressId", onUpdate: "cascade", onDelete: "cascade" })
-Shipping.belongsTo(Address);
+Address.hasMany(Order, { foreignKey: "addressId", onUpdate: "cascade", onDelete: "cascade" })
+Order.belongsTo(Address);
+
+
+OrderOffer.hasMany(OrderOfferProduct, { foreignKey: "orderOfferId", onUpdate: "cascade", onDelete: "cascade"})
+OrderOfferProduct.belongsTo(OrderOffer);
+
+Product.hasMany(OrderOfferProduct, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade"})
+OrderOfferProduct.belongsTo(Product);
+
+Product.hasMany(OrderProduct, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade"})
+OrderProduct.belongsTo(Product);
+
 // db.drop();
 
 module.exports = {
@@ -126,7 +136,7 @@ module.exports = {
     Order,
     OrderProduct,
     OrderOffer,
-    OrderProductColor,
+    OrderOfferProduct,
     Address,
     City,
     Governorate,

@@ -1,5 +1,5 @@
-let governorateService = require("../../services/admin/governorate.admin._service");
- 
+let governorateService = require("../../services/users/governorate.user._service");
+
 exports.index = async (req, res, next) => {
     let governorates = await governorateService.getAllGpvernorate();
 
@@ -7,16 +7,6 @@ exports.index = async (req, res, next) => {
         success: true,
         governorates
     })
-}
-exports.store = async (req, res, next) => {
-    let { name } = req.body;
-
-    await governorateService.createGovernorate({ name });
-
-    res.status(201).json({
-        success: true,
-        message: "new governorate created"
-    });
 }
 
 exports.show = async (req, res, next) => {
@@ -36,4 +26,3 @@ exports.show = async (req, res, next) => {
         });
 
 }
-
