@@ -15,7 +15,7 @@ let OrderOffer = require("./orderOffer.model");
 let OrderProduct = require("./orderProduct.model");
 let Address = require("./address.model");
 let City = require("./city.model");
-let Governorate = require("./emailVerification.model");
+let Governorate = require("./governorate.model");
 let Shipper = require("./shipper.model");
 let Shipping = require("./shipping.model");
 let OrderOfferProduct = require("./orderOfferProdcut.model");
@@ -87,36 +87,38 @@ Address.belongsTo(Governorate);
 Order.hasMany(OrderOffer, { foreignKey: "orderId", onUpdate: "cascade", onDelete: "cascade"});
 OrderOffer.belongsTo(Order);
 
-// order and order product realtion
-Order.hasMany(OrderProduct, { foreignKey: "orderId", onUpdate: "cascade", onDelete: "cascade"});
-OrderProduct.belongsTo(Order);
-
 // order and order offer realtion
 Offer.hasMany(OrderOffer, { foreignKey: "offerId", onUpdate: "cascade", onDelete: "cascade"});
 OrderOffer.belongsTo(Offer);
 
-// order offer and order product realtion
-OrderOffer.hasMany(OrderProduct, { foreignKey: "orderOfferId", onUpdate: "cascade", onDelete: "cascade" });
-OrderProduct.belongsTo(OrderOffer);
-
-Order.hasOne(Shipping, { foreignKey: "orderId", onUpdate: "cascade", onDelete: "cascade" })
-Shipping.belongsTo(Order);
-
-Shipper.hasOne(Shipping, { foreignKey: "shipperId", onUpdate: "cascade", onDelete: "cascade" })
-Shipping.belongsTo(Shipper);
-
-Address.hasMany(Order, { foreignKey: "addressId", onUpdate: "cascade", onDelete: "cascade" })
-Order.belongsTo(Address);
-
-
-OrderOffer.hasMany(OrderOfferProduct, { foreignKey: "orderOfferId", onUpdate: "cascade", onDelete: "cascade"})
+// order offer and order offer product realtion
+OrderOffer.hasMany(OrderOfferProduct, { foreignKey: "orderOfferId", onUpdate: "cascade", onDelete: "cascade" });
 OrderOfferProduct.belongsTo(OrderOffer);
 
+// realtion between product and order offer product
 Product.hasMany(OrderOfferProduct, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade"})
 OrderOfferProduct.belongsTo(Product);
 
+
+// order and order product realtion
+Order.hasMany(OrderProduct, { foreignKey: "orderId", onUpdate: "cascade", onDelete: "cascade"});
+OrderProduct.belongsTo(Order);
+
+// realtion between product and order product
 Product.hasMany(OrderProduct, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade"})
 OrderProduct.belongsTo(Product);
+
+// realtion between order and shipping
+Order.hasOne(Shipping, { foreignKey: "orderId", onUpdate: "cascade", onDelete: "cascade" })
+Shipping.belongsTo(Order);
+
+// realtion between order and shipping
+Shipper.hasOne(Shipping, { foreignKey: "shipperId", onUpdate: "cascade", onDelete: "cascade" })
+Shipping.belongsTo(Shipper);
+
+// realtiom between address and orders
+Address.hasMany(Order, { foreignKey: "addressId", onUpdate: "cascade", onDelete: "cascade" })
+Order.belongsTo(Address);
 
 // db.drop();
 

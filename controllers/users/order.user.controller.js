@@ -59,7 +59,7 @@ exports.show = async (req, res, next) => {
 //         }
 // }
 
-exports.store = async (req, res, res) => {
+exports.store = async (req, res, next) => {
     let { userId } = req.user;
     let { paymentToken, products, offers, addressId, cityShippingCost, totalPrice } = req.body
     

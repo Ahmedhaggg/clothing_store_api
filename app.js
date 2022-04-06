@@ -29,34 +29,21 @@ db.authenticate()
 })
 
 
-// create tables in database
-/* 
-    let {
-    Admin,
-    Category,
-    Subcategory,
-    Product,
-    ProductColor,
-    ProductDiscount,
-    Inventory
-// } = require("./models/index")
-
-db.sync({ force: true});
-*/
-// include routes
-db.sync();
-
+db
+  .sync() // create the database table for our model(s)
+ 
 // admin routes
 let adminAuthRouter = require("./routes/admin/auth.admin.router");
 let adminProductRouter = require("./routes/admin/product.admin.router");
 let adminCategoryRouter = require("./routes/admin/category.admin.router");
 let adminSubcategoryRouter = require("./routes/admin/subcategory.admin.router");
 let adminproductColorsRouter = require("./routes/admin/productColor.admin.router");
-// let adminInventoryRouter = require("./routes/admin/inventory.admin.router");
+let adminInventoryRouter = require("./routes/admin/inevntory.admin.router");
 let adminProductDiscountRouter = require("./routes/admin/productDiscount.admin.router");
-// users routes
-// let authUserRouter = require("./routes/users/auth.user.router");
-// let resetPasswordUserRouter = require("./routes/users/resetPassword.user.router");
+let adminOfferRouter = require("./routes/admin/offer.admin.router");
+let adminOfferProductRouter = require("./routes/admin/offerProduct.admin.router");
+let adminGovernorateRouter = require("./routes/admin/governorate.admin.router");
+let adminCityRouter = require("./routes/admin/city.admin.router");
 
 // using admin routes
 app.use("/api/admin/auth", adminAuthRouter);
@@ -65,11 +52,33 @@ app.use("/api/admin/categories", adminCategoryRouter);
 app.use("/api/admin/subcategories", adminSubcategoryRouter);
 app.use("/api/admin/products/colors", adminproductColorsRouter);
 app.use("/api/admin/products/discounts", adminProductDiscountRouter);
-// app.use("/api/admin/inventories", adminInventoryRouter);
+app.use("/api/admin/inventories", adminInventoryRouter);
+app.use("/api/admin/offers", adminOfferRouter)
+app.use("/api/admin/offerProducts", adminOfferProductRouter);
+app.use("/api/admin/governorates", adminGovernorateRouter);
+app.use("/api/admin/cities", adminCityRouter);
+
+
+// users routes
+let userAuthRouter = require("./routes/users/auth.user.router");
+let userResetPasswordRouter = require("./routes/users/resetPassword.user.router");
+let userAddressRouter = require("./routes/users/address.user.router");
+let userProductRouter = require("./routes/users/product.user.router");
+let userCategoryRouter = require("./routes/users/category.user.router");
+let userSubcategoryRouter = require("./routes/users/subcategory.user.router");
+let userGovernorateRouter = require("./routes/users/governorate.user.router");
+let userOrderRouter = require("./routes/users/order.user.router");
+
 
 // using users routes
-// app.use("/api/users/auth", authUserRouter);
-// app.use("/api/users/password/reset/", resetPasswordUserRouter);
+app.use("/api/users/auth", userAuthRouter);
+app.use("/api/users/password-reset", userResetPasswordRouter);
+app.use("/api/users/addresses", userAddressRouter);
+app.use("/api/users/products", userProductRouter);
+app.use("/api/users/categories", userCategoryRouter);
+app.use("/api/users/subcategories", userSubcategoryRouter);
+app.use("/api/users/governorates", userGovernorateRouter);
+app.use("/api/users/orders", userOrderRouter)
 
 
 app.use(errorHandler);

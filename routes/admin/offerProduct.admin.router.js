@@ -1,7 +1,7 @@
 let router = require("express").Router();
 let adminOfferProductController = require("../../controllers/admin/offerProduct.admin.controller");
 
-router.pos("/", 
+router.post("/", 
     adminOfferProductController.store
 )
 router.put("/:id", 

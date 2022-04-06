@@ -35,7 +35,7 @@ exports.createUser = async (order, offers, offersProducts, products) => {
         
         let newOrderOffersProducts = await OrderOfferProduct.bulkCreate(newOffersProductsData, { transaction: newTransaction });
 
-        newOrderOffersProducts.forEach(newOrderOfferProduct => {
+        newOrderOffersProducts.forEach(async newOrderOfferProduct => {
             await Inventory.increment(
                 { 
                     quantity: -(newOffersProductsData.quantity) 

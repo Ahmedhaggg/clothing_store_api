@@ -13,7 +13,7 @@ let OrderOfferProduct = db.define("order_offer_products", {
         allowNull: false
     },
     colors: {
-        type: DataTypes.ARRAY(DataTypes.JSON),
+        type: DataTypes.JSON,
         allowNull: false
     }
 }, {
