@@ -22,7 +22,6 @@ let OrderOfferProduct = require("./orderOfferProdcut.model");
 const db = require("../config/database");
 
 /* =================== realtions ====================*/
-
 // category and subcategory realtion
 Category.hasMany(Subcategory, { foreignKey: "categoryId" })
 Subcategory.belongsTo(Category);
@@ -36,7 +35,7 @@ Subcategory.hasMany(Product, { foreignKey: "subcategoryId" })
 Product.belongsTo(Subcategory);
 
 // product and colors realtion
-Product.hasMany(ProductColor, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade" });
+Product.hasMany(ProductColor, { as: "productColors", foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade" });
 ProductColor.belongsTo(Product);
 
 // product and discount realtion
@@ -48,7 +47,7 @@ Product.hasMany(Inventory, { foreignKey: "productId", onUpdate: "cascade", onDel
 Inventory.belongsTo(Product);
 
 // product color and inventory
-ProductColor.hasOne(Inventory, { foreignKey: "colorId", onUpdate: "cascade", onDelete: "cascade" });
+ProductColor.hasMany(Inventory, { foreignKey: "colorId", onUpdate: "cascade", onDelete: "cascade" });
 Inventory.belongsTo(ProductColor);
 
 // user and verificationCode realtion
@@ -60,7 +59,7 @@ User.hasOne(ResetPassword, { foreignKey: "userId", onUpdate: "cascade", onDelete
 ResetPassword.belongsTo(User);
 
 // offer and offer Products realtion
-Offer.hasMany(OfferProducts, { foreignKey: "offerId", onUpdate: "cascade", onDelete: "cascade" });
+Offer.hasMany(OfferProducts, { as: "offerProducts", foreignKey: "offerId", onUpdate: "cascade", onDelete: "cascade" });
 OfferProducts.belongsTo(Offer);
 
 // offer Products and products realtion

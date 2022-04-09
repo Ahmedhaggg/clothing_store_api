@@ -2,10 +2,22 @@ let { hash, compare } = require("../helpers/hash");
 let { addHoursToDate } = require("../helpers/date.handler")
 let generateRandomToken = require("../helpers/generateRandomToken")
 let password = async () => await hash("Ahmed@12345");
+
+exports.adminData = {
+    email: "elwensh@gmail.com",
+    password: "Admin.Test@0000"
+}
 // product`
 exports.productData = {
     name: "sweet shirt",
     slug: "sweet-shirt",
+    description: "new style sweet shirt",
+    price: 4.2,
+    image: "newProduct.jpeg"
+}
+exports.secondProductData = {
+    name: "sweet shirt zara",
+    slug: "sweet-shirt-zara",
     description: "new style sweet shirt",
     price: 4.2,
     image: "newProduct.jpeg"
@@ -53,8 +65,28 @@ exports.productDetails = [
     {name: "yellow", size: "lg", quantity: 10}
 ]
 exports.productDetails = [
-    {name: "green", size: "xl", quantity: 10},
-    {name: "red", size: "lg", quantity: 10}
+    {
+        color: "green", 
+        sizes: [
+            {
+                size: "xl", quantity: 10
+            },
+            {
+                size: "lg", quantity: 10
+            }
+        ]   
+    },
+    {
+        color: "yellow", 
+        sizes: [
+            {
+                size: "xl", quantity: 10
+            },
+            {
+                size: "lg", quantity: 10
+            }
+        ]   
+    }
 ]
 
 // inventory
@@ -89,4 +121,43 @@ exports.codeVerificationData = {
 exports.resetPasswordData = {
     token: generateRandomToken(),
     expiresin: new Date()
+}
+
+exports.offerData = {
+    name: "sweet shirt",
+    slug: "sweet-shirt",
+    description: "new style sweet shirt",
+    price: 34.99,
+    image: "newProduct.jpeg",
+    expiresin: "2022-10-4"
+}
+
+exports.newOfferData = {
+    price: 39.99
+}
+exports.offerProductsData = [
+    {
+        quantity: 1
+    },
+    { 
+        quantity: 2
+    }
+]
+exports.offerProductData = {
+    quantity: 1
+}
+exports.newOfferProductData = {
+    quantity: 2
+}
+exports.governorateData = {
+    name: "beni suef"
+}
+exports.cityData = {
+    name: "beba",
+    shippingTime: "3days",
+    shippingCost: 40,
+}
+
+exports.newCityData = {
+    shippingCost: 60
 }

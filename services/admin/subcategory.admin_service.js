@@ -1,23 +1,20 @@
 const { Sequelize, Op } = require("sequelize");
 let { Subcategory, Product, ProductDiscount } = require("../../models/index");
 
-exports.createSubcategory = async subcategoryData => {
-    let newSubcategory = await Subcategory.create(subcategoryData);
-    return newSubcategory;
-}
+exports.createSubcategory = async subcategoryData => await Subcategory.create(subcategoryData);
 
-exports.updateSubcategory = async (id, newData) => {
+exports.updateSubcategory = async (query, newData) => {
     let updatedSubcategory = await Subcategory.update(newData, {
-        where: {id}
+        where: query
     });
     
     return updatedSubcategory[0] === 1 ? true : false;
 }
 
-exports.getSubcategory = async id => {
-    let subcategory = await Subcategory.findOne({
-        where: {id},
-        attributes: ["name", "slug"],
+exports.getSubcategory = async query =>  await Subcategory
+    .findOne({
+        where: query,
+        attributes: ["name", "slug", "createdAt", "updatedAt"],
         include: {
             required: false,
             model: Product,
@@ -32,6 +29,3 @@ exports.getSubcategory = async id => {
             }
         }
     });
-
-    return subcategory;
-}

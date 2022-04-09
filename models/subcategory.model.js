@@ -18,7 +18,7 @@ let Subcategory = db.define("subcategories", {
         allowNull: false
     }
 }, {
-    timestamps: false
+    timestamps: true
 });
 
 

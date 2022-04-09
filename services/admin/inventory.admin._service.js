@@ -1,8 +1,8 @@
 let { Inventory } = require("../../models/index");
 
-exports.updateIneventory = async (id, newData) => {
+exports.updateIneventory = async (query, newData) => {
     let updatedInventory = await Inventory.update(newData, {
-        where: { id }
+        where: query
     });
 
     return updatedInventory[0] === 1 ? true : false;

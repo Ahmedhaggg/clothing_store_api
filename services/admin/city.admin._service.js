@@ -1,7 +1,7 @@
 let { City, Governorate } = require("../../models");
 
-exports.getCity = async query => {
-    return await City.findOne({ 
+exports.getCity = async query =>  await City
+    .findOne({ 
         where: query,
         attributes: ["id", "name", "shippingCost", "shippingTime"],
         include: [{ 
@@ -9,11 +9,10 @@ exports.getCity = async query => {
             attributes: ["governorate"]
         }]
     });
-}
 
-exports.createCity = async newData => {
-    return await City.create(newData);
-}
+
+exports.createCity = async newData =>  await City.create(newData);
+
 
 exports.updateCity = async (query, newData) => {
     let updatedCity = await City.update(newData, { where: query });

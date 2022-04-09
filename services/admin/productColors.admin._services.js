@@ -1,9 +1,6 @@
 let { ProductColor } = require("../../models/index");
 
-exports.createColor = async (colorData) => {
-    let newColor = await ProductColor.create(colorData);
-    return newColor;
-}
+exports.createColor = async (colorData) => await ProductColor.create(colorData);
 
 exports.updateColors = async (id, newColorData) => {
     let updatedColor = await ProductColor.update(newColorData, { where: {id} });

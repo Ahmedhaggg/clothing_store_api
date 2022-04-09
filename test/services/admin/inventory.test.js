@@ -4,45 +4,21 @@ let subcategoryService = require("../../../services/admin/subcategory.admin_serv
 let inventoryService = require("../../../services/admin/inventory.admin._service");
 let db = require("../../../config/database");
 const { QueryTypes } = require("sequelize");
+let {categoryData, subcategoryData, productData, productDiscountData, productDetails } = require("../../test.data")
 
 describe("test all method in product service", () => {
-    let productData = {
-        name: "sweet shirt",
-        slug: "sweet-shirt",
-        description: "new style sweet shirt",
-        price: 4.2,
-        image: "newProduct.jpeg"
-    };
-    let discountData = {
-        percent: 10,
-        description: "this is new description",
-        expiresin: "2022-12-14"
-    };
-    let inventoryData = {
-        quantity: 10
-    }
-    let colorsData = [
-        {name: "red"},
-        {name: "green"}
-    ];
-    let categoryData = {
-        name: "sweet shirt",
-        slug: "sweet-shirt"
-    };
-    let subcategoryData = {
-        name: "sweet shirt",
-        slug: "sweet-shirt"
-    };
-
+    let colorId;
+    let inventoryId;
     beforeAll( async () => {
         let newCategory = await categoryService.createCategory(categoryData);
         productData.categoryId = newCategory.id;
         subcategoryData.categoryId = newCategory.id;
         let newSubcategory = await subcategoryService.createSubcategory(subcategoryData);
         productData.subcategoryId = newSubcategory.id;
-        let newProduct = await productService.createProduct(productData, discountData, inventoryData, colorsData);
+        let newProduct = await productService.createProduct(productData, productDiscountData, productDetails);
         productData.id = newProduct.product.id;
-        inventoryData.id = newProduct.inventory.id;
+        colorId = newProduct.colors[0].id;
+        inventoryId = newProduct.inventory[0].id;
     });
     
     afterAll(async () => {
@@ -52,7 +28,7 @@ describe("test all method in product service", () => {
     });
 
     it('updateDiscount should return true', async () => {
-        let updateIneventory = await inventoryService.updateIneventory(inventoryData.id, {
+        let updateIneventory = await inventoryService.updateIneventory({ id: inventoryId }, {
             quantity: 50
         });
         expect(updateIneventory).toBe(true);

@@ -18,7 +18,7 @@ let Category = db.define("categories", {
         allowNull: false
     }
 }, {
-    timestamps: false
+    timestamps: true
 });
 
 

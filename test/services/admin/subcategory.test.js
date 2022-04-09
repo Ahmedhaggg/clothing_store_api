@@ -6,33 +6,28 @@ let db = require("../../../config/database");
 const { QueryTypes } = require("sequelize");
 
 describe("test all method in subcategory service", () => {
+   
     beforeAll(async () => {
-        let newCategory = await categoryService.createCategory(categoryData);
-        categoryData.id = newCategory.id;
-        subcategoryData.categoryId = newCategory.id
-        let newSubcategory = await subcategoryService.createSubcategory(subcategoryData);
-        subcategoryData.id = newSubcategory.id;
+        let newCategory = categoryService.createCategory(categoryData);
+        subcategoryData.categoryId = newCategory.id;
     });
-
     afterAll(async () => {
         await db.query("DELETE FROM subcategories", { type: QueryTypes.DELETE})
         await db.query("DELETE FROM categories", { type: QueryTypes.DELETE})
     });
 
     it('createSubcategory should be defined and return object', async () => {
-        let newSubcategory = await subcategoryService.createSubcategory({
-            name: "sweet shirt a",
-            slug: "sweet-shirt-a",
-            categoryId: categoryData.id
-        });
+        let newSubcategory = await subcategoryService.createSubcategory(categoryData);
+        subcategoryData.id = newSubcategory.id;
         expect(newSubcategory).toHaveProperty("id");
-        expect(newSubcategory).toHaveProperty("name", "sweet shirt a");
-        expect(newSubcategory).toHaveProperty("slug", "sweet-shirt-a");
+        expect(newSubcategory).toHaveProperty("name");
+        expect(newSubcategory).toHaveProperty("slug");
         expect(newSubcategory).toHaveProperty("categoryId", categoryData.id);
     });
 
     it('getSubcategory should return object', async () => {
-        let subcategory = await subcategoryService.getSubcategory(subcategoryData.id);
+        let subcategory = await subcategoryService.getSubcategory({ id : subcategoryData.id});
+        console.log(subcategory);
         expect(subcategory).toHaveProperty("id")
         expect(subcategory).toHaveProperty("name", subcategoryData.name)
         expect(subcategory).toHaveProperty("slug", subcategoryData.slug)
@@ -40,7 +35,7 @@ describe("test all method in subcategory service", () => {
     });
 
     it('updateSubcategory should return true', async () => {
-        let updateSubcategory = await subcategoryService.updateSubcategory(subcategoryData.id, newSubcategoryData);
+        let updateSubcategory = await subcategoryService.updateSubcategory({ id: subcategoryData.id }, newSubcategoryData);
         expect(updateSubcategory).toBe(true);
     });
 }); 

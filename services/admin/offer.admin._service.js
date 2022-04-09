@@ -1,13 +1,13 @@
 let { Offer, OfferProducts, Product, ProductColor, ProductDiscount, Inventory} = require("../../models");
 let db = require("../../config/database");
+const { Op, Sequelize } = require("sequelize");
 
-exports.getAllOffers = async query => {
-    let offers = await Offer.findAll({
+exports.getAllOffers = async query => await Offer
+    .findAll({
         where: query
-    })
+    });
     
-    return offers;
-}
+
 
 exports.createOffer = async (offerData, offerProductsData) => {
     let transaction = await db.transaction();
@@ -19,44 +19,55 @@ exports.createOffer = async (offerData, offerProductsData) => {
             offerProductData.offerId = offer.id;
         });
 
-        await OfferProducts.bulkCreate(offerProductsData, { transaction });
+        let offerProducts = await OfferProducts.bulkCreate(offerProductsData, { transaction });
 
         await transaction.commit();
-        return true;
+        return {
+            offer,
+            offerProducts
+        };
     } catch (error) {
         await transaction.rollback()
-        return false;
+        return null;
     }
 }
 
-exports.getOffer = async query => {
-    let offer = await Offer.findOne({
+exports.getOffer = async query => await Offer
+    .findOne({
         where: query,
+        attributes: ["id", "name", "active", "slug", "price", "image", "description", "expiresin"],
         include: [
             {
                 model: OfferProducts,
+                as: "offerProducts",
+                attributes: ["id", "quantity"],
                 include: [
                     {
                         model: Product,
-                        include: [
-                            {
-                                model: ProductColor
-                            },
-                            {
-                                model: ProductDiscount
-                            },
-                            {
-                                model: Inventory
-                            }
-                        ]
+                        attributes: ["id", "name", "slug", "price", "active", "image"],
+                        include: {
+                            required: false,
+                            model: ProductColor,
+                            as: "productColors",
+                            attributes: ["id", "name"],
+                            include: [
+                                { 
+                                    required: true,
+                                    model: Inventory,    
+                                    attributes: ["id", "size", "quantity"],
+                                    where: {
+                                        quantity: {
+                                            [Op.gte]: 1
+                                        }
+                                    } 
+                                }    
+                            ]
+                        }
                     }
                 ]
             }
         ]
     });
-
-    return offer;
-}
 
 exports.updateOffer = async (query, offerData) => {
     let updateOffer = await Offer.update(offerData, { where: query});
@@ -64,12 +75,9 @@ exports.updateOffer = async (query, offerData) => {
     return updateOffer[0] === 1 ? true : false;
 }
 
-exports.getSomeOfferData = async (query, fields) => {
-    let offer = await Offer.findOne({
+exports.getSomeOfferData = async (query, fields) =>  await Offer
+    .findOne({
         where: query,
         attributes: fields
     });
-
-    return offer;
-}
 

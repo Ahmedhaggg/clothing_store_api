@@ -1,20 +1,23 @@
 let adminAuthService = require("../../../services/admin/auth.admin._service");
-
-
+let { adminData } = require("../../test.data")
+let db = require("../../../config/database");
+const { QueryTypes } = require("sequelize");
 describe('test all methods in auth admin service', () => {
-
-    let adminData = {
-        email: "elwensh@gmail.com",
-        password: "Admin.Test@0000"
-    }
     
-    it('create admin should not throw error', async () => {
-        let newAdmin = await adminAuthService.createAdmin(admin);
-        expect(newAdmin).resolves.not.toThrow();
+    afterAll(async () => {
+        await db.query("DELETE FROM admins", { type: QueryTypes.DELETE});
     });
-    it("getAdmin should return new admin", async () => {
-        let admin = adminAuthService.getAdmin(adminData.email);
-        expect(admin.email).toEquel(adminData.email);
+    it('create admin should return object conatins new admin data', async () => {
+        let newAdmin = await adminAuthService.createAdmin(adminData);
+        expect(newAdmin).toHaveProperty("id");
+        expect(newAdmin).toHaveProperty("email");
+        expect(newAdmin).toHaveProperty("password");
+    });
+    it("getAdmin should return admin data", async () => {
+        let admin = await adminAuthService.getAdmin(adminData.email);
+        console.log(admin)
+        expect(admin).toHaveProperty("id");
+        expect(admin).toHaveProperty("email");
         expect(admin).toHaveProperty("password");
     })
     
