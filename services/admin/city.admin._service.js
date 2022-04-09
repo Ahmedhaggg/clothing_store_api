@@ -1,12 +1,20 @@
 let { City, Governorate } = require("../../models");
 
+exports.getAllCities = async () => await City
+    .findAll({ 
+        include: [{ 
+            model: Governorate,
+            attributes: ["name"]
+        }]
+    });
+
 exports.getCity = async query =>  await City
     .findOne({ 
         where: query,
         attributes: ["id", "name", "shippingCost", "shippingTime"],
         include: [{ 
             model: Governorate,
-            attributes: ["governorate"]
+            attributes: ["name"]
         }]
     });
 

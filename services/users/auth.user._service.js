@@ -5,15 +5,15 @@ const { Op } = require("sequelize");
 
 exports.createUser = async (newUserData, emailVerificationData) => {
     let newTransaction = await db.transaction();
-
     try {
         let newUser = await User.create(newUserData, { transaction: newTransaction });
-        
         emailVerificationData.userId = newUser.id;
         await EmailVerification.create(emailVerificationData, { transaction: newTransaction});
 
         await newTransaction.commit();
-        
+        return {
+            id: newUser.id
+        };
     } catch (error) {
         await newTransaction.rollback();
 
@@ -27,14 +27,12 @@ exports.updateUser = async (query, newData) => {
     return updatedUser[0] === 1 ? true : false; 
 }
 
-exports.getUser = async query => {
-    let user = await User.findOne({ 
+exports.getUser = async query =>  await User
+    .findOne({ 
         where: query,
         attributes: ["id", "email", "password", "verified"]
     });
-    
-    return user;
-}
+
 
 exports.getUserIdAndEmailVerificationCode = async query => {
     let user = await User.findOne({
@@ -42,14 +40,13 @@ exports.getUserIdAndEmailVerificationCode = async query => {
         attributes: ["id"],
         include: {
             required: false,
+            model: EmailVerification,
             where: { 
                 expiresin: { [Op.gt]: new Date()}
             },
-            model: EmailVerification,
             attributes: ["code"]
         }
     });
-
     return  {
         code: user.email_verification.code,
         id: user.id
@@ -57,13 +54,13 @@ exports.getUserIdAndEmailVerificationCode = async query => {
 }
 
 exports.updateEmailVerification = async (query, newData) => {
-    let d = await EmailVerification.update(newData, { where: query});
-
-    // return updatedEmailVerification === 1 ? true : false;
+    let updatedEmailVerification = await EmailVerification.update(newData, { where: query});
+    return updatedEmailVerification[0] === 1 ? true : false;
 }
 
 exports.deleteEmailVerification = async query => {
-    await EmailVerification.destroy({
+    let deleteEmailVerification = await EmailVerification.destroy({
         where: query
     });
+    return deleteEmailVerification === 1 ? true : false;
 }

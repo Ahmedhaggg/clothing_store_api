@@ -1,13 +1,8 @@
 let { ProductColor } = require("../../models/index");
 
-exports.createColor = async (colorData) => await ProductColor.create(colorData);
+exports.addColorToProduct = async colorData => await ProductColor.create(colorData);
 
-exports.updateColors = async (id, newColorData) => {
-    let updatedColor = await ProductColor.update(newColorData, { where: {id} });
-    return updatedColor[0] === 1 ? true : false;
-}
-
-exports.deleteColors = async (id) => {
-    let deletedColor = await ProductColor.destroy({ where: {id} });
+exports.deleteColorfromProduct = async query => {
+    let deletedColor = await ProductColor.destroy({ where: query });
     return deletedColor === 1 ? true : false;
 }

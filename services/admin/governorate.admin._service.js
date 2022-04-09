@@ -1,6 +1,6 @@
 let { Governorate, City } = require("../../models");
 
-exports.getAllGovernorate = async () => await Governorate.findAll();
+exports.getAllGovernorates = async () => await Governorate.findAll();
 
 exports.getGovernorate = async query => await Governorate
     .findOne({ 

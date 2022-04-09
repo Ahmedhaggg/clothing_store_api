@@ -1,14 +1,13 @@
 let productService = require("../../../services/admin/product.admin._service");
 let categoryService = require("../../../services/admin/category.admin._service");
 let subcategoryService = require("../../../services/admin/subcategory.admin_service");
-let inventoryService = require("../../../services/admin/inventory.admin._service");
+let productColorService = require("../../../services/admin/productColors.admin._services")
 let db = require("../../../config/database");
-const { QueryTypes } = require("sequelize");
-let {categoryData, subcategoryData, productData, productDiscountData, productDetails } = require("../../test.data")
-
+const { QueryTypes } = require("sequelize"); 
+let { productData, productDetails, productDiscountData , categoryData, subcategoryData, productColorData } = require("../../test.data")
 describe("test all method in product service", () => {
-    let colorId;
-    let inventoryId;
+     
+ 
     beforeAll( async () => {
         let newCategory = await categoryService.createCategory(categoryData);
         productData.categoryId = newCategory.id;
@@ -16,9 +15,7 @@ describe("test all method in product service", () => {
         let newSubcategory = await subcategoryService.createSubcategory(subcategoryData);
         productData.subcategoryId = newSubcategory.id;
         let newProduct = await productService.createProduct(productData, productDiscountData, productDetails);
-        productData.id = newProduct.product.id;
-        colorId = newProduct.colors[0].id;
-        inventoryId = newProduct.inventory[0].id;
+        productColorData.productId = newProduct.product.id;
     });
     
     afterAll(async () => {
@@ -26,12 +23,16 @@ describe("test all method in product service", () => {
         await db.query("DELETE FROM categories", { type: QueryTypes.DELETE});
         await db.query("DELETE FROM subcategories", { type: QueryTypes.DELETE});
     });
-
-    it('updateInevntory should return true', async () => {
-        let updateIneventory = await inventoryService.updateIneventory({ id: inventoryId }, {
-            quantity: 50
-        });
-        expect(updateIneventory).toBe(true);
+    
+    it('addColorToProduct should return object', async () => {
+        let newColor = await productColorService.addColorToProduct(productColorData);
+        productColorData.id = newColor.id;
+        expect(newColor).toHaveProperty("id");
+        expect(newColor).toHaveProperty("name");
+        expect(newColor).toHaveProperty("productId");
     });
-
-});
+    it('deleteColorFromProduct should return true', async () => {
+        let deleteColor = await productColorService.deleteColorfromProduct({ id: productColorData.id });
+        expect(deleteColor).toBe(true);
+    });
+})

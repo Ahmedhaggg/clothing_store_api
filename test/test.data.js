@@ -1,7 +1,5 @@
-let { hash, compare } = require("../helpers/hash");
 let { addHoursToDate } = require("../helpers/date.handler")
 let generateRandomToken = require("../helpers/generateRandomToken")
-let password = async () => await hash("Ahmed@12345");
 
 exports.adminData = {
     email: "elwensh@gmail.com",
@@ -89,6 +87,9 @@ exports.productDetails = [
     }
 ]
 
+exports.productColorData = {
+    name: "red"
+}
 // inventory
 exports.inventoryData = [
     {size: "xl", quantity: 10},
@@ -98,30 +99,6 @@ exports.newInventoryData = [
     {size: "xl", quantity: 20},
     {size: "lg", quantity: 20}
 ]
-
-// user
-exports.userData = {
-    firstName: "ahmed",
-    lastName: "haggag",
-    userName: "ahmed_haggag",
-    password: password(),
-    email: "ahmedhaggagrady@gmail.com",
-    phoneNumber: "01014223925",
-    gender: "male",
-    birthDay: new Date()
-}
-
-// code verification
-exports.codeVerificationData = {
-    code: 123456,
-    expiresin: addHoursToDate(new Date(), 2)
-}
-
-// reset password
-exports.resetPasswordData = {
-    token: generateRandomToken(),
-    expiresin: new Date()
-}
 
 exports.offerData = {
     name: "sweet shirt",
@@ -160,4 +137,31 @@ exports.cityData = {
 
 exports.newCityData = {
     shippingCost: 60
+}
+
+// user
+exports.userData = {
+    firstName: "ahmed",
+    lastName: "haggag",
+    userName: "ahmed_haggag",
+    email: "ahmedhaggagrady@gmail.com",
+    phoneNumber: "01014223925",
+    gender: "male",
+    birthDay: new Date()
+}
+
+// code verification
+exports.emailVerificationData = {
+    code: 123456,
+    expiresin: addHoursToDate(new Date(), 2)
+}
+exports.newEmailVerificationData = {
+    code: 444444,
+    expiresin: addHoursToDate(new Date(), 3)
+}
+
+// reset password
+exports.resetPasswordData = {
+    token: generateRandomToken(),
+    expiresin: new Date()
 }
