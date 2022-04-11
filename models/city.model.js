@@ -13,7 +13,7 @@ let City = db.define("cities", {
         allowNull: false
     },
     shippingTime: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING(15),
         allowNull: false
     }, 
     shippingCost: {

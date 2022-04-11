@@ -130,7 +130,7 @@ exports.governorateData = {
     name: "beni suef"
 }
 exports.cityData = {
-    name: "beba",
+    name: "beni suef",
     shippingTime: "3days",
     shippingCost: 40,
 }
@@ -164,4 +164,14 @@ exports.newEmailVerificationData = {
 exports.resetPasswordData = {
     token: generateRandomToken(),
     expiresin: new Date()
+}
+exports.newResetPasswordData = {
+    token: generateRandomToken()
+}
+exports.addressData = {
+    firstZone: "The third floor of the building next to Al Shaab Restaurant", 
+    secondZone: "salah salem street"
+}
+exports.newAddressData = {
+    secondZone: "abdelsalam araf street"
 }

@@ -1,55 +1,63 @@
 const { Op } = require("sequelize");
-let { Product, Category, Subcategory, ProductDiscount, ProductColor, Inventory } = require("../../models/index"); 
+let { Category, Subcategory } = require("../../models/index"); 
 
-exports.getCategories = async () => {
-    let categories = await Category.findAll({
+exports.getAllCategories = async () => await Category
+    .findAll({
         attributes: ["id", "name", "slug"],
         include: [
             {
-                model: Subcategory
+                model: Subcategory,
+                attributes: ["id", "name", "slug"]
             }
         ]
     });
-    
-    return categories;
-}
 
-exports.getCategoryProducts = async query => {
-    let category = await Category.findOne({
+
+
+exports.getSubcategoriesOfcategory = async query => await Category
+    .findOne({
         where: query,
-        include: [
-            {
-                model: Product,
-                attributes: ["id", "name", "slug", "price", "image"],
-                where: {
-                    active: true
-                },
-                required: false,
-                include: [
-                    {
-                        model: ProductDiscount,
-                        attributes: ["percent"],
-                        where: {
-                            expiresin: {
-                                [Op.gt]: new Date()
-                            }
-                        },
-                        required: false
-                    },
-                    {
-                        model: Inventory,
-                        attributes: [],
-                        where: {
-                            quantity: {
-                                [Op.gte]: 1
-                            }
-                        },
-                        required: true
-                    }
-                ]
-            }
-        ]
-    })
+        attributes: ["id", "name", "slug"],
+        include: {
+            model: Subcategory,
+            attributes: ["id", "name", "slug"]
+        }
+    });
 
-    return category;
-}
+
+// exports.getCategoryProducts = async query =>  await Category
+    // .findOne({
+    //     where: query,
+    //     include: [
+    //         {
+    //             model: Product,
+    //             attributes: ["id", "name", "slug", "price", "image"],
+    //             where: {
+    //                 active: true
+    //             },
+    //             required: false,
+    //             include: [
+    //                 {
+    //                     model: ProductDiscount,
+    //                     attributes: ["percent"],
+    //                     where: {
+    //                         expiresin: {
+    //                             [Op.gt]: new Date()
+    //                         }
+    //                     },
+    //                     required: false
+    //                 },
+    //                 {
+    //                     model: Inventory,
+    //                     attributes: [],
+    //                     where: {
+    //                         quantity: {
+    //                             [Op.gte]: 1
+    //                         }
+    //                     },
+    //                     required: true
+    //                 }
+    //             ]
+    //         }
+    //     ]
+    // });
