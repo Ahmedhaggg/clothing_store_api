@@ -10,6 +10,7 @@ exports.getAllActiveProducts = async () =>  await Product
             {
                 required: false,
                 model: ProductDiscount,
+                as: "discount",
                 where: { expiresin : {[Op.gt]: new Date() }},
                 attributes: ["percent"]
             },

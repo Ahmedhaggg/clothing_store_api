@@ -39,7 +39,7 @@ Product.hasMany(ProductColor, { as: "productColors", foreignKey: "productId", on
 ProductColor.belongsTo(Product);
 
 // product and discount realtion
-Product.hasOne(ProductDiscount, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade" });
+Product.hasOne(ProductDiscount, { as: "discount", foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade" });
 ProductDiscount.belongsTo(Product);
 
 // product and inventory realtion

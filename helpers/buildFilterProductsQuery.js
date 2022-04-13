@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-let { Product, ProductDiscount, Category, Subcategory, Inventory } = require("../models/index")
+let { Product, ProductDiscount, Category, Subcategory, ProductColor ,Inventory } = require("../models/index")
 
 let buildSortInQuery = (sortBy) => {
     let sortData = sortBy.split(":");
@@ -13,30 +13,36 @@ let buildSortInQuery = (sortBy) => {
 class BuildFilterQuery {
     query = {
         where: {},
-        attributes: ["id", "name", "slug", "price"],
+        attributes: ["id", "name", "slug", "price", "image", "description"],
         include: [
             {
                 required: false,
                 model: ProductDiscount,
-                attributes: ["percent"],
+                as: "discount",
+                attributes: ["percent", "expiresin"],
                 where: {
                     expiresin: {
-                        [Op.lt]: new Date()
+                        [Op.gte]: new Date()
                     }
                 }
             },
             {
                 required: true,
-                model: Inventory,
-                where: {
-                    quantity: {
-                        [Op.gte]: 1
+                model: ProductColor,
+                as: "productColors",
+                attributes: ["name"],
+                include: {
+                    required: true,
+                    model: Inventory,
+                    attributes: ["size"],
+                    where: {
+                        quantity: {
+                            [Op.gte]: 1
+                        }
                     }
                 }
             }
-        ],
-        order: []
-
+        ]
     }
     
     setLimit(limit) {
@@ -70,8 +76,10 @@ class BuildFilterQuery {
             }
         });
     }
-    setSortBy(sortQuery) {
-        this.query.order.push(buildSortInQuery(sortQuery));
+    setSortBy(sortBy) {
+        let sort = [];
+        sort.push(buildSortInQuery(sortBy));
+        this.query.order = sort;
     }
     build() {
         return this.query;

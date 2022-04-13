@@ -1,22 +1,24 @@
 const { Op } = require("sequelize");
 let { Product, Category, Subcategory, ProductDiscount, ProductColor, Inventory } = require("../../models/index"); 
 
-exports.getIndexProducts = async () => {
-    let products = await Product.findAll({
+exports.getIndexProducts = async () => await Product
+    .findAll({
         where: { active: true },
-        attributes: ["name", "slug", "price"],
+        attributes: ["id", "name", "slug", "price", "image", "description"],
         include: [
             {
                 model: Category,
-                attributes: ["name", "slug"]
+                attributes: ["id", "name", "slug"]
             },
             {
                 model: Subcategory,
-                attributes: ["name", "slug"]
+                attributes: ["id", "name", "slug"]
             },
             {
                 required: false,
+                attributes: ["percent", "expiresin"],
                 model: ProductDiscount,
+                as: "discount",
                 where: {
                     expiresin: {
                         [Op.gt]: new Date()
@@ -24,44 +26,42 @@ exports.getIndexProducts = async () => {
                 }
             },
             {
-                model: Inventory,
+                model: ProductColor,
+                as: "productColors",
                 required: true,
-                attributes: [],
-                where: {
-                    quantity: {
-                        [Op.gt]: 1
+                attributes: ["name"],
+                include: {
+                    model: Inventory,
+                    attributes: [],
+                    where: {
+                        quantity: {
+                            [Op.gte]: 1
+                        }
                     }
-                },
-                as: "available"
+                }
             }
         ],
         limit: 36
     });
 
-    return products;
-}
+exports.getProductsByQuery = async (query) => await Product.findAll(query);
 
-exports.getSomeProducts = async (query) => {
-    let products = await Product.findAll(query);
-
-    return products;
-}
-
-exports.getProduct = async (query) => {
-    let product = await Product.findOne({
+exports.getProduct = async (query) => await Product
+    .findOne({
         where: query,
-        attributes: ["name", "slug", "price", "description"],
+        attributes: ["id", "name", "slug", "price", "image", "description"],
         include: [
             {
                 model: Category,
-                attributes: ["name", "slug"]
+                attributes: ["id", "name", "slug"]
             },
             {
                 model: Subcategory,
-                attributes: ["name", "slug"]
+                attributes: ["id", "name", "slug"]
             },
             {
                 model: ProductDiscount,
+                as: "discount",
                 required: false,
                 attributes: ["percent", "expiresin", "description"],
                 where: {
@@ -71,22 +71,21 @@ exports.getProduct = async (query) => {
                 }
             },
             {
-                model: ProductColor,
-                attributes: ["name"]
-            },
-            {
-                model: Inventory,
                 required: true,
-                attributes: [],
-                where: {
-                    quantity: {
-                        [Op.gt]: 1
-                    }
-                },
-                as: "available"
-            }
+                model: ProductColor,
+                as: "productColors",
+                attributes: ["name"],
+                include: {
+                    model: Inventory,
+                    required: true,
+                    attributes: ["size"],
+                    where: {
+                        quantity: {
+                            [Op.gt]: 1
+                        }
+                    },
+                }
+            },
+            
         ]
     });
-
-    return product;
-}
