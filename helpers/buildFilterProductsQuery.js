@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-let { Product, ProductDiscount, Category, Subcategory, ProductColor ,Inventory } = require("../models/index")
+let {  ProductDiscount, Category, Subcategory, ProductColor ,Inventory } = require("../models/index")
 
 let buildSortInQuery = (sortBy) => {
     let sortData = sortBy.split(":");

@@ -58,19 +58,19 @@ exports.newSubcategoryData = {
 }
 
 // product color
-exports.productDetails = [
-    {name: "blue", size: "xl", quantity: 10},
-    {name: "yellow", size: "lg", quantity: 10}
-]
+// exports.productDetails = [
+//     {name: "blue", size: "xl", quantity: 10},
+//     {name: "yellow", size: "lg", quantity: 10}
+// ]
 exports.productDetails = [
     {
         color: "green", 
         sizes: [
             {
-                size: "xl", quantity: 10
+                size: "xl", quantity: 12
             },
             {
-                size: "lg", quantity: 10
+                size: "l", quantity: 1
             }
         ]   
     },
@@ -78,10 +78,10 @@ exports.productDetails = [
         color: "yellow", 
         sizes: [
             {
-                size: "xl", quantity: 10
+                size: "xl", quantity: 1
             },
             {
-                size: "lg", quantity: 10
+                size: "l", quantity: 1
             }
         ]   
     }
@@ -114,7 +114,7 @@ exports.newOfferData = {
 }
 exports.offerProductsData = [
     {
-        quantity: 1
+        quantity: 2
     },
     { 
         quantity: 2
@@ -175,3 +175,31 @@ exports.addressData = {
 exports.newAddressData = {
     secondZone: "abdelsalam araf street"
 }
+
+exports.orderData = {
+    userId: 1,
+    addressId: 1,
+    amount: 200.22,
+    paymentId: "123Acjf"
+}
+exports.orderProducts = [    
+    {
+        productId: 1,
+        quantity: 2,
+        pricePerUnit: 4.20,
+        totalPrice: 8.40,
+        colors: [
+            {
+                color: "green", 
+                sizes: [
+                    {
+                        size: "xl", quantity: 1
+                    },
+                    {
+                        size: "l", quantity: 1
+                    }
+                ]   
+            }
+        ]
+    }
+]
