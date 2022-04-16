@@ -53,7 +53,7 @@ let {
     OrderProductColor
 } = require("./models");
 db
-  .sync({ force: true }) // create the database table for our model(s)
+  .sync() // create the database table for our model(s)
  
 // admin routes
 // let adminAuthRouter = require("./routes/admin/auth.admin.router");

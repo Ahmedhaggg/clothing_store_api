@@ -180,18 +180,19 @@ exports.orderData = {
     amount: 200.22,
     paymentId: "123Acjf"
 }
-exports.orderProducts = [    
-    {
-        productId: 1,
-        quantity: 2,
-        pricePerUnit: 4.20,
-        totalPrice: 8.40,
-        colors: [
-            {
-                colorId: id, 
-                size: "xl", 
-                quantity: 2
-            }
-        ]
+exports.orderProductData =  {
+    productId: 1,
+    quantity: 2,
+    pricePerUnit: 4.20,
+    totalPrice: 8.40
+}
+exports.orderProductColorsData = [
+    { 
+        size: "xl",
+        quantity: 1
+    },
+    { 
+        size: "l",
+        quantity: 1
     }
 ]

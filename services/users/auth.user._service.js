@@ -15,6 +15,7 @@ exports.createUser = async (newUserData, emailVerificationData) => {
             id: newUser.id
         };
     } catch (error) {
+        console.log(error);
         await newTransaction.rollback();
 
         throw new Error("something wen wrong");

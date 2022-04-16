@@ -18,7 +18,13 @@ let Inventory = db.define("inventories", {
         allowNull: false
     }
 }, {
-    timestamps: false
+    timestamps: false,
+    validate: {
+        checkQuantity(quantity) {
+            return this.quantity < quantity ? true : false
+
+        }
+    }
 });
 
 

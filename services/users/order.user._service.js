@@ -11,6 +11,49 @@ exports.getUserOrders = async query => await Order
     });
  
 
+exports.createOrder = async (orderData, transaction) => {
+    try {
+        return await Order.create(orderData, { transaction});
+    } catch (_) {
+        return null;
+    }
+}
+
+exports.createOrderProduct = async (productData, transaction) => {
+    try {
+        return await OrderProduct.create(productData, { transaction});
+    } catch (_) {
+        return null;
+    }
+}
+
+exports.createOrderProductColors = async (colorsData, transaction) => {
+    try {
+        return await OrderProductColor.bulkCreate(colorsData, { transaction });
+    } catch (_) {
+        return null;
+    }
+}
+
+exports.createOrderOffer = async (offerData, transaction) => {
+    try {
+        return await OrderOffer.create(offerData, { transaction });
+    } catch (_) {
+        return null;
+    }
+}
+
+exports.createOrderOfferProduct = async (offerProductData, transaction) => {
+    try {
+        return await OrderOfferProduct.create(offerProductData, { transaction });
+    } catch (_) {
+        return null;
+    }
+}
+
+
+
+
 exports.create = async (orderData, productsData = null, offersData = null, offersProductsData = null) => {
     let newTransaction = await db.transaction();
     
