@@ -177,8 +177,6 @@ exports.newAddressData = {
 }
 
 exports.orderData = {
-    userId: 1,
-    addressId: 1,
     amount: 200.22,
     paymentId: "123Acjf"
 }
@@ -190,15 +188,9 @@ exports.orderProducts = [
         totalPrice: 8.40,
         colors: [
             {
-                color: "green", 
-                sizes: [
-                    {
-                        size: "xl", quantity: 1
-                    },
-                    {
-                        size: "l", quantity: 1
-                    }
-                ]   
+                colorId: id, 
+                size: "xl", 
+                quantity: 2
             }
         ]
     }

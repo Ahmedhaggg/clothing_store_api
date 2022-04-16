@@ -12,10 +12,6 @@ let OrderProduct = db.define("order_products", {
         type: DataTypes.TINYINT,
         allowNull: false
     },
-    colors: {
-        type: DataTypes.JSON,
-        allowNull: false
-    },
     pricePerUnit: {
         type: DataTypes.DECIMAL(4, 2),
         allowNull: false

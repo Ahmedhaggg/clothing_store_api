@@ -28,19 +28,19 @@ describe('test all method in orde user service', () => {
     beforeAll( async () => {
         let newUser = userService.createUser(userData, emailVerificationData);
         orderData.userId = newUser.id;
-
-    //     let newCategory = await categoryService.createCategory(categoryData);
-    //     productData.categoryId = newCategory.id;
+        
+        let newCategory = await categoryService.createCategory(categoryData);
+        productData.categoryId = newCategory.id;
     //     secondProductData.categoryId = newCategory.id;
     //     subcategoryData.categoryId = newCategory.id;
-    //     let newSubcategory = await subcategoryService.createSubcategory(subcategoryData);
-    //     productData.subcategoryId = newSubcategory.id;
+        let newSubcategory = await subcategoryService.createSubcategory(subcategoryData);
+        productData.subcategoryId = newSubcategory.id;
     //     secondProductData.subcategoryId = newSubcategory.id;
-    let firstProduct = await adminProductService.createProduct(productData, productDiscountData, productDetails);
-    orderProducts[0].productId = firstProduct.product.id;
-    orderProducts[0].colors = firstProduct.colors.map(color => {
-        
-    })
+        let firstProduct = await adminProductService.createProduct(productData, productDiscountData, productDetails);
+        console.log(JSON.stringify(firstProduct.product, 0, 4));
+        console.log(JSON.stringify(firstProduct.colors, 0, 4));
+        console.log(JSON.stringify(firstProduct.inventory, 0, 4));
+
     //     let secondProduct = await adminProductService.createProduct(secondProductData, productDiscountData, productDetails);
     //     offerProductsData[1].productId = secondProduct.product.id;
     //     let offers = await adminOfferService.createOffer(offerData, offerProductsData);
@@ -57,8 +57,8 @@ describe('test all method in orde user service', () => {
     // });
 
     it('createOrder should return orderData', async () => {
-        let newOrder = await orderService.createOrder(orderData, null, null, orderProducts);
-        console.log(JSON.stringify(newOrder, 0, 4));
+        // let newOrder = await orderService.createOrder(orderData, null, null, orderProducts);
+        // console.log(JSON.stringify(newOrder, 0, 4));
 
 
     });

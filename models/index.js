@@ -19,6 +19,7 @@ let Governorate = require("./governorate.model");
 let Shipper = require("./shipper.model");
 let Shipping = require("./shipping.model");
 let OrderOfferProduct = require("./orderOfferProdcut.model");
+let OrderProductColor = require("./orderProductColor.model");
 const db = require("../config/database");
 
 /* =================== realtions ====================*/
@@ -94,6 +95,10 @@ OrderOffer.belongsTo(Offer);
 OrderOffer.hasMany(OrderOfferProduct, { foreignKey: "orderOfferId", onUpdate: "cascade", onDelete: "cascade" });
 OrderOfferProduct.belongsTo(OrderOffer);
 
+// realtion between order offer product and color
+OrderOfferProduct.hasOne(OrderProductColor, { foreignKey: "orderOfferProductId", onUpdate: "cascade", onDelete: "cascade" });
+OrderProductColor.belongsTo(OrderOfferProduct);
+
 // realtion between product and order offer product
 Product.hasMany(OrderOfferProduct, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade"})
 OrderOfferProduct.belongsTo(Product);
@@ -102,6 +107,14 @@ OrderOfferProduct.belongsTo(Product);
 // order and order product realtion
 Order.hasMany(OrderProduct, { foreignKey: "orderId", onUpdate: "cascade", onDelete: "cascade"});
 OrderProduct.belongsTo(Order);
+
+// realtion between order product and color
+OrderProduct.hasOne(OrderProductColor, { foreignKey: "orderProductId", onUpdate: "cascade", onDelete: "cascade" });
+OrderProductColor.belongsTo(OrderProduct);
+
+// // realtion between order product color and product color
+ProductColor.hasMany(OrderProductColor, { foreignKey: "productColorId", onUpdate: "cascade", onDelete: "cascade" })
+OrderProductColor.belongsTo(ProductColor);
 
 // realtion between product and order product
 Product.hasMany(OrderProduct, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade"})
@@ -118,8 +131,6 @@ Shipping.belongsTo(Shipper);
 // realtiom between address and orders
 Address.hasMany(Order, { foreignKey: "addressId", onUpdate: "cascade", onDelete: "cascade" })
 Order.belongsTo(Address);
-
-// db.drop();
 
 module.exports = {
     Admin,
@@ -142,5 +153,7 @@ module.exports = {
     City,
     Governorate,
     Shipping,
-    Shipper
+    Shipper,
+    OrderProductColor,
+    db
 };
