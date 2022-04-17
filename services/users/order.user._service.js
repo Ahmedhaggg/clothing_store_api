@@ -1,11 +1,12 @@
-let { Inventory, Order, OrderOffer, OrderProduct, OrderOfferProduct, Shipping, Offer, Product, ProductDiscount, Address, OrderProductColor } = require("../../models");
+let { Inventory, Order, OrderOffer, OrderProduct, OrderOfferProduct, Shipping, Offer, Product, ProductDiscount, Address, OrderProductColor, ProductColor, City, Governorate } = require("../../models");
 let db = require("../../config/database");
 exports.getUserOrders = async query => await Order   
-    .findOne({
+    .findAll({
         where: query,
         include: [
             {
-                model: Shipping
+                model: Shipping,
+                attributes: ["startShippingAt", "endShippingWithin"]
             }
         ]
     });
@@ -201,20 +202,31 @@ exports.create = async (orderData, productsData = null, offersData = null, offer
 exports.getOrder = async query => await Order
     .findOne({
         where: query,
-        attributes: ["id", "status", "amount"],
+        attributes: ["id", "status", "amount", "createdAt", "updatedAt"],
         include: [
             {
                 model: OrderOffer,
+                attributes: ["id", "quantity", "pricePerUnit", "totalPrice"],
                 include: [
                     {
-                        model: Offer
+                        model: Offer,
+                        attributes: ["id", "name", "slug", "image"]
                     },
                     {
                         model: OrderOfferProduct,
+                        attributes: ["id", "quantity"],
                         include: [
                             {
                                 model: Product,
-                                attributes: ["name", "slug", "image"]
+                                attributes: ["id", "name", "slug", "image"]
+                            },
+                            {
+                                model: OrderProductColor,
+                                attributes: ["id", "size", "quantity"],
+                                include: {
+                                    model: ProductColor,
+                                    attributes: ["id", "name"]
+                                }
                             }
                         ]
                     }
@@ -222,24 +234,39 @@ exports.getOrder = async query => await Order
             },
             {
                 model: OrderProduct,
-                attributes: ["id"],
+                attributes: ["quantity", "pricePerUnit", "totalPrice"],
                 include: [
                     {
                         model: Product,
-                        attributes: ["name", "slug", "image"],
-                        include: [
-                            {
-                                model: ProductDiscount
-                            }
-                        ]
+                        attributes: ["id", "name", "slug", "image"]
+                    },
+                    {
+                        model: OrderProductColor,
+                        attributes: ["id", "quantity", "size"],
+                        include: {
+                            model: ProductColor,
+                            attributes: ["id", "name"]
+                        }
                     }
                 ]
             },
             {
-                model: Address
+                model: Address,
+                attributes: ["id", "firstZone", "secondZone"], 
+                include: [
+                    {
+                        model: City,
+                        attributes: ["id", "name", "shippingCost", "ShippingTime"]
+                    },
+                    {
+                        model: Governorate,
+                        attributes: ["id", "name"]
+                    }
+                ]
             },
             {
-                model: Shipping
+                model: Shipping,
+                attributes: ["id", "startShippingAt", "endShippingWithin", "shippingCost"]
             }
         ]
     });

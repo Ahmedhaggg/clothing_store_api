@@ -70,7 +70,7 @@ exports.productDetails = [
                 size: "xl", quantity: 12
             },
             {
-                size: "l", quantity: 1
+                size: "l", quantity: 10
             }
         ]   
     },
@@ -78,10 +78,10 @@ exports.productDetails = [
         color: "yellow", 
         sizes: [
             {
-                size: "xl", quantity: 1
+                size: "xl", quantity: 10
             },
             {
-                size: "l", quantity: 1
+                size: "l", quantity: 10
             }
         ]   
     }
@@ -194,5 +194,25 @@ exports.orderProductColorsData = [
     { 
         size: "l",
         quantity: 1
+    }
+]
+
+exports.orderOfferData = {
+    quantity: 3,
+    totalPrice: 300,
+    pricePerUnit: 150
+}
+
+exports.orderOfferProductData = {
+    quantity: 6
+}
+exports.orderOfferProductColorsData = [
+    { 
+        size: "xl",
+        quantity: 3
+    },
+    { 
+        size: "l",
+        quantity: 3
     }
 ]

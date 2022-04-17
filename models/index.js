@@ -83,6 +83,9 @@ Address.belongsTo(City);
 Governorate.hasMany(Address, { foreignKey: "governorateId", onUpdate: "cascade", onDelete: "cascade"})
 Address.belongsTo(Governorate);
 
+User.hasMany(Order, { foreignKey: "userId", onUpdate: "cascade", onDelete: "cascade"});
+Order.belongsTo(User);
+
 // order and order offer realtion
 Order.hasMany(OrderOffer, { foreignKey: "orderId", onUpdate: "cascade", onDelete: "cascade"});
 OrderOffer.belongsTo(Order);
