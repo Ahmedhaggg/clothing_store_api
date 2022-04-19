@@ -20,23 +20,23 @@ router.get("/:id",
     use(adminProductController.show)
 );
 
-router.put("/:productId", 
+router.put("/:id", 
     adminProductValidation.validate("updateProduct"),
     checkValidationError,
     use(adminProductController.update)
 );
 
-router.put("/image/:productId", 
+router.put("/:id/image", 
     uploader.uploadFile("image"),
     adminProductValidation.validate("updateProductImage"),
     use(adminProductController.updateProductImage)
 );
 
-router.put("/active/:productId",
+router.put("/:id/active",
     use(adminProductController.active)
 );
 
-router.put("/unactive/:productId",
+router.put("/:id/unactive",
     use(adminProductController.unactive)
 );
 

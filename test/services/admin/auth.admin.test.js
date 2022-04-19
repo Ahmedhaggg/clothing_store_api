@@ -14,7 +14,7 @@ describe('test all methods in auth admin service', () => {
         expect(newAdmin).toHaveProperty("password");
     });
     it("getAdmin should return admin data", async () => {
-        let admin = await adminAuthService.getAdmin(adminData.email);
+        let admin = await adminAuthService.getAdmin({ email: adminData.email });
         console.log(admin)
         expect(admin).toHaveProperty("id");
         expect(admin).toHaveProperty("email");

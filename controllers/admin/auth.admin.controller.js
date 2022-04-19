@@ -2,9 +2,9 @@ let { hash, compare } = require("../../helpers/hash");
 let authAdminService = require("../../services/admin/auth.admin._service");
 let { createJwtToken } = require("../../helpers/jwtToken");
 exports.login = async (req, res, next) => {
-    let { email, password } = req.body;
+    let { email, password } = req.body; 
 
-    let admin = await authAdminService.getAdmin(email);
+    let admin = await authAdminService.getAdmin({ email });
     
     if (!admin) 
         return res.status(400).json({
@@ -33,8 +33,11 @@ exports.login = async (req, res, next) => {
 
 exports.register = async (req, res, next) => {
     let { email, password } = req.body;
+
     password =  await hash(password);
+
     await authAdminService.createAdmin({email, password});
+    
     res.status(200).json({
         success: true,
         message: "admin created successfully"

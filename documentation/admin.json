@@ -1,0 +1,31 @@
+{
+    
+    "openapi" : "3.0",
+    "info":{  
+		"description": "admin clothing store api",
+		"version":"1.0.0",
+		"title":"admin clothing store api",
+		"contact":{  
+
+		}
+    },
+    "tags": [		
+        {  
+			"name":"admin clothing store",
+			"description":"api"
+		}
+	],
+    "host": "localost:2000",
+    "basePath": "/admin/api/",
+    "schemes": ["http"],
+    "consumes": [ "application/json" ],
+    "produces": [ "application/json" ],
+    "paths": {
+        "/products": {
+            "get": {
+                "description": "get all books"
+            }
+        } 
+    }
+    
+}

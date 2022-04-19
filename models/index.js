@@ -36,7 +36,7 @@ Subcategory.hasMany(Product, { foreignKey: "subcategoryId" })
 Product.belongsTo(Subcategory);
 
 // product and colors realtion
-Product.hasMany(ProductColor, { as: "productColors", foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade" });
+Product.hasMany(ProductColor, { as: "colors", foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade" });
 ProductColor.belongsTo(Product);
 
 // product and discount realtion

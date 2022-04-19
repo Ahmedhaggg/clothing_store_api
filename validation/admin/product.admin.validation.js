@@ -28,10 +28,13 @@ exports.validate = (action) => {
                 check("discount.description")
                     .if(body("discount")).exists()
                     .not().isEmpty().withMessage("can't be empty"),
-                check("colors.*.name").not().isEmpty().withMessage("can't be empty"),
-                isArray("colors", { min: 1, max: 6}),
-                isArray("inventory", { min: 1, max: 6}),
-                isUnique("products", "name"),
+                isArray("productDetails"),
+                check("productDetails.*.color").not().isEmpty().withMessage("can't be empty"),
+                check("productDetails.*.sizes").not().isEmpty().withMessage("can't be empty"),
+                isArray("productDetails.[0].sizes"),
+                check("productDetails.*.sizes.*.size").not().isEmpty().withMessage("can't be empty"),
+                check("productDetails.*.sizes.*.quantity").not().isEmpty().withMessage("can't be empty")
+                    .isInt({ min: 1 }),
                 isFile("image")
             ];
         case "updateProduct": 

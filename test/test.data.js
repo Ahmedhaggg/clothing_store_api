@@ -73,7 +73,7 @@ exports.productDetails = [
                 size: "l", quantity: 10
             }
         ]   
-    },
+    }, 
     {
         color: "yellow", 
         sizes: [

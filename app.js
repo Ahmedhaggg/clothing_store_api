@@ -4,6 +4,9 @@ let db = require("./config/database");
 let helmet = require("helmet");
 let logger = require("morgan");
 let errorHandler = require("./middlewares/errorHandler");
+let swaggerUi = require("swagger-ui-express")
+let adminDocs = require("./documentation/admin.json");
+let usersDocs = require("./documentation/users.json");
 
 // application
 let app = express();
@@ -52,12 +55,28 @@ let {
     Shipper,
     OrderProductColor
 } = require("./models");
-db
-  .sync() // create the database table for our model(s)
+// db
+//   .sync() // create the database table for our model(s)
  
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(null, {
+    explorer: true,
+    swaggerOptions: {
+        urls: [
+            {
+                url: adminDocs,
+                name: "admin docs"
+            },
+            {
+                url: usersDocs,
+                name: 'users docs'
+            }
+        ]
+    }
+}));
+
 // admin routes
-// let adminAuthRouter = require("./routes/admin/auth.admin.router");
-// let adminProductRouter = require("./routes/admin/product.admin.router");
+let adminAuthRouter = require("./routes/admin/auth.admin.router");
+let adminProductRouter = require("./routes/admin/product.admin.router");
 // let adminCategoryRouter = require("./routes/admin/category.admin.router");
 // let adminSubcategoryRouter = require("./routes/admin/subcategory.admin.router");
 // let adminproductColorsRouter = require("./routes/admin/productColor.admin.router");
@@ -69,8 +88,8 @@ db
 // let adminCityRouter = require("./routes/admin/city.admin.router");
 
 // // using admin routes
-// app.use("/api/admin/auth", adminAuthRouter);
-// app.use("/api/admin/products", adminProductRouter)
+app.use("/api/admin/auth", adminAuthRouter);
+app.use("/api/admin/products", adminProductRouter)
 // app.use("/api/admin/categories", adminCategoryRouter);
 // app.use("/api/admin/subcategories", adminSubcategoryRouter);
 // app.use("/api/admin/products/colors", adminproductColorsRouter);

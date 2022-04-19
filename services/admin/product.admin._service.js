@@ -2,9 +2,39 @@ const { Op } = require("sequelize");
 let { Product, ProductColor, ProductDiscount, Inventory, Category, Subcategory } = require("../../models/index");
 let db = require("../../config/database");
 
-exports.getAllActiveProducts = async () =>  await Product
+exports.getProduct = async query => await Product.findOne({
+        where: query,
+        attributes: ["id", "name", "slug", "image", "price", "description", "active", "createdAt", "updatedAt"],
+        include: [
+            {
+                model: Category,
+                attributes: ["id", "name", "slug"]
+            },
+            {
+                model: Subcategory,
+                attributes: ["id", "name", "slug"]
+            },
+            {
+                model: ProductDiscount,
+                as: "discount",
+                attributes: ["id", "expiresin", "percent", "description", "createdAt", "updatedAt"]
+            },
+            {
+                model: ProductColor,
+                as: "colors",
+                attributes: ["id", "name"],
+                include: {
+                    model: Inventory,
+                    attributes: ["id", "size", "quantity"]
+                }
+            }
+        ]
+    });
+
+
+exports.getProdutcts = async query =>  await Product
     .findAll({
-        where: { active: true },
+        where: query,
         attributes: ["id", "name", "slug", "price", "description", "createdAt", "updatedAt"],
         include: [
             {
@@ -12,12 +42,26 @@ exports.getAllActiveProducts = async () =>  await Product
                 model: ProductDiscount,
                 as: "discount",
                 where: { expiresin : {[Op.gt]: new Date() }},
-                attributes: ["percent"]
+                attributes: ["percent", "expiresin"]
             },
             {
+                required: query.active == true ? true : false,
                 model: Inventory,
-                attributes: ["quantity", "size"]
-            }
+                attributes: [],
+                where: {
+                    quantity: {
+                        [Op.gte]: 1
+                    }
+                }
+            },
+            {
+                model: Category,
+                attributes: ["id", "name"]
+            },
+            {
+                model: Subcategory,
+                attributes: ["id", "name"]
+            },
         ]
     });
 
@@ -49,15 +93,10 @@ exports.createProduct = async (product, discount, productDetails) => {
             })
         })
         
-        let newProductInventory = await Inventory.bulkCreate(inventoryData, {transaction: newTransaction});
+        await Inventory.bulkCreate(inventoryData, {transaction: newTransaction});
         await newTransaction.commit();
         
-        return {
-            product: newProduct,
-            inventory: newProductInventory,
-            discount : newProductDiscount || null,
-            colors: newProductColors
-        };
+        return newProduct;
     } catch (error) {
         await newTransaction.rollback();
         
@@ -81,23 +120,3 @@ exports.getSomeProductData = async (query, fields) => await Product
         where: query,
         attributes: fields
     });
-
-exports.checkActivityOfProduct = async query => {
-    let product = await Product.findOne({
-        where: query,
-        attributes: ["active"]
-    });
-    return product.active;
-}
-// let product = await Product.findOne({
-        //     where: { id },
-        //     attributes: ["name", "slug", "price", "description", "image"],
-        //     include: [
-        //         {
-        //             model: Category
-        //         },
-        //         {
-        //             model: Subcategory
-        //         }
-        //     ]
-        // })

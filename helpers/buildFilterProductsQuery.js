@@ -10,41 +10,43 @@ let buildSortInQuery = (sortBy) => {
     
 }
 
-class BuildFilterQuery {
-    query = {
-        where: {},
-        attributes: ["id", "name", "slug", "price", "image", "description"],
-        include: [
-            {
-                required: false,
-                model: ProductDiscount,
-                as: "discount",
-                attributes: ["percent", "expiresin"],
-                where: {
-                    expiresin: {
-                        [Op.gte]: new Date()
-                    }
-                }
-            },
-            {
-                required: true,
-                model: ProductColor,
-                as: "productColors",
-                attributes: ["name"],
-                include: {
-                    required: true,
-                    model: Inventory,
-                    attributes: ["size"],
+class BuildFilterProductsQuery {
+    query;
+    constructor() {
+        this.query = {
+            where: {},
+            attributes: ["id", "name", "slug", "price", "image", "description"],
+            include: [
+                {
+                    required: false,
+                    model: ProductDiscount,
+                    as: "discount",
+                    attributes: ["percent", "expiresin"],
                     where: {
-                        quantity: {
-                            [Op.gte]: 1
+                        expiresin: {
+                            [Op.gte]: new Date()
+                        }
+                    }
+                },
+                {
+                    required: true,
+                    model: ProductColor,
+                    as: "productColors",
+                    attributes: ["name"],
+                    include: {
+                        required: true,
+                        model: Inventory,
+                        attributes: ["size"],
+                        where: {
+                            quantity: {
+                                [Op.gte]: 1
+                            }
                         }
                     }
                 }
-            }
-        ]
+            ]
+        }
     }
-    
     setLimit(limit) {
         this.query.limit = limit;
     }
@@ -86,7 +88,7 @@ class BuildFilterQuery {
     }
 }
 
-module.exports = BuildFilterQuery;
+module.exports = BuildFilterProductsQuery;
 
 // let buildFilterQuery = filterRequirements => {
 //     let query = {}

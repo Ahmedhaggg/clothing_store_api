@@ -35,7 +35,8 @@
     "sequelize": "^6.16.2",
     "slugify": "^1.6.5",
     "stripe": "^8.211.0",
-    "supertest": "^6.2.2"
+    "supertest": "^6.2.2",
+    "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
     "sequelize-cli": "^6.4.1"
