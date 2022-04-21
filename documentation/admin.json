@@ -1,6 +1,6 @@
 {
     
-    "openapi" : "3.0",
+    "swagger" : "2.0",
     "info":{  
 		"description": "admin clothing store api",
 		"version":"1.0.0",
@@ -15,17 +15,302 @@
 			"description":"api"
 		}
 	],
-    "host": "localost:2000",
-    "basePath": "/admin/api/",
+    "host": "localhost:2000",
+    "basePath": "/api/admin/",
     "schemes": ["http"],
     "consumes": [ "application/json" ],
     "produces": [ "application/json" ],
+
     "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": ["admin"],
+                "description": "login admin by email and password",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success login"
+                    },
+                    "500": {
+                        "description": "something went wrong"
+                    },
+                    "400": {
+                        "description": "email or password is incorrect"
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "post": {
+                "tags": ["create category"], 
+                "description": "login admin by email and password",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "descripton": "authorization token",
+                        "required": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "properties": {
+                            "name": { "type": "string" }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "descrition": "product is created successfully"
+                    },
+                    "500": {
+                        "description": "something went wrong"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["find all categories"], 
+                "description": "find all categories",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "descripton": "authorization token",
+                        "required": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success get all categories and subcategories"
+                    },
+                    "500": {
+                        "description": "something went wrong"
+                    }
+                }
+            }
+        },
+        "/categories/{id}": {
+            "get": {
+                "tags": ["categories"], 
+                "description": "get category with id",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "descripton": "authorization token",
+                        "required": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "category id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get category successfully"
+                    },
+                    "404": {
+                        "description": "category is not found"
+                    },
+                    "500": {
+                        "description": "something went wrong"
+                    }
+                }
+            },
+            "put": {
+                "tags": ["categories"], 
+                "description": "update category category with id",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "descripton": "authorization token",
+                        "required": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "category id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "category name",
+                        "required": true,
+                        "properties": {
+                            "name": { "type": "string" }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "category is updated successfully"
+                    },
+                    "404": {
+                        "description": "category is not found"
+                    },
+                    "500": {
+                        "description": "something went wrong"
+                    }
+                }
+            }
+        },
         "/products": {
             "get": {
-                "description": "get all books"
+                "tags": [
+                    "products"
+                ],
+                "summary": "find products by activity and names",
+                "description": "get products by query which get active and unactive products, and search on products by name",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "active",
+                        "in": "query",
+                        "description": "to filter products is available or unavailable",
+                        "required": false,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "to filter products is available or unavailable",
+                        "required": false,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "descripton": "authorization token",
+                        "required": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "descrition": "find products successfully",
+                        "schema": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/product"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "something went wrong"
+                    }
+                }
+
             }
         } 
-    }
+    },
     
+    "definitions": {
+        "admin": {
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "ahmedhaggag@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "ahmed123"
+                }
+            }
+        },
+        "product": {
+            "required": ["id", "name", "price"],
+            "properties": {
+                "id": { "type": "integer" },
+                "name": { "type": "string" },
+                "price": { "type": "string" },
+                "categoryId": { "type": "integer" },
+                "subcategoryId": { "type": "integer" },
+                "description":  { "type": "string" },
+                "image": {
+                    "type": "string",
+                    "format": "binary"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "Date"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "Date"
+                }
+            }
+        },
+        "category": {
+            "schema": {
+                "type": "object",
+                "required": [ "name" ],
+                "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "slug": { "type": "string" }
+                }
+            }
+        },
+        "subcategory": {
+            "properties": {
+                "id": { "type": "integer" },
+                "name": { "type": "string" },
+                "slug": { "type": "string" },
+                "categoryId": { "type": "integer" }
+            }
+        }
+    }
 }

@@ -2,15 +2,13 @@ let { check } = require("express-validator");
 let isUnique = require("../custom/unique");
 exports.validate = (action) => {
     switch (action) {
-        case "addCategory":
+        case "create":
             return [
-                check("name").not().isEmpty().withMessage("can't be empty"),
-                    isUnique("categories", "name")
+                check("name").not().isEmpty().withMessage("can't be empty")
             ];
-        case "updateCategory": 
+        case "update": 
             return [
-                check("name").not().isEmpty().withMessage("can't be empty"),
-                    isUnique("categories", "name")
+                check("name").not().isEmpty().withMessage("can't be empty")
             ]
         default:
             throw new Error("something went wrong");

@@ -3,27 +3,30 @@ let categoryAdminController = require("../../controllers/admin/category.admin.co
 let categoryAdminValidation = require("../../validation/admin/category.admin.validation");
 let checkValidationError = require("../../middlewares/checkValidationError");
 let use = require("../../middlewares/useMiddleware");
+let guards = require("../../middlewares/guards");
+
 
 router.get("/", 
+    guards.isAdmin,
     use(categoryAdminController.index)
 );
 
 router.post("/", 
-    categoryAdminValidation.validate("addCategory"),
+    guards.isAdmin,
+    categoryAdminValidation.validate("create"),
     checkValidationError,
     use(categoryAdminController.store)
 );
 
 router.get("/:id", 
+    guards.isAdmin,
     use(categoryAdminController.show)
 );
 
-router.get("/:id/subcategoriesNames", 
-    use(categoryAdminController.getSubcategoriesName)
-);
 
 router.put("/:id", 
-    categoryAdminValidation.validate("updateCategory"),
+    guards.isAdmin,
+    categoryAdminValidation.validate("update"),
     checkValidationError,
     use(categoryAdminController.update)
 );

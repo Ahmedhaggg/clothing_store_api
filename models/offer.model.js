@@ -3,8 +3,8 @@ let db = require("../config/database");
 
 let Offer = db.define("offers", {
     id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
         allowNull: false
     },

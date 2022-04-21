@@ -49,7 +49,7 @@ exports.store = async (req, res, next) => {
     
     let newProduct = await productAdminService.createProduct(
         { name,slug,price, description, image, categoryId, subcategoryId }, 
-        discount, 
+        discount || null, 
         productDetails
     ); 
     

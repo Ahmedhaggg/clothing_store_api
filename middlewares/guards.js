@@ -1,16 +1,18 @@
 let { getDataFromJwtToken } = require("../helpers/jwtToken");
 exports.isAdmin = async (req, res, next) => {
     try {
-        let token = req.headers['Authorization'];
+        let token = req.headers['authorization'];
+
         let tokenData = await getDataFromJwtToken(token);
 
         if (tokenData.role !== "admin")
-            return res.status(404).json({
+            return res.status(500).json({
                 success: false,
                 message: "invaild token"
             })
+
         next();
-    } catch (_) {
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: "something went wrong"

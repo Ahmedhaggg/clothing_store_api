@@ -3,6 +3,7 @@ let slugify = require("slugify");
 
 exports.index = async (req, res, next) => {
     let categories = await categoryAdminService.getAllCategories();
+
     res.status(200).json({
         success: true,
         categories
@@ -13,7 +14,8 @@ exports.store = async (req, res, next) => {
     let { name } = req.body;
     let slug = slugify(name);
 
-    let newCategory = await categoryAdminService.createCategory({name, slug});
+    let newCategory = await categoryAdminService.createCategory({ name, slug });
+
     res.status(201).json({
         success: true,
         message: "category is created successfully",
@@ -22,15 +24,15 @@ exports.store = async (req, res, next) => {
 }
 exports.update = async (req, res, next) => {
     let { id } = req.params;
-    let { name } = req.params;
+    let { name } = req.body;
     let slug = slugify(name);
 
-    let updateCategory = await categoryAdminService.updateCategory(id, {name, slug});
+    let updateCategory = await categoryAdminService.updateCategory({ id }, {name, slug});
 
     if (updateCategory === false) 
         return res.status(404).json({
             success: false,
-            message: `can't update category with this id : ${id}`
+            message: `can't update this category`
         })
     
     res.status(200).json({
@@ -42,7 +44,7 @@ exports.update = async (req, res, next) => {
 exports.show = async (req, res, next) => {
     let { id } = req.params;
     
-    let category = await categoryAdminService.getCategory(id);
+    let category = await categoryAdminService.getCategory({ id });
 
     if (!category) 
         return res.status(404).json({
@@ -56,19 +58,3 @@ exports.show = async (req, res, next) => {
     });
 }
 
-exports.getSubcategoriesName = async (req, res, next) => {
-    let { id } = req.params;
-
-    let subCategoriesNames = await categoryAdminService.getSubcategoriesName(id);
-
-    if (!subCategoriesNames) 
-        return res.status(404).json({
-            success: false,
-            message: "can't found subcategories of this category"
-        });
-    
-    res.status(200).json({
-        success: true,
-        subCategories: subCategoriesNames
-    });
-}
