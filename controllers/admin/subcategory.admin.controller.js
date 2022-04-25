@@ -1,7 +1,14 @@
-let subcategoryAdminService = require("../../services/admin/subcategory.admin_service")
+let subcategoryService = require("../../services/admin/subcategory.admin_service")
 let slugify = require("slugify");
 
+exports.index = async (req, res, next) => {
+    let subcategories = await subcategoryService.getAllSubcategories();
 
+    res.status(200).json({
+        success: true,
+        subcategories
+    });
+} 
 exports.store = async (req, res, next) => {
     let { name, categoryId } = req.body;
     let slug = slugify(name);
@@ -41,13 +48,13 @@ exports.update = async (req, res, next) => {
     let updateSubcategory = await subcategoryAdminService.updateSubcategory(id ,{name, slug});
 
     if (updateSubcategory === false) 
-        return res.status(401).json({
+        return res.status(404).json({
             success: false,
-            message: `can't find subcategory with this ${id}`
+            message: `subcategory is not found`
         });
 
     res.status(201).json({
         success: true,
-        message: "subcategory is updated successfully"
+        message: "update subcategory successfully"
     });
 }    

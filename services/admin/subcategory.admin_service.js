@@ -1,6 +1,7 @@
 const { Sequelize, Op } = require("sequelize");
 let { Subcategory, Product, ProductDiscount } = require("../../models/index");
 
+exports.getAllSubcategories = async () => await Subcategory.findAll({ attributes: ["id", "name"]});
 exports.createSubcategory = async subcategoryData => await Subcategory.create(subcategoryData);
 
 exports.updateSubcategory = async (query, newData) => {

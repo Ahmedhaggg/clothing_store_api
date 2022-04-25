@@ -3,19 +3,27 @@ let subcategoryAdminController = require("../../controllers/admin/subcategory.ad
 let subcategoryAdminValidation = require("../../validation/admin/subcategory.admin.validation");
 let checkValidationError = require("../../middlewares/checkValidationError");
 let use = require("../../middlewares/useMiddleware");
-
+let guards = require("../../middlewares/guards");
 router.get("/", 
+    guards.isAdmin,
     use(subcategoryAdminController.index)
 );
 
 router.post("/", 
-    subcategoryAdminValidation.validate("addSubcategory"),
+    guards.isAdmin,
+    subcategoryAdminValidation.validate("create"),
     checkValidationError,
     use(subcategoryAdminController.store)
 );
 
+router.get("/:id", 
+    guards.isAdmin,
+    use(subcategoryAdminController.show)
+)
+
 router.put("/:id", 
-    subcategoryAdminValidation.validate("updateSubcategory"),
+    guards.isAdmin,
+    subcategoryAdminValidation.validate("update"),
     checkValidationError,
     use(subcategoryAdminController.update)
 );

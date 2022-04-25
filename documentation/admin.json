@@ -24,7 +24,7 @@
     "paths": {
         "/auth/login": {
             "post": {
-                "tags": ["admin"],
+                "tags": ["admin login"],
                 "description": "login admin by email and password",
                 "produces": [
                     "application/json"
@@ -54,7 +54,7 @@
         },
         "/categories": {
             "post": {
-                "tags": ["create category"], 
+                "tags": ["categories"], 
                 "description": "login admin by email and password",
                 "produces": [
                     "application/json"
@@ -88,7 +88,7 @@
                 }
             },
             "get": {
-                "tags": ["find all categories"], 
+                "tags": ["categories"], 
                 "description": "find all categories",
                 "produces": [
                     "application/json"
@@ -199,8 +199,212 @@
                 }
             }
         },
+        "/subcategories": {
+            "get": {
+                "tags": [
+                    "subcategories"
+                ],
+                "description": "get all subcategories",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "descripton": "authorization token",
+                        "required": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "descrition": "get all subcategories successfully"
+                    },
+                    "500": {
+                        "description": "something went wrong"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "subcategories"
+                ],
+                "description": "create subcategory",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": false,
+                        "properties": {
+                            "name": { "type": "string" },
+                            "categoryId": { "type": "string" }
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "descrition": "subcategory is created successfully"
+                    },
+                    "500": {
+                        "description": "something went wrong"
+                    }
+                }
+
+            }
+        },
+        "/subcategories/{id}": {
+            "get": {
+                "tags": [
+                    "subcategories"
+                ],
+                "description": "get subcategory by id and its products",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "descrition": "get subcategory successfully"
+                    },
+                    "500": {
+                        "description": "something went wrong"
+                    }
+                }
+
+            },
+            "put": {
+                "tags": [
+                    "subcategories"
+                ],
+                "description": "update subcategory with id",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": false,
+                        "properties": {
+                            "name": { "type": "string" }
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "descrition": "subcategory is updated successfully"
+                    },
+                    "404": {
+                        "description": "subcategory is not found"
+                    },
+                    "500": {
+                        "description": "something went wrong"
+                    }
+                }
+
+            }
+        },
         "/products": {
             "get": {
+                "tags": [
+                    "products"
+                ],
+                "summary": "find products by activity and names",
+                "description": "get products by query which get active and unactive products, and search on products by name",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "active",
+                        "in": "query",
+                        "description": "to filter products is available or unavailable",
+                        "required": false,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "to filter products is available or unavailable",
+                        "required": false,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "descripton": "authorization token",
+                        "required": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "descrition": "find products successfully",
+                        "schema": {
+                            "type": "array", 
+                            "items": {
+                                "$ref": "#/definitions/product"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "something went wrong"
+                    }
+                }
+
+            },
+            "post": {
                 "tags": [
                     "products"
                 ],

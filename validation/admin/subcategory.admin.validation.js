@@ -3,12 +3,12 @@ let isUnique = require("../custom/unique");
 
 exports.validate = (action) => {
     switch (action) {
-        case "addSubcategory":
+        case "create":
             return [
                 check("name").not().isEmpty().withMessage("can't be empty"),
                     isUnique("subcategories", "name")
             ];
-        case "updateSubcategory":
+        case "update":
             return [
                 check("name").not().isEmpty().withMessage("can't be empty"),
                     isUnique("subcategories", "name")
