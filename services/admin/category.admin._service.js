@@ -5,7 +5,7 @@ exports.getAllCategories = async () => await Category.findAll();
 
 
 exports.getCategory = async query => await Category
-    .findOne({
+    .findOne({ 
         where: query,
         include: [
             {

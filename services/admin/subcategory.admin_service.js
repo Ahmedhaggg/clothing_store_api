@@ -1,7 +1,14 @@
-const { Sequelize, Op } = require("sequelize");
-let { Subcategory, Product, ProductDiscount } = require("../../models/index");
+const { Op } = require("sequelize");
+let { Subcategory, Category, Product, ProductDiscount } = require("../../models/index");
 
-exports.getAllSubcategories = async () => await Subcategory.findAll({ attributes: ["id", "name"]});
+exports.getAllSubcategories = async () => await Subcategory
+    .findAll({ 
+        attributes: ["id", "name"],
+        include: {
+            model: Category,
+            attributes: ["id", "name"]
+        }
+    });
 exports.createSubcategory = async subcategoryData => await Subcategory.create(subcategoryData);
 
 exports.updateSubcategory = async (query, newData) => {
@@ -23,6 +30,7 @@ exports.getSubcategory = async query =>  await Subcategory
             include: {
                 required: false,
                 model: ProductDiscount,
+                as: "discount", 
                 where: {
                     expiresin: { [Op.lt] : new Date() }
                 },

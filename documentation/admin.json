@@ -243,7 +243,7 @@
                         "required": false,
                         "properties": {
                             "name": { "type": "string" },
-                            "categoryId": { "type": "string" }
+                            "categoryId": { "type": "integer" }
                         }
                     },
                     {
@@ -354,7 +354,6 @@
                 "tags": [
                     "products"
                 ],
-                "summary": "find products by activity and names",
                 "description": "get products by query which get active and unactive products, and search on products by name",
                 "produces": [
                     "application/json"
@@ -390,13 +389,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "descrition": "find products successfully",
-                        "schema": {
-                            "type": "array", 
-                            "items": {
-                                "$ref": "#/definitions/product"
-                            }
-                        }
+                        "descrition": "find products successfully"
                     },
                     "500": {
                         "description": "something went wrong"
@@ -408,52 +401,25 @@
                 "tags": [
                     "products"
                 ],
-                "summary": "find products by activity and names",
-                "description": "get products by query which get active and unactive products, and search on products by name",
-                "produces": [
-                    "application/json"
+                "description": "create product, should add colors and sizes with quantity and can add discount",
+                "consumes": [
+                    "multipart/form-data"
                 ],
-                "parameters": [
-                    {
-                        "name": "active",
-                        "in": "query",
-                        "description": "to filter products is available or unavailable",
-                        "required": false,
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "to filter products is available or unavailable",
-                        "required": false,
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "descripton": "authorization token",
-                        "required": true,
-                        "items": {
-                            "type": "string"
-                        }
+                "requestBody": {
+                    "content": "multipart/form-data",
+                    "schema": {
+                        "$ref":"#/definitions/admin"
                     }
-                ],
+                },
                 "responses": {
                     "200": {
-                        "descrition": "find products successfully",
-                        "schema": {
-                            "type": "array", 
-                            "items": {
-                                "$ref": "#/definitions/product"
-                            }
-                        }
+                        "descrition": "product is created successfully"
                     },
                     "500": {
                         "description": "something went wrong"
+                    },
+                    "400": {
+                        "description": "validation error"
                     }
                 }
 
@@ -498,14 +464,10 @@
             }
         },
         "category": {
-            "schema": {
-                "type": "object",
-                "required": [ "name" ],
-                "properties": {
-                    "id": { "type": "integer" },
-                    "name": { "type": "string" },
-                    "slug": { "type": "string" }
-                }
+            "properties": {
+                "id": { "type": "integer" },
+                "name": { "type": "string" },
+                "slug": { "type": "string" }
             }
         },
         "subcategory": {
@@ -514,6 +476,12 @@
                 "name": { "type": "string" },
                 "slug": { "type": "string" },
                 "categoryId": { "type": "integer" }
+            }
+        },
+        "inventroy": {
+            "properties": {
+                "size": { "type": "string" },
+                "quantity": { "type": "integer" }
             }
         }
     }

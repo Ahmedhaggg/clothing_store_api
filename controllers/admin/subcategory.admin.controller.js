@@ -13,7 +13,7 @@ exports.store = async (req, res, next) => {
     let { name, categoryId } = req.body;
     let slug = slugify(name);
 
-    let newSubcategory = await subcategoryAdminService.createSubcategory({name, slug, categoryId});
+    let newSubcategory = await subcategoryService.createSubcategory({name, slug, categoryId});
     
     res.status(201).json({
         success: true,
@@ -25,9 +25,9 @@ exports.store = async (req, res, next) => {
 exports.show = async (req, res, next) => {
     let { id } = req.params;
 
-    let category = await subcategoryAdminService.getSubcategory(id);
+    let subcategory = await subcategoryService.getSubcategory({ id });
 
-    if (!category) 
+    if (!subcategory) 
         return res.status(404).json({
             success: false,
             message: "category is not found"
@@ -35,7 +35,7 @@ exports.show = async (req, res, next) => {
     
     res.status(200).json({
         success: true,
-        category
+        subcategory
     });
     
 }
@@ -45,7 +45,7 @@ exports.update = async (req, res, next) => {
     let { name } = req.body;
     let slug = slugify(name);
     
-    let updateSubcategory = await subcategoryAdminService.updateSubcategory(id ,{name, slug});
+    let updateSubcategory = await subcategoryService.updateSubcategory({ id } , { name, slug });
 
     if (updateSubcategory === false) 
         return res.status(404).json({
