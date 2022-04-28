@@ -23,7 +23,6 @@ router.get("/:id",
     use(categoryAdminController.show)
 );
 
-
 router.put("/:id", 
     guards.isAdmin,
     categoryAdminValidation.validate("update"),

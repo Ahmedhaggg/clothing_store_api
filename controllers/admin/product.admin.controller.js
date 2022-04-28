@@ -42,10 +42,10 @@ exports.store = async (req, res, next) => {
     let image = req.file.filename;
     
     let { name, price, description, categoryId, subcategoryId, discount, productDetails } = req.body;
-
+    console.log(discount)
+    return;
     let slug = slugify(name);
     
-    productDetails = JSON.parse(colors);
     
     let newProduct = await productAdminService.createProduct(
         { name,slug,price, description, image, categoryId, subcategoryId }, 

@@ -4,6 +4,7 @@ let subcategoryAdminValidation = require("../../validation/admin/subcategory.adm
 let checkValidationError = require("../../middlewares/checkValidationError");
 let use = require("../../middlewares/useMiddleware");
 let guards = require("../../middlewares/guards");
+
 router.get("/", 
     guards.isAdmin,
     use(subcategoryAdminController.index)

@@ -1,6 +1,6 @@
 {
     
-    "swagger" : "2.0",
+    "openapi" : "3.0.0",
     "info":{  
 		"description": "admin clothing store api",
 		"version":"1.0.0",
@@ -406,10 +406,8 @@
                     "multipart/form-data"
                 ],
                 "requestBody": {
-                    "content": "multipart/form-data",
-                    "schema": {
-                        "$ref":"#/definitions/admin"
-                    }
+                    "content": "multipart/form-data"
+                    
                 },
                 "responses": {
                     "200": {
@@ -427,7 +425,7 @@
         } 
     },
     
-    "definitions": {
+    "components": {
         "admin": {
             "properties": {
                 "email": {

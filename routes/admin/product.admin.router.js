@@ -5,6 +5,7 @@ let adminProductController = require("../../controllers/admin/product.admin.cont
 let adminProductValidation = require("../../validation/admin/product.admin.validation");
 let guards = require("../../middlewares/guards");
 let use = require("../../middlewares/useMiddleware");
+
 router.get("/", 
     guards.isAdmin,
     use(adminProductController.index)
@@ -13,8 +14,8 @@ router.get("/",
 router.post("/", 
     guards.isAdmin,
     uploader.uploadFile("image"),
-    adminProductValidation.validate("addProduct"),
-    checkValidationError,
+    // adminProductValidation.validate("addProduct"),
+    // checkValidationError,
     use(adminProductController.store)
 );
 

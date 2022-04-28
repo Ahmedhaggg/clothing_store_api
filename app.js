@@ -5,6 +5,7 @@ let helmet = require("helmet");
 let logger = require("morgan");
 let errorHandler = require("./middlewares/errorHandler");
 let swaggerUi = require("swagger-ui-express")
+let swaggerJsDoc = require("swagger-jsdoc");
 let adminDocs = require("./documentation/admin.json");
 let usersDocs = require("./documentation/users.json");
 let cors = require("cors");
@@ -61,12 +62,28 @@ let {
 // db
 //   .sync({ force: true }) // create the database table for our model(s)
 
-var options = {
-  swaggerOptions: {
-    authAction :{ JWT: {name: "JWT", schema: {type: "apiKey", in: "header", name: "Authorization", description: ""}, value: "Bearer <JWT>"} }
-  }
+
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "clothing store API",
+      version: "1.0.0",
+      description: "clothing store api",
+    },
+    servers: [
+      {
+        url: "http://localhost:2000/api/"
+      }
+    ],
+  },
+  apis: ["./routes/admin/*.admin.router.js", "./routes/admin/*.users.router.js"],
 };
 
+const specs = swaggerJsDoc(options);
+
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/admin/api-docs', swaggerUi.serve, swaggerUi.setup(adminDocs, options));
 // app.use('/users/api-docs', swaggerUi.serve, swaggerUi.setup(usersDocs));
 

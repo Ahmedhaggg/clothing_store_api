@@ -19,8 +19,7 @@ exports.validate = (action) => {
                     .isInt().withMessage("can't be number"),
                 check("discount.expiresin")
                     .if(body("discount")).exists()
-                    .not().isEmpty().withMessage("can't be empty")
-                    .isDate().withMessage("should be date"),
+                    .not().isEmpty().withMessage("can't be empty"),
                 check("discount.percent")
                     .if(body("discount")).exists()
                     .not().isEmpty().withMessage("can't be empty")
@@ -31,7 +30,7 @@ exports.validate = (action) => {
                 isArray("productDetails"),
                 check("productDetails.*.color").not().isEmpty().withMessage("can't be empty"),
                 check("productDetails.*.sizes").not().isEmpty().withMessage("can't be empty"),
-                isArray("productDetails.[0].sizes"),
+                isArray("productDetails[0].sizes"),
                 check("productDetails.*.sizes.*.size").not().isEmpty().withMessage("can't be empty"),
                 check("productDetails.*.sizes.*.quantity").not().isEmpty().withMessage("can't be empty")
                     .isInt({ min: 1 }),

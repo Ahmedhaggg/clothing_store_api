@@ -4,7 +4,7 @@ let { check } = require("express-validator");
 let isArray = (field, length = null) => 
     check(field).custom((value, { req } ) => {
         let array = JSON.parse(req.body[field]);
-
+        
         if (!Array.isArray(array))
             throw new Error(`${field} is can't array`)
         
