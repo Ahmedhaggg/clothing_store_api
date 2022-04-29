@@ -5,7 +5,7 @@ let isFile = require("../custom/isFile");
 
 exports.validate = (action) => {
     switch (action) {
-        case "addProduct":
+        case "create":
             return [
                 check("name").not().isEmpty().withMessage("can't be empty"),
                 check("price").not().isEmpty().withMessage("can't be empty")
@@ -29,23 +29,21 @@ exports.validate = (action) => {
                     .not().isEmpty().withMessage("can't be empty"),
                 isArray("productDetails"),
                 check("productDetails.*.color").not().isEmpty().withMessage("can't be empty"),
-                check("productDetails.*.sizes").not().isEmpty().withMessage("can't be empty"),
                 isArray("productDetails[0].sizes"),
                 check("productDetails.*.sizes.*.size").not().isEmpty().withMessage("can't be empty"),
                 check("productDetails.*.sizes.*.quantity").not().isEmpty().withMessage("can't be empty")
                     .isInt({ min: 1 }),
-                isFile("image")
+                isFile("image"),
+                isUnique("products", "name")
             ];
-        case "updateProduct": 
+        case "update": 
             return [
                 check("name").not().isEmpty().withMessage("can't be empty"),
                 check("price").not().isEmpty().withMessage("can't be empty")
                     .isDecimal(),
-                check("description").not().isEmpty().withMessage("can't be empty"),
-                check("categoryId").not().isEmpty().withMessage("can't be empty"),
-                check("subcategoryId").not().isEmpty().withMessage("can't be empty")
+                check("description").not().isEmpty().withMessage("can't be empty")
             ];
-        case "updateProductImage": 
+        case "updateImage": 
             return [
                 isFile("image")
             ]    

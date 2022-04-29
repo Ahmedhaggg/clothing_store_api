@@ -30,7 +30,7 @@ let Product = db.define("products", {
         allowNull: false
     },
     image: {
-        type: DataTypes.STRING(70),
+        type: DataTypes.STRING(200),
         allowNull: false
     },
 }, {

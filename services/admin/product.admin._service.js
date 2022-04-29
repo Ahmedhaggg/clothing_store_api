@@ -15,8 +15,10 @@ exports.getProduct = async query => await Product.findOne({
                 attributes: ["id", "name", "slug"]
             },
             {
+                required: false,
                 model: ProductDiscount,
                 as: "discount",
+                where: { expiresin : {[Op.gt]: new Date() }},
                 attributes: ["id", "expiresin", "percent", "description", "createdAt", "updatedAt"]
             },
             {
@@ -111,8 +113,8 @@ exports.updateProduct = async (query, newDate) => {
     let updatedProduct = await Product.update(newDate, {
         where: query
     });
-    return updatedProduct[0] === 1 ? true : false;
-            
+    
+    return updatedProduct[0] === 1 ? true : false;        
 }
 
 exports.getSomeProductData = async (query, fields) => await Product

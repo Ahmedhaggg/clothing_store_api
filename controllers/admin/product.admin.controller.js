@@ -1,4 +1,4 @@
-let productAdminService = require("../../services/admin/product.admin._service");
+let productService = require("../../services/admin/product.admin._service");
 let slugify = require("slugify");
 let fs = require("fs");
 let { UPLOADSDIR } = require("../../config/index");
@@ -9,11 +9,11 @@ exports.index = async (req, res, next) => {
 
     let query = {}
     
-    query.active = active === false ? false : true;
+    query.active = active === "false" ? false : true;
     
     req.query.name ? (query.name = name) : false;
     
-    let products = await productAdminService.getProdutcts(query);
+    let products = await productService.getProdutcts(query);
 
     return res.status(200).json({ 
         success: true,
@@ -24,7 +24,7 @@ exports.index = async (req, res, next) => {
 exports.show = async (req, res, next) => {
     let { id } = req.params;
 
-    let product = await productAdminService.getProduct({ id });
+    let product = await productService.getProduct({ id });
 
     if (!product) 
         return res.status(404).json({ 
@@ -42,12 +42,11 @@ exports.store = async (req, res, next) => {
     let image = req.file.filename;
     
     let { name, price, description, categoryId, subcategoryId, discount, productDetails } = req.body;
-    console.log(discount)
-    return;
+    
     let slug = slugify(name);
     
     
-    let newProduct = await productAdminService.createProduct(
+    let newProduct = await productService.createProduct(
         { name,slug,price, description, image, categoryId, subcategoryId }, 
         discount || null, 
         productDetails
@@ -63,19 +62,19 @@ exports.store = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     let { id } = req.params;
 
-    let { name, price, description, categoryId, subcategoryId } = req.body;
+    let { name, price, description } = req.body;
 
     let slug = slugify(name);
 
-    let updateProduct = await productAdminService.updateProduct(
+    let updateProduct = await productService.updateProduct(
         { id }, 
-        { name, slug, price, description, categoryId, subcategoryId }
+        { name, slug, price, description }
     );
     
     if (updateProduct === false) 
         return res.status(404).json({ 
             success: false, 
-            message: "can't update this product, verify from data" 
+            message: "product is not found to update" 
         }); 
     
     res.status(200).json({ 
@@ -86,18 +85,21 @@ exports.update = async (req, res, next) => {
 
 exports.updateProductImage = async (req, res, next) => {
     let { id } = req.params;
-
+    
     let image = req.file.filename;
 
-    let lastProductData = await productAdminService.getSomeProductData({ id }, ["image"]);
+    let lastProductData = await productService.getSomeProductData({ id }, ["image"]);
     
-    if (!lastProductData) 
+    if (!lastProductData) {
+        await fs.unlinkSync(path.join(UPLOADSDIR, image));
+        
         return res.status(404).json({ 
             success: false, 
             message: "product is not found" 
         });
+    }
 
-    let updateProduct = await productAdminService.updateProduct({ id }, { image });
+    let updateProduct = await productService.updateProduct({ id }, { image });
 
     if (updateProduct === false) {
         await fs.unlinkSync(path.join(UPLOADSDIR, image));
@@ -107,7 +109,6 @@ exports.updateProductImage = async (req, res, next) => {
             message: "can't update image of this product now" 
         }); 
     }
-
     await fs.unlinkSync(path.join(UPLOADSDIR, lastProductData.image));
 
     res.status(200).json({ 
@@ -119,33 +120,49 @@ exports.updateProductImage = async (req, res, next) => {
 exports.active = async (req, res, next) => {
     let { id } = req.params;
 
-    let activeProduct = await productAdminService.updateProduct({ id }, { active: true });
+    let product = await productService.getSomeProductData({ id }, ["id", "active"])
     
-    if (activeProduct === true) 
-        return res.status(200).json({ 
-            success: true, 
-            message: "product is active now" 
-        }); 
+    if (!product)
+        return res.status(404).json({ 
+            success: false, 
+            message: "product is not found" 
+        });
 
-    res.status(404).json({ 
-        success: false, 
-        message: "can't unactive unactive this product" 
+    if (product.active === true) 
+        return res.status(404).json({ 
+            success: false, 
+            message: "product is actived arleady" 
+        });
+
+    await productService.updateProduct({ id }, { active: true });
+    
+    res.status(200).json({ 
+        success: true, 
+        message: "product is active successfully" 
     });
 }
 
 exports.unactive = async (req, res, next) => {
     let { id } = req.params;
+
+    let product = await productService.getSomeProductData({ id }, ["id", "active"])
     
-    let unactiveProduct = await productAdminService.updateProduct({ id }, { active: false });
+    if (!product)
+        return res.status(404).json({ 
+            success: false, 
+            message: "product is not found" 
+        });
+
+    if (product.active === false) 
+        return res.status(404).json({ 
+            success: false, 
+            message: "product is unactived arleady" 
+        });
+
+    await productService.updateProduct({ id }, { active: false });
     
-    if (unactiveProduct === true) 
-        return res.status(200).json({ 
-            success: true, 
-            message: "product is unactive successfully" 
-        }); 
-    
-    res.status(404).json({ 
-        success: false, 
-        message: "can't unactive this product" 
+    res.status(200).json({ 
+        success: true, 
+        message: "product is unactive successfully" 
     });
 }

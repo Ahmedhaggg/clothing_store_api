@@ -14,8 +14,8 @@ router.get("/",
 router.post("/", 
     guards.isAdmin,
     uploader.uploadFile("image"),
-    // adminProductValidation.validate("addProduct"),
-    // checkValidationError,
+    adminProductValidation.validate("create"),
+    checkValidationError,
     use(adminProductController.store)
 );
 
@@ -27,15 +27,15 @@ router.get("/:id",
 
 router.put("/:id", 
     guards.isAdmin,
-    adminProductValidation.validate("updateProduct"),
+    adminProductValidation.validate("update"),
     checkValidationError,
     use(adminProductController.update)
 );
 
 router.put("/:id/image", 
     guards.isAdmin,
-    uploader.uploadFile("image"),
-    adminProductValidation.validate("updateProductImage"),
+    uploader.uploadFile("newImage"),
+    adminProductValidation.validate("updateImage"),
     use(adminProductController.updateProductImage)
 );
 
