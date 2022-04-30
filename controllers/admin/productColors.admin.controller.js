@@ -1,9 +1,9 @@
 let productColorsServices = require("../../services/admin/productColors.admin._services");
-
-exports.show = async (req, res, next) => {
+let inventoryService = require("../../services/admin/inventory.admin._service")
+exports.index = async (req, res, next) => {
     let { productId } = req.params;
 
-    let productColors = await productColorsServices.getColors({ productId });
+    let productColors = await productColorsServices.getProductColors({ productId });
 
     res.status(200).json({
         success: true,
@@ -12,36 +12,21 @@ exports.show = async (req, res, next) => {
 }
 
 exports.create = async (req, res, next) => {
-    let { productId, name } = req.body;
+    let { productId, name, sizes } = req.body;
+    
+    let newProductColor = await productColorsServices.addColorToProduct({ productId, name});
 
-    let newProductColor = await productColorsServices.createColor({ productId, name});
+    sizes.forEach(size => {
+        size.colorId = newProductColor.id;
+        size.productId = productId
+    });
 
+    let newColorSizes = await inventoryService.addProductColorSizesToInventory(sizes);
+    
     res.status(201).json({
         success: true,
         message: "new color is add successfully",
-        newColor: newProductColor
+        newColor: newProductColor,
+        sizes: newColorSizes
     });
-}
-
-exports.update = async (req, res, next) => {
-    let { colorId } = req.params;
-    let { name } = req.body;
-
-    await productColorsServices.updateColors(colorId, { name });
-
-    res.status(200).json({
-        success: true,
-        message: "product color is updated"
-    })
-}
-
-exports.destroy = async (req, res, next) => {
-    let { colorId } = req.params;
-
-    await productColorsServices.deleteColors(colorId);
-
-    res.status(200).json({
-        success: true,
-        message: "product color is deleted successfully"
-    })
 }

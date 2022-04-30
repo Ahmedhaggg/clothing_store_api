@@ -92,8 +92,8 @@ let adminAuthRouter = require("./routes/admin/auth.admin.router");
 let adminProductRouter = require("./routes/admin/product.admin.router");
 let adminCategoryRouter = require("./routes/admin/category.admin.router");
 let adminSubcategoryRouter = require("./routes/admin/subcategory.admin.router");
-// let adminproductColorsRouter = require("./routes/admin/productColor.admin.router");
-// let adminInventoryRouter = require("./routes/admin/inevntory.admin.router");
+let adminproductColorsRouter = require("./routes/admin/productColor.admin.router");
+let adminInventoryRouter = require("./routes/admin/inevntory.admin.router");
 // let adminProductDiscountRouter = require("./routes/admin/productDiscount.admin.router");
 // let adminOfferRouter = require("./routes/admin/offer.admin.router");
 // let adminOfferProductRouter = require("./routes/admin/offerProduct.admin.router");
@@ -105,9 +105,9 @@ app.use("/api/admin/auth", adminAuthRouter);
 app.use("/api/admin/products", adminProductRouter)
 app.use("/api/admin/categories", adminCategoryRouter);
 app.use("/api/admin/subcategories", adminSubcategoryRouter);
-// app.use("/api/admin/products/colors", adminproductColorsRouter);
+app.use("/api/admin/products", adminproductColorsRouter);
 // app.use("/api/admin/products/discounts", adminProductDiscountRouter);
-// app.use("/api/admin/inventories", adminInventoryRouter);
+app.use("/api/admin/inventories", adminInventoryRouter);
 // app.use("/api/admin/offers", adminOfferRouter)
 // app.use("/api/admin/offerProducts", adminOfferProductRouter);
 // app.use("/api/admin/governorates", adminGovernorateRouter);
