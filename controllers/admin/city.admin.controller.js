@@ -1,34 +1,44 @@
 let cityService = require("../../services/admin/city.admin._service");
  
+exports.index = async (req, res, next) => {
+    let cities = await cityService.getAllCities();
+
+    res.status(200).json({
+        success: true,
+        cities
+    });
+}
+
 exports.show = async (req, res, next) => {
     let { id } = req.params;
     let city = await cityService.getCity({ id });
 
     if (city) 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             city
-        })
-    else 
-        res.status(400).json({
-            success: false,
-            message: "city is not found"
-        })
+        });
+     
+    res.status(400).json({
+        success: false,
+        message: "city is not found"
+    });
 }
 
 exports.store = async (req, res, next) => {
     let { governorateId, name, shippingTime, shippingCost } = req.body;
 
-    await cityService.createCity({
+    let city = await cityService.createCity({
         governorateId,
         name,
         shippingTime,
         shippingCost
     });
 
-    return res.status(201).json({
+    res.status(201).json({
         success: true,
-        message: "new city created"
+        message: "city is created successfully",
+        city
     });
 }
 
@@ -36,19 +46,16 @@ exports.update = async (req, res, next) => {
     let { id } = req.params;
     let { shippingTime, shippingCost } = req.body;
 
-    let updateCity = await cityService.updateCity({ id },{
-        shippingTime,
-        shippingCost
-    });
+    let updateCity = await cityService.updateCity({ id }, { shippingTime, shippingCost });
 
     if (updateCity === true)
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
-            message: "new city created"
+            message: "city is updated successfully"
         });
-    else 
-        res.status(400).json({
-            success: false,
-            message: "faild to update city"
-        })
+
+    res.status(400).json({
+        success: false,
+        message: "city is not found to update"
+    });
 }

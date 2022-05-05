@@ -20,6 +20,7 @@ let sendEmail = async mailOptions => {
     try {
         await transporter.sendMail(mailOptions);
     } catch (error) {
+      console.log(error)
         throw new Error(`can't send mail message for this email : ${mailOptions.to}`);
     }
 }

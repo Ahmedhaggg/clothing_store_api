@@ -12,8 +12,8 @@ router.get("/",
 );
 
 router.post("/", 
+    uploader.uploadFile("image", "productsImages"),
     guards.isAdmin,
-    uploader.uploadFile("image"),
     adminProductValidation.validate("create"),
     checkValidationError,
     use(adminProductController.store)

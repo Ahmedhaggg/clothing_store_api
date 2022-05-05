@@ -1,11 +1,18 @@
 let { Offer, OfferProducts, Product, ProductColor, ProductDiscount, Inventory} = require("../../models");
 let db = require("../../config/database");
-const { Op, Sequelize } = require("sequelize");
+const { Op } = require("sequelize");
 
-exports.getAllOffers = async query => await Offer
-    .findAll({
-        where: query
-    });
+exports.getAllOffers = async (query = {}) => {
+    query.name ? 
+        (query.name = { [Op.like]: `%${query.name}%` }) : false;
+
+    query.active === true ? 
+        (query.expiresin = { [Op.gt]: new Date() }) 
+            :
+        (query.expiresin = { [Op.lt]: new Date() });
+
+    return await Offer.findAll({ where: query });
+}
     
 
 
@@ -19,14 +26,11 @@ exports.createOffer = async (offerData, offerProductsData) => {
             offerProductData.offerId = offer.id;
         });
 
-        let offerProducts = await OfferProducts.bulkCreate(offerProductsData, { transaction });
+        await OfferProducts.bulkCreate(offerProductsData, { transaction });
 
         await transaction.commit();
-        return {
-            offer,
-            offerProducts
-        };
-    } catch (error) {
+        return offer
+    } catch (error) { 
         await transaction.rollback()
         return null;
     }
@@ -48,7 +52,7 @@ exports.getOffer = async query => await Offer
                         include: {
                             required: false,
                             model: ProductColor,
-                            as: "productColors",
+                            as: "colors",
                             attributes: ["id", "name"],
                             include: [
                                 { 

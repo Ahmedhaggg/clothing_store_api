@@ -1,11 +1,32 @@
 let productDisocuntService = require("../../services/admin/productDiscount.admin._service");
 
+exports.show = async (req, res, next) => {
+    let { discountId } = req.params;
 
+    let discount = await productDisocuntService.getDiscount({ id: discountId });
 
-exports.create = async (req, res, next) => {
+    if (!discount) 
+        return res.status(404).json({
+            success: false,
+            message: "product discount is not found"
+        });
+
+    res.status(200).json({
+        success: true,
+        discount
+    });
+}
+
+exports.create = async (req, res, next) => {    
     let { percent, description, expiresin, productId } = req.body;
 
-    await productDisocuntService.createDiscount({
+    let checkProductDiscount = await productDisocuntService.getDiscount({ productId });
+
+    if (checkProductDiscount) {
+        await productDisocuntService.deleteDiscount({ id: checkProductDiscount.id });
+    }
+
+    let newDiscount = await productDisocuntService.createDiscount({
         percent,
         description,
         expiresin,
@@ -14,15 +35,16 @@ exports.create = async (req, res, next) => {
 
     res.status(201).json({
         success: true,
-        message: "discount is created successfully"
+        message: "discount is created successfully",
+        discount: newDiscount
     });
 }
 
 exports.update = async (req, res, next) => {
-    let { id } = req.params;
+    let { discountId } = req.params;
     let { percent, description, expiresin } = req.body;
 
-    let updatediscount = await productDisocuntService.updateDiscount(id, {
+    let updatediscount = await productDisocuntService.updateDiscount({ id: discountId }, {
         percent,
         description,
         expiresin
@@ -31,21 +53,28 @@ exports.update = async (req, res, next) => {
     if (updatediscount === false) 
         return res.status(400).json({
             success: false,
-            message: "you should verifiy from data"
+            message: "discount is not found to update"
         });
     
     res.status(200).json({
         success: true,
         message: "discount is updated successfully"
-    })
+    });
 }
 
 exports.destroy = async (req, res, next) => {
-    let { id } = req.params;
+    let { discountId } = req.params;
 
-    await productDisocuntService.deleteDiscount(id);
+    let deleteDiscount = await productDisocuntService.deleteDiscount({ id: discountId });
+    
+    if (deleteDiscount === false) 
+        return res.status(400).json({
+            success: false,
+            message: "discount is not found to delete"
+        });
 
     res.status(200).json({
-        message: "product is deleted successfully"
+        success: true,
+        message: "discount is deleted successfully"
     });
 }

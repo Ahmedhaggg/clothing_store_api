@@ -4,7 +4,7 @@ let isArray = require("../custom/isArray");
 
 exports.validate = (action) => {
     switch (action) {
-        case "addDiscount":
+        case "create":
             return [
                 check("percent").not().isEmpty().withMessage("can't be empty")
                     .isInt(),
@@ -12,8 +12,9 @@ exports.validate = (action) => {
                 check("expiresin").not().isEmpty().withMessage("can't be empty")
                     .isDate(),
                 check("productId").not().isEmpty().withMessage("can't be empty")
+                    .isInt()
             ];
-        case "updateDiscount":
+        case "update":
             return [
                 check("percent").not().isEmpty().withMessage("can't be empty")
                     .isInt(),

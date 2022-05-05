@@ -4,7 +4,8 @@ env.config();
 
 let ROOT = path.dirname(__dirname);
 let UPLOADSDIR = path.join( path.dirname(__dirname), "productsImages")
-console.log(UPLOADSDIR)
+let OFFERSIMAGESDIR = path.join( path.dirname(__dirname), "offersImages")
+
 let { 
     PORT,
     DB_HOST,
@@ -35,5 +36,6 @@ module.exports =  {
     EMAIL,
     EMAIL_PASS,
     EMAIL_SERVICE,
-    STRIPE_KEY
+    STRIPE_KEY,
+    OFFERSIMAGESDIR
 };

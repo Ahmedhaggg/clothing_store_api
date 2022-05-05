@@ -6,8 +6,8 @@ let hashing = require("../../helpers/hash");
 let { createJwtToken } = require("../../helpers/jwtToken")
 
 exports.register = async (req, res, next) => {
-    let { firstName, lastName, userName, email, password, gender, birthday, phoneNumber } = req.body;
-    
+    let { firstName, lastName, userName, email, password, gender, birthDay, phoneNumber } = req.body;
+
     let verificationCode = genrateRandomDigitCode();
     let hashedPassword = await hashing.hash(password)
     
@@ -18,7 +18,7 @@ exports.register = async (req, res, next) => {
         email,
         password: hashedPassword,
         gender,
-        birthday,
+        birthDay,
         phoneNumber
     }, {
         code: verificationCode,

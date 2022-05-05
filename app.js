@@ -4,10 +4,6 @@ let db = require("./config/database");
 let helmet = require("helmet");
 let logger = require("morgan");
 let errorHandler = require("./middlewares/errorHandler");
-let swaggerUi = require("swagger-ui-express")
-let swaggerJsDoc = require("swagger-jsdoc");
-let adminDocs = require("./documentation/admin.json");
-let usersDocs = require("./documentation/users.json");
 let cors = require("cors");
 // application
 let app = express();
@@ -16,7 +12,7 @@ let app = express();
 app.use(cors()); 
 
 // use body parser 
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 
 // use helmet middleware
@@ -63,30 +59,6 @@ let {
 //   .sync({ force: true }) // create the database table for our model(s)
 
 
-
-const options = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "clothing store API",
-      version: "1.0.0",
-      description: "clothing store api",
-    },
-    servers: [
-      {
-        url: "http://localhost:2000/api/"
-      }
-    ],
-  },
-  apis: ["./routes/admin/*.admin.router.js", "./routes/admin/*.users.router.js"],
-};
-
-const specs = swaggerJsDoc(options);
-
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-app.use('/admin/api-docs', swaggerUi.serve, swaggerUi.setup(adminDocs, options));
-// app.use('/users/api-docs', swaggerUi.serve, swaggerUi.setup(usersDocs));
-
 // admin routes
 let adminAuthRouter = require("./routes/admin/auth.admin.router");
 let adminProductRouter = require("./routes/admin/product.admin.router");
@@ -94,11 +66,11 @@ let adminCategoryRouter = require("./routes/admin/category.admin.router");
 let adminSubcategoryRouter = require("./routes/admin/subcategory.admin.router");
 let adminproductColorsRouter = require("./routes/admin/productColor.admin.router");
 let adminInventoryRouter = require("./routes/admin/inevntory.admin.router");
-// let adminProductDiscountRouter = require("./routes/admin/productDiscount.admin.router");
-// let adminOfferRouter = require("./routes/admin/offer.admin.router");
-// let adminOfferProductRouter = require("./routes/admin/offerProduct.admin.router");
-// let adminGovernorateRouter = require("./routes/admin/governorate.admin.router");
-// let adminCityRouter = require("./routes/admin/city.admin.router");
+let adminProductDiscountRouter = require("./routes/admin/productDiscount.admin.router");
+let adminOfferRouter = require("./routes/admin/offer.admin.router");
+let adminOfferProductRouter = require("./routes/admin/offerProduct.admin.router");
+let adminGovernorateRouter = require("./routes/admin/governorate.admin.router");
+let adminCityRouter = require("./routes/admin/city.admin.router");
 
 // // using admin routes
 app.use("/api/admin/auth", adminAuthRouter); 
@@ -106,16 +78,16 @@ app.use("/api/admin/products", adminProductRouter)
 app.use("/api/admin/categories", adminCategoryRouter);
 app.use("/api/admin/subcategories", adminSubcategoryRouter);
 app.use("/api/admin/products", adminproductColorsRouter);
-// app.use("/api/admin/products/discounts", adminProductDiscountRouter);
+app.use("/api/admin/products/discounts", adminProductDiscountRouter);
 app.use("/api/admin/inventories", adminInventoryRouter);
-// app.use("/api/admin/offers", adminOfferRouter)
-// app.use("/api/admin/offerProducts", adminOfferProductRouter);
-// app.use("/api/admin/governorates", adminGovernorateRouter);
-// app.use("/api/admin/cities", adminCityRouter);
+app.use("/api/admin/offers", adminOfferRouter)
+app.use("/api/admin/offers/offerProducts", adminOfferProductRouter);
+app.use("/api/admin/governorates", adminGovernorateRouter);
+app.use("/api/admin/cities", adminCityRouter);
 
 
 // // users routes
-// let userAuthRouter = require("./routes/users/auth.user.router");
+let userAuthRouter = require("./routes/users/auth.user.router");
 // let userResetPasswordRouter = require("./routes/users/resetPassword.user.router");
 // let userAddressRouter = require("./routes/users/address.user.router");
 // let userProductRouter = require("./routes/users/product.user.router");
@@ -126,7 +98,7 @@ app.use("/api/admin/inventories", adminInventoryRouter);
 
 
 // // using users routes
-// app.use("/api/users/auth", userAuthRouter);
+app.use("/api/users/auth", userAuthRouter);
 // app.use("/api/users/password-reset", userResetPasswordRouter);
 // app.use("/api/users/addresses", userAddressRouter);
 // app.use("/api/users/products", userProductRouter);

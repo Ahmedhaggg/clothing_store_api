@@ -5,15 +5,20 @@ exports.isAdmin = async (req, res, next) => {
 
         let tokenData = await getDataFromJwtToken(token);
 
-        if (tokenData.role !== "admin")
+        if (tokenData.role !== "admin") {
+            await fs.unlinkSync(path.join(req.file.destination,  req.file.filename));
+
             return res.status(500).json({
                 success: false,
                 message: "invaild token"
-            })
+            });
+        }
 
         next();
     } catch (error) {
-        console.log(error)
+        if (req.file)
+            await fs.unlinkSync(path.join(req.file.destination,  req.file.filename));
+
         res.status(500).json({
             success: false,
             message: "something went wrong"

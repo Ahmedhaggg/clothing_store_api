@@ -3,6 +3,7 @@ let userAuthValidation = require("../../validation/users/auth.user.validation");
 let userAuthController = require("../../controllers/users/auth.user.controller");
 let checkValidationError = require("../../middlewares/checkValidationError");
 let use = require("../../middlewares/useMiddleware");
+let guards = require("../../middlewares/guards");
 router.post("/register", 
     userAuthValidation.validate("register"),
     checkValidationError,
@@ -16,7 +17,7 @@ router.post("/login",
 );
 
 router.post("/verify", 
-    // userAuthController.validate("verifyEmail"),
+    userAuthValidation.validate("verifyEmail"),
     checkValidationError,
     use(userAuthController.verify)
 );

@@ -1,5 +1,6 @@
-const { UPLOADSDIR } = require("../config/index");
+const { ROOT } = require("../config/index");
 const multer = require("multer")
+let path = require("path");
 
 const fileFilter = (req, file, cb) => {
     if (file.mimetype === "image/jpeg" || file.mimetype === "image/jpg" || file.mimetype === "image/png") {
@@ -12,9 +13,9 @@ const fileFilter = (req, file, cb) => {
 
 
 
-const storage = multer.diskStorage({
+const storage = (folder) => multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, UPLOADSDIR)
+        cb(null, path.join(ROOT, folder))
     },
     filename: function (req, file, cb) {
         let filename =  Date.now() + file.originalname;
@@ -22,8 +23,8 @@ const storage = multer.diskStorage({
     }
 })
 
-let uploader = multer({
-    storage: storage,
+let uploader = (folder) => multer({
+    storage: storage(folder),
     limits: {
         fieldSize: 1024 * 1024 * 5,
         fileFilter: fileFilter
@@ -32,5 +33,5 @@ let uploader = multer({
 
 
 module.exports = {
-    uploadFile: (field) => uploader.single(field)
+    uploadFile: (field, folder) => uploader(folder).single(field)
 };

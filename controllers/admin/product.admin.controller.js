@@ -7,7 +7,7 @@ const path = require("path");
 exports.index = async (req, res, next) => {
     let { active, name } = req.query;
 
-    let query = {}
+    let query = {};
     
     query.active = active === "false" ? false : true;
     

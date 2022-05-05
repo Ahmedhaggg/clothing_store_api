@@ -1,7 +1,10 @@
 let { ProductDiscount } = require("../../models/index");
 
-
-
+exports.getDiscount = async query => await ProductDiscount
+    .findOne({
+        where: query,
+        attributes: ["id", "percent", "description", "expiresin", "createdAt", "updatedAt", "productId"]    
+    })
 exports.createDiscount = async (newData) => await ProductDiscount.create(newData);
  
 exports.updateDiscount = async (query, newData) => {
@@ -9,7 +12,7 @@ exports.updateDiscount = async (query, newData) => {
         where: query
     });
 
-    return updatedDiscount[0] === 1 ? true : false; 
+    return updatedDiscount[0] === 1 ? true : false;
 }
 
 exports.deleteDiscount = async query => {
