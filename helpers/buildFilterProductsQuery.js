@@ -4,7 +4,7 @@ let {  ProductDiscount, Category, Subcategory, ProductColor ,Inventory } = requi
 let buildSortInQuery = (sortBy) => {
     let sortData = sortBy.split(":");
     if (sortData[0] === "discount") 
-       return ["products_discounts", "percent", sortData[1]]
+       return [{ model: ProductDiscount, as: "discount"}, "percent", sortData[1]]
     if (sortData[0] === "createdAt")
         return ["createdAt", sortData[1]]
     
@@ -31,7 +31,7 @@ class BuildFilterProductsQuery {
                 {
                     required: true,
                     model: ProductColor,
-                    as: "productColors",
+                    as: "colors",
                     attributes: ["name"],
                     include: {
                         required: true,
@@ -55,7 +55,7 @@ class BuildFilterProductsQuery {
     }
     setName(name) {
         this.query.where.name =  {
-            [Op.like]: `%${name}`
+            [Op.like]: `%${name}%`
         }
     } 
     setCategory(categoryName) {
@@ -79,9 +79,10 @@ class BuildFilterProductsQuery {
         });
     }
     setSortBy(sortBy) {
+        console.log(buildSortInQuery(sortBy));
         let sort = [];
         sort.push(buildSortInQuery(sortBy));
-        this.query.order = sort;
+        this.query.order = [sort];
     }
     build() {
         return this.query;
@@ -89,31 +90,3 @@ class BuildFilterProductsQuery {
 }
 
 module.exports = BuildFilterProductsQuery;
-
-// let buildFilterQuery = filterRequirements => {
-//     let query = {}
-//     query.limit = filterRequirements.limit || 12;
-//     query.offset = filterRequirements.offset || 0;
-//     if (filterRequirements.name) 
-//         query.where.name = {
-//             [Op.like]: `%${filterRequirements.name}%`
-//         };
-
-//     // if (filterRequirements.sortBy)
-        
-//     let product = Product.findAll({
-//         where: {
-//             name: {
-                
-//             },
-//         },
-//         include: {
-//             model 
-//         }
-//         offset: 10,
-//         limit: 12,
-//         order: [
-//             ["productDiscounts", ]
-//         ]
-//     })
-// }

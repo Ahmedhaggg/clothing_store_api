@@ -8,6 +8,8 @@ exports.hash = async data => {
     return hash;
 }
 exports.compare = async (data, hashedData) => {
+    console.log(data);
+    console.log(hashedData);
     let isHashed = await bcrypt.compare(data, hashedData);
     
     return isHashed;

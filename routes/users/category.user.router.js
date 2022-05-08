@@ -1,11 +1,12 @@
 let router = require("express").Router();
 let userCategoryController = require("../../controllers/users/category.admin.controller")
+let use = require("../../middlewares/useMiddleware");
 
 router.get("/", 
-    userCategoryController.index
+    use(userCategoryController.index)
 )
-router.get("/:slug/products", 
-    userCategoryController.show
+router.get("/:slug", 
+    use(userCategoryController.show)
 )
 
 module.exports = router;

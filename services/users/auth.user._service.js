@@ -48,6 +48,7 @@ exports.getUserIdAndEmailVerificationCode = async query => {
             attributes: ["code"]
         }
     });
+    
     return  {
         code: user.email_verification.code,
         id: user.id
@@ -65,3 +66,9 @@ exports.deleteEmailVerification = async query => {
     });
     return deleteEmailVerification === 1 ? true : false;
 }
+
+exports.getEmailVerification = async query => await EmailVerification
+    .findOne({
+        where: query,
+        attributes: ["code", "expiresin"]
+    });

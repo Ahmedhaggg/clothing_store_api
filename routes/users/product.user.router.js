@@ -1,13 +1,14 @@
 let router = require("express").Router();
 let userProductController = require("../../controllers/users/product.admin.controller");
+let use = require("../../middlewares/useMiddleware");
 
 router.get("/", 
-    userProductController.index
-)
+    use(userProductController.index)
+);
 
 router.get("/:slug", 
-    userProductController.show
-)
+    use(userProductController.show)
+);
 
 
 

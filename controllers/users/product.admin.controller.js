@@ -1,10 +1,13 @@
 let productService = require("../../services/users/product.user._service");
 let BuildFilterProductQuery = require("../../helpers/buildFilterProductsQuery");
+
+
 exports.index = async (req, res, next) => {
-    let queryString = req.query;
+    let query = req.query;
     
-    if (!queryString) {
+    if (Object.keys(query).length === 0) {
         let products = await productService.getIndexProducts();
+       
         return res.status(200).json({
             success: true,
             products
@@ -13,31 +16,20 @@ exports.index = async (req, res, next) => {
 
     let filterQuery = new BuildFilterProductQuery();
     
-    if (queryString.limit) 
-        filterQuery.setLimit(queryString.limit);
-    if (queryString.offset)
-        filterQuery.setOffset(queryString.offset);
-    if (queryString.name)
-        filterQuery.setName(queryString.name);
-    if (queryString.category)
-        filterQuery.setCategory(queryString.category);
-    if (queryString.subcategory)
-        filterQuery.setSubcategory(queryString.subcategory);
-    if (queryString.sort)
-        filterQuery.setSubcategory(queryString.sort);
+    query.limit ? filterQuery.setLimit(query.limit)
+    : query.offset ? filterQuery.setOffset(query.offset)
+    : query.name ? filterQuery.setName(query.name)
+    : query.category ? filterQuery.setCategory(query.category)
+    : query.subcategory ? filterQuery.setSubcategory(query.subcategory)
+    : query.sort ? filterQuery.setSortBy(query.sort)
+    : null;
 
-    let products = await productService.getSomeProducts(filterQuery.build())
+    let products = await productService.getProductsByQuery(filterQuery.build())
 
-    if (products.length === 0)
-        res.status(400).json({
-            success: false,
-            message: "can't find any product with this requirements"
-        })
-    else
-        res.status(200).json({
-            success: true,
-            products
-        })
+    res.status(200).json({
+        success: true,
+        products
+    });
 }
 
 exports.show = async (req, res, next) => {
@@ -46,13 +38,13 @@ exports.show = async (req, res, next) => {
     let product = await productService.getProduct({ slug });
 
     if (!product)
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: "product isn't found"
-        })
-    else 
-        res.status(200).json({
-            success: true,
-            product
-        })
+        });
+   
+    res.status(200).json({
+        success: true,
+        product
+    })
 }

@@ -27,7 +27,7 @@ exports.getIndexProducts = async () => await Product
             },
             {
                 model: ProductColor,
-                as: "productColors",
+                as: "colors",
                 required: true,
                 attributes: ["name"],
                 include: {
@@ -44,7 +44,7 @@ exports.getIndexProducts = async () => await Product
         limit: 36
     });
 
-exports.getProductsByQuery = async (query) => await Product.findAll(query);
+exports.getProductsByQuery = async query => await Product.findAll(query);
 
 exports.getProduct = async (query) => await Product
     .findOne({
@@ -73,7 +73,7 @@ exports.getProduct = async (query) => await Product
             {
                 required: true,
                 model: ProductColor,
-                as: "productColors",
+                as: "colors",
                 attributes: ["name"],
                 include: {
                     model: Inventory,

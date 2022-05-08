@@ -6,13 +6,13 @@ exports.show = async (req, res, next) => {
     let subcategory = await subcategoryService.getSubCategory({ slug });
 
     if (!subcategory)
-        res.status(404).json({
+        return res.status(404).json({
             success: false,
             message: "subcategory isn't found"
-        })
-    else
-        res.status(200).json({
-            success: true,
-            subcategory
-        })
+        });
+    
+    res.status(200).json({
+        success: true,
+        subcategory
+    });
 }

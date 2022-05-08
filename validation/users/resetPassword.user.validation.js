@@ -12,7 +12,8 @@ exports.validate = (action) => {
         case "updatePassword":
             return [
                 check("newPassword").not().isEmpty().withMessage("can't be empty")
-                    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/, "i"),
+                    .isLength({ min: 8 })
+                    .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d@$.!%*#?&]/,),
                 passwordIsConfirmed("newPassword")
             ];
         default:

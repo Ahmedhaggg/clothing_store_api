@@ -5,10 +5,10 @@ let { addHoursToDate } = require("../../helpers/date.handler");
 let hashing = require("../../helpers/hash");
 let generateRandomToken = require("../../helpers/generateRandomToken");
 let { createJwtToken, getDataFromJwtToken } = require("../../helpers/jwtToken")
- 
+  
 exports.create = async (req, res, next) => {
-    
     let { frontUrl, email } = req.body;
+
     let user = await authService.getUser({ email });
 
     if (!user || user.verified === false)
@@ -23,10 +23,10 @@ exports.create = async (req, res, next) => {
 
     let getOldToken = await resetPasswordService.getResetPassword({ userId: user.id});
     
-    if (!getOldToken)
-        await resetPasswordService.createResetPassword({ token, expiresin, userId: user.id });
-    else
-        await resetPasswordService.updateResetPassword({userId: user.id}, { token, expiresin})
+    !getOldToken ?
+        await resetPasswordService.createResetPassword({ token, expiresin, userId: user.id })
+            :
+        await resetPasswordService.updateResetPassword({userId: user.id}, { token, expiresin});  
     
     await sendEmail({
         to: email,
@@ -43,23 +43,24 @@ exports.create = async (req, res, next) => {
 }
 
 exports.verify = async (req, res, next) => {
+    let userId = req.user.id;
     let { token } = req.params;
 
     let getTokenData = await resetPasswordService.getResetPassword({ token });
-
+    
     if (!getTokenData)
         return res.status(404).json({
             success: false,
             message: "invalid token"
-        })
+        });
 
-    if (token.expiresin.getTime() < (new Date()).getTime()) 
+    if (token.expiresin < new Date()) 
         return res.status(400).json({
             success: false,
             message: "token is expired"
         });
         
-    await resetPasswordService.deleteResetPassword({ token });
+    await resetPasswordService.deleteResetPassword({ userId: userId });
     
     let resetPasswordJwtToken = await createJwtToken({
         userId: getTokenData.userId,
@@ -74,23 +75,23 @@ exports.verify = async (req, res, next) => {
 }
 
 exports.update = async (req, res, next) => {
-    let token = req.header.authorization;
+    let { resetPasswordToken } = req.params;
     let { newPassword } = req.body;
     
-    if (!token)
+    if (!resetPasswordToken)
         return res.status(400).json({
             success: false,
             message: "you can't be authorized"
         })
     
-    let tokenData = await getDataFromJwtToken(token);
+    let tokenData = await getDataFromJwtToken(resetPasswordToken);
 
     let currentDate = new Date();
-    if (tokenData.expiresin.getTime() < currentDate.getTime() )
+    if (tokenData.expiresin < currentDate)
         return res.status(400).json({
             success: false,
             message: "reset password token is expired"
-        })
+        });
     
     let password = await hashing.hash(newPassword);
     
@@ -105,7 +106,7 @@ exports.update = async (req, res, next) => {
     let jwtToken = await createJwtToken({
         userId: tokenData.userId,
         role: "admin"
-    })
+    }, "3d")
 
     res.status(200).json({
         success: true,

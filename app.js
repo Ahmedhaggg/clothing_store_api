@@ -88,24 +88,26 @@ app.use("/api/admin/cities", adminCityRouter);
 
 // // users routes
 let userAuthRouter = require("./routes/users/auth.user.router");
-// let userResetPasswordRouter = require("./routes/users/resetPassword.user.router");
-// let userAddressRouter = require("./routes/users/address.user.router");
-// let userProductRouter = require("./routes/users/product.user.router");
-// let userCategoryRouter = require("./routes/users/category.user.router");
-// let userSubcategoryRouter = require("./routes/users/subcategory.user.router");
-// let userGovernorateRouter = require("./routes/users/governorate.user.router");
-// let userOrderRouter = require("./routes/users/order.user.router");
+let userResetPasswordRouter = require("./routes/users/resetPassword.user.router");
+let userAddressRouter = require("./routes/users/address.user.router");
+let userProductRouter = require("./routes/users/product.user.router");
+let userCategoryRouter = require("./routes/users/category.user.router");
+let userSubcategoryRouter = require("./routes/users/subcategory.user.router");
+let userGovernorateRouter = require("./routes/users/governorate.user.router");
+let userCityRouter = require("./routes/users/city.user.router");
+let userOrderRouter = require("./routes/users/order.user.router");
 
 
 // // using users routes
 app.use("/api/users/auth", userAuthRouter);
-// app.use("/api/users/password-reset", userResetPasswordRouter);
-// app.use("/api/users/addresses", userAddressRouter);
-// app.use("/api/users/products", userProductRouter);
-// app.use("/api/users/categories", userCategoryRouter);
-// app.use("/api/users/subcategories", userSubcategoryRouter);
-// app.use("/api/users/governorates", userGovernorateRouter);
-// app.use("/api/users/orders", userOrderRouter)
+app.use("/api/users/reset-passwords", userResetPasswordRouter);
+app.use("/api/users/addresses", userAddressRouter);
+app.use("/api/users/products", userProductRouter);
+app.use("/api/users/categories", userCategoryRouter);
+app.use("/api/users/subcategories", userSubcategoryRouter);
+app.use("/api/users/governorates", userGovernorateRouter);
+app.use("/api/users/cities", userCityRouter);
+app.use("/api/users/orders", userOrderRouter)
 
 
 app.use(errorHandler);

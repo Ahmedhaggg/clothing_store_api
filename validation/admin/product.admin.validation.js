@@ -18,14 +18,14 @@ exports.validate = (action) => {
                 check("inventory.*.size").not().isEmpty().withMessage("can't be empty")
                     .isInt().withMessage("can't be number"),
                 check("discount.expiresin")
-                    .if(body("discount")).exists()
+                    .if(body("discount").exists())
                     .not().isEmpty().withMessage("can't be empty"),
                 check("discount.percent")
-                    .if(body("discount")).exists()
+                    .if(body("discount").exists())
                     .not().isEmpty().withMessage("can't be empty")
                     .isInt().withMessage("can't be number"),
                 check("discount.description")
-                    .if(body("discount")).exists()
+                    .if(body("discount").exists())
                     .not().isEmpty().withMessage("can't be empty"),
                 isArray("productDetails"),
                 check("productDetails.*.color").not().isEmpty().withMessage("can't be empty"),

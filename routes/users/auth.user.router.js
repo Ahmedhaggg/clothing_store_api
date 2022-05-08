@@ -16,7 +16,7 @@ router.post("/login",
     use(userAuthController.login)
 );
 
-router.post("/verify", 
+router.put("/:email/verify", 
     userAuthValidation.validate("verifyEmail"),
     checkValidationError,
     use(userAuthController.verify)

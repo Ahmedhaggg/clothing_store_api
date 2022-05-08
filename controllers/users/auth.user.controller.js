@@ -9,8 +9,8 @@ exports.register = async (req, res, next) => {
     let { firstName, lastName, userName, email, password, gender, birthDay, phoneNumber } = req.body;
 
     let verificationCode = genrateRandomDigitCode();
-    let hashedPassword = await hashing.hash(password)
-    
+    let hashedPassword = await hashing.hash(password) 
+
     await authService.createUser({
         firstName,
         lastName, 
@@ -42,7 +42,7 @@ exports.register = async (req, res, next) => {
 exports.verify = async (req, res, next) => {
     let { code } = req.body;
     let { email } = req.params;
-
+    
     let user = await authService.getUserIdAndEmailVerificationCode({ email })
     
     if (code !== user.code)
@@ -51,12 +51,12 @@ exports.verify = async (req, res, next) => {
             message: "this is incorrect code"
         });
 
-    await authService.updateUser({ id: userId }, {
+    await authService.updateUser({ id: user.id }, {
         verified: true,
         verifiedAt: new Date()
     });
 
-    await authService.deleteEmailVerification({ userId });
+    await authService.deleteEmailVerification({ userId: user.id });
 
     res.status(200).json({
         success: true, 
@@ -67,25 +67,29 @@ exports.verify = async (req, res, next) => {
 exports.login = async (req, res, next) => {
     let { email, password } = req.body;
 
-    let user = authService.getUser({ email });
+    let user = await authService.getUser({ email });
 
     if (user.verified === false) {
+    
+        let lastEmailVerification = await authService.getEmailVerification({ userId: user.id });
+        
+        if (lastEmailVerification.expiresin < new Date()) {
+            let newVerificationCode = genrateRandomDigitCode();
+            let expiresin = addHoursToDate(new Date(), 2)
+            
+            await authService.updateEmailVerification({userId : user.id }, {
+                code: newVerificationCode,
+                expiresin
+            });
 
-        let newVerificationCode = genrateRandomDigitCode();
-        let expiresin = addHoursToDate(new Date(2), 2)
-
-        await authService.updateEmailVerification({userId : user.id }, {
-            code: newVerificationCode,
-            expiresin
-        });
-
-        await sendEmail({
-            to: email,
-            subject: "please confirm your email",
-            html: `
-                <p>email verification code is : ${newVerificationCode}</p>
-            `
-        });
+            await sendEmail({
+                to: email,
+                subject: "please confirm your email",
+                html: `
+                    <p>email verification code is : ${newVerificationCode}</p>
+                `
+            });
+        }
 
         return res.status(400).json({
             success: false,
@@ -106,7 +110,7 @@ exports.login = async (req, res, next) => {
     let token = await createJwtToken({
         userId: user.id,
         role: "user"
-    });
+    }, "7d");
 
     res.status(200).json({
         success: true,

@@ -28,7 +28,7 @@ exports.getSubCategory = async query => await Subcategory
                     {
                         model: ProductColor,
                         attributes: ["name"],
-                        as: "productColors",
+                        as: "colors",
                         required: true,
                         include: [
                             {

@@ -28,19 +28,21 @@ exports.isAdmin = async (req, res, next) => {
 
 exports.isUser = async (req, res, next) => {
     try {
-        let token = req.headers['Authorization'];
+        let token = req.headers['authorization'];
+        
         let tokenData = await getDataFromJwtToken(token);
-
+        
         if (tokenData.role !== "user")
             return res.status(404).json({
                 success: false,
                 message: "invaild token"
-            })
+            });
+            
         req.user = {
-            userId: tokenData.userId
+            id: tokenData.userId
         }
         next();
-    } catch (_) {
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: "something went wrong"

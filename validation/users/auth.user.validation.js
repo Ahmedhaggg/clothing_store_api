@@ -27,6 +27,8 @@ exports.validate = (action) => {
         case "verifyEmail": 
             return [
                 check("code").not().isEmpty().withMessage("can't be empty")
+                .isInt()
+                .isLength({min: 6, max: 6})
             ];
         default:
             throw new Error("something went wrong");

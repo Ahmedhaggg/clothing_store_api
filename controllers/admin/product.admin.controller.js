@@ -42,7 +42,6 @@ exports.store = async (req, res, next) => {
     let image = req.file.filename;
     
     let { name, price, description, categoryId, subcategoryId, discount, productDetails } = req.body;
-    
     let slug = slugify(name);
     
     
