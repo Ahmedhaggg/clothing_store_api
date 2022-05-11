@@ -12,7 +12,9 @@ exports.getUserOrders = async query => await Order
     });
  
 exports.createOrder = async (orderData, transaction) => await Order.create(orderData, { transaction });
+
 exports.createOrderProduct = async (productData, transaction) => await OrderProduct.create(productData, { transaction });
+
 exports.createOrderProductColors = async (colorsData, transaction) => await OrderProductColor.bulkCreate(colorsData, { transaction });
 
 // exports.createOrder = async (orderData, transaction) => {
@@ -39,13 +41,14 @@ exports.createOrderProductColors = async (colorsData, transaction) => await Orde
 //     }
 // }
 
-// exports.createOrderOffer = async (offerData, transaction) => {
-//     try {
-//         return await OrderOffer.create(offerData, { transaction });
+exports.createOrderOffer = async (offerData, transaction) =>    await OrderOffer.create(offerData, { transaction });
 //     } catch (_) {
 //         return null;
 //     }
 // }
+
+exports.createOrderOfferProduct = async (offerProductData, transaction) =>  await OrderOfferProduct.create(offerProductData, { transaction });
+
 
 // exports.createOrderOfferProduct = async (offerProductData, transaction) => {
 //     try {

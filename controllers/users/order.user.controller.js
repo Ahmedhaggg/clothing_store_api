@@ -31,8 +31,118 @@ exports.show = async (req, res, next) => {
     });
 }
 
+exports.stored = async (req, res, next) => {
+    let  userId  = req.user.id;
+    let { paymentToken, products, offers, addressId, cityShippingCost, totalPrice } = req.body
+
+    let amount = totalPrice + cityShippingCost * 100;
+
+    let newTransaction = await transaction.createTransaction();
+
+    try {
+        let updateInventoryData = [];
+        
+        let order = await orderService.createOrder(
+            {
+                userId,
+                amount,
+                addressId,
+                paymentId: "checkoutid"
+            }, 
+            newTransaction        
+        );
+    
+        let storeProducts = [];
+        let storeColors = [];
+        products.forEach( product => {
+            let newOrderProduct = orderService.createOrderProduct({
+                    productId: product.id,
+                    quantity: product.quantity,
+                    totalPrice: product.totalPrice,
+                    pricePerUnit: product.pricePerUnit,
+                    orderId: order.id
+            }, newTransaction);
+            storeProducts.push(newOrderProduct);
+            product.colors.forEach(color => {
+                updateInventoryData.push({
+                    colorId: color.id,
+                    size: color.size,
+                    quantity: color.quantity 
+                });
+                
+                color.orderProductId = newOrderProduct.id;
+                
+                storeColors.push( {
+                    quantity: color.quantity,
+                    size: color.size,
+                    productColorId: color.id
+                });
+            });
+        })
+
+        let orderProducts = await Promise.all(storeProducts);
+        orderProducts.forEach(orderProduct => {
+            storeColors.forEach(color => {
+                if (product.id)
+                color.orderProductId = orderProduct.id 
+            })
+        }) 
+        let orderProductsColors = await Promise.all(storeColors);
+
+        await transaction.saving(newTransaction);
+        res.status(200).json({
+            success: true,
+            productsss,
+            colorsss
+        })
+    } catch (error) {
+        console.log(error);
+        await transaction.cancel(newTransaction);
+
+        res.status(400).json({ 
+            success: false,
+            message: "something went wrong"
+        });
+    }
+}
+
+let updateInventories = async (inventoryData, trans) =>
+    await Promise.all(inventoryData.map( async inventoryUpdate => {
+        
+        let decrementInventoryColor = await inventoryService.decrementInventory({
+            size: inventoryUpdate.size,
+            colorId: inventoryUpdate.colorId
+        }, inventoryUpdate.quantity , trans);
+        
+        return decrementInventoryColor;
+    }));
+
+
+
+let processColors = colors => {
+    let updateInventoryData = []
+    let colorsData = offerProduct.colors.map(color => {
+        updateInventoryData.push({
+            colorId: color.id,
+            size: color.size,
+            quantity: color.quantity
+        });
+        
+        return {
+            orderOfferProductId: newOrderOfferProduct.id,
+            quantity: color.quantity,
+            size: color.size,
+            productColorId: color.id
+        };
+    })
+    return {
+        colorsData,
+        updateInventoryData
+    }
+}
+
 exports.store = async (req, res, next) => {
-    console.log(req.body);
+    
     let  userId  = req.user.id;
     let { paymentToken, products, offers, addressId, cityShippingCost, totalPrice } = req.body
 
@@ -54,6 +164,7 @@ exports.store = async (req, res, next) => {
     let newTransaction = await transaction.createTransaction();
 
     try {
+
         let updateInventoryData = [];
         
         let order = await orderService.createOrder(
@@ -65,12 +176,13 @@ exports.store = async (req, res, next) => {
             }, 
             newTransaction        
         );
-        
+
+            
         if (products) {
             
             
-            await products.forEach(async product => {
-                
+            await Promise.all(products.map( async product => {
+            
                 let newOrderProduct = await orderService.createOrderProduct({
                     productId: product.id,
                     quantity: product.quantity,
@@ -79,15 +191,13 @@ exports.store = async (req, res, next) => {
                     orderId: order.id
                 }, newTransaction);
                 
-                let orderProductColorsData = product.colors.map(color => {
+                let newOrderProductColorsData = product.colors.map(color => {
                     updateInventoryData.push({
                         colorId: color.id,
                         size: color.size,
                         quantity: color.quantity 
                     });
-                    
-                    color.orderProductId = newOrderProduct.id;
-                    
+                                        
                     return {
                         orderProductId: newOrderProduct.id,
                         quantity: color.quantity,
@@ -96,27 +206,26 @@ exports.store = async (req, res, next) => {
                     };
                 });
 
-                await orderService.createOrderProductColors(orderProductColorsData, newTransaction);
-
-            });        
+                await orderService.createOrderProductColors(newOrderProductColorsData, newTransaction);
+            }));   
         }
 
 
 
         if (offers) {
 
-            await offers.forEach(async offer => {
+            await Promise.all(offers.map(async offer => {
                 
                 let newOrderOffer = await orderService.createOrderOffer({
-                    id: offer.id,
+                    offerId: offer.id,
                     quantity: offer.quantity,
                     pricePerUnit: offer.pricePerUnit,
                     totalPrice: offer.totalPrice,
                     orderId: order.id
                 }, newTransaction);
 
-                await offer.products.forEach(async offerProduct => {
-                    let newOfferProduct = await orderService.createOrderOfferProduct(
+                await Promise.all(offer.products.map(async offerProduct => {
+                    let newOrderOfferProduct = await orderService.createOrderOfferProduct(
                         {
                             productId: offerProduct.productId,
                             orderOfferId: newOrderOffer.id,
@@ -125,40 +234,34 @@ exports.store = async (req, res, next) => {
                         newTransaction
                     );
 
-                    let orderOfferProductColorsData = offerProduct.colors.map(offerProductColor => {
-                        offerProductColorsData.offerProductId = newOfferProduct.id;
+                    let orderOfferProductColorsData = offerProduct.colors.map(color => {
+                        
                         updateInventoryData.push({
-                            colorId: offerProductColor.colorId,
-                            size: offerProductColor.size,
-                            quantity: offerProductColor.quantity
+                            colorId: color.id,
+                            size: color.size,
+                            quantity: color.quantity
                         });
                         
-                        return offerProductColor;
+                        return {
+                            orderOfferProductId: newOrderOfferProduct.id,
+                            quantity: color.quantity,
+                            size: color.size,
+                            productColorId: color.id
+                        };
                     })
 
                     await orderService.createOrderProductColors(orderOfferProductColorsData, newTransaction)
-                });
-            })
+                }));
+            }));
         }
 
-
-        let updateInventories = updateInventoryData.map( inventoryUpdate => {
-                
-            let decrementInventoryColor = inventoryService.decrementInventory({
-                size: inventoryUpdate.size,
-                colorId: inventoryUpdate.productColorId
-            }, inventoryUpdate.quantity , transaction)
-            
-            return decrementInventoryColor;
-        });
-                    
-            
-        let updateInventoriesResult =  await Promise.all(updateInventories);
-
+        let updateInventoriesResult =  await updateInventories(updateInventoryData, newTransaction);
+        console.log(updateInventoriesResult)
         updateInventoriesResult.forEach(updateInventoryResult => {
+            
             if (updateInventoryResult === false) 
                 throw new Error("some products in your order is not available")
-        })
+        });
 
         await transaction.saving(newTransaction);
 
@@ -166,13 +269,14 @@ exports.store = async (req, res, next) => {
             success: true,
             message: "order is created successfully"
         });
-
+ 
     } catch (error) {
+        
         await transaction.cancel(newTransaction);
 
         res.status(400).json({ 
             success: false,
-            message: error
+            message: error.message
         });
     }
 }
