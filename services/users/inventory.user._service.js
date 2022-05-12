@@ -4,13 +4,13 @@ exports.getInventoryProduct = async query => await Inventory.findAll({ where: qu
 
 exports.decrementInventory = async (query, quantity, transaction) => {
     try {
-        let inventory = await Inventory.findOne({ where: query , attributes: ["quantity"]});
+        let inventory = await Inventory.findOne({ where: query , attributes: ["quantity"], transaction });
         
-        if (inventory.quantity < quantity || (inventory.quantity - quantity) <= 0) 
+        if (inventory.quantity < quantity || (inventory.quantity - quantity) < 0) 
             return false;
         
-        await Inventory.increment('quantity', { by: -quantity , where: query, transaction: transaction, validator: true});
-    
+        await Inventory.update({ quantity: inventory.quantity - quantity }, { where: query , transaction });
+            
         return true;
     } catch (error) {
         

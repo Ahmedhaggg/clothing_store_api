@@ -15,7 +15,7 @@ let Order = db.define("orders", {
     }, 
     paymentId: {
         type: DataTypes.STRING(100),
-        allowNull: false
+        allowNull: true
     },
     amount: {
         type: DataTypes.DECIMAL(5, 2),

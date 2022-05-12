@@ -1,5 +1,7 @@
 let { Inventory, Order, OrderOffer, OrderProduct, OrderOfferProduct, Shipping, Offer, Product, ProductDiscount, Address, OrderProductColor, ProductColor, City, Governorate } = require("../../models");
 let db = require("../../config/database");
+
+
 exports.getUserOrders = async query => await Order   
     .findAll({
         where: query,
@@ -13,6 +15,14 @@ exports.getUserOrders = async query => await Order
  
 exports.createOrder = async (orderData, transaction) => await Order.create(orderData, { transaction });
 
+exports.updateOrder = async (query, newData, transaction) => {
+    let updatedOrder = await Order.update(newData, { 
+        where: query,
+        transaction
+    });
+    
+    return updatedOrder[0] === 1 ? true : false;
+};
 exports.createOrderProduct = async (productData, transaction) => await OrderProduct.create(productData, { transaction });
 
 exports.createOrderProductColors = async (colorsData, transaction) => await OrderProductColor.bulkCreate(colorsData, { transaction });

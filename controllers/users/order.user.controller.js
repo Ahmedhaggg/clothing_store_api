@@ -141,26 +141,33 @@ let processColors = colors => {
     }
 }
 
+
+// "products": [
+//         {
+//             "id": 6,
+//             "quantity": 1,
+//             "pricePerUnit": 18,
+//             "totalPrice": 18,
+//             "colors": [
+//                 {
+//                     "id": 4,
+//                     "size": "l",
+//                     "quantity": 1
+//                 }
+//             ]
+//         }
+//     ],
+
+
+
+
 exports.store = async (req, res, next) => {
     
     let  userId  = req.user.id;
     let { paymentToken, products, offers, addressId, cityShippingCost, totalPrice } = req.body
-
-    let amount = totalPrice + cityShippingCost * 100;
-
-    let checkout = await payment.pay({
-        amount,
-        source: paymentToken,
-        currency: "usd" 
-    });
-
-    if (checkout === false)
-        return res.status(400).json({
-            success: false,
-            message: "something happend in payment"
-        });
     
-        
+    let amount = (totalPrice  + cityShippingCost) * 100;
+    
     let newTransaction = await transaction.createTransaction();
 
     try {
@@ -172,14 +179,12 @@ exports.store = async (req, res, next) => {
                 userId,
                 amount,
                 addressId,
-                paymentId: "checkoutid"
+                paymentId: null
             }, 
             newTransaction        
         );
-
             
         if (products) {
-            
             
             await Promise.all(products.map( async product => {
             
@@ -256,12 +261,23 @@ exports.store = async (req, res, next) => {
         }
 
         let updateInventoriesResult =  await updateInventories(updateInventoryData, newTransaction);
-        console.log(updateInventoriesResult)
+        
         updateInventoriesResult.forEach(updateInventoryResult => {
             
             if (updateInventoryResult === false) 
                 throw new Error("some products in your order is not available")
         });
+
+        let checkout = await payment.pay({
+            amount,
+            source: paymentToken,
+            currency: "usd",
+        });
+    
+        if (checkout.success === false) 
+            throw new Error("invalid payment")
+        
+        await orderService.updateOrder({ id: order.id }, { paymentId: checkout.id }, newTransaction);
 
         await transaction.saving(newTransaction);
 
@@ -271,7 +287,6 @@ exports.store = async (req, res, next) => {
         });
  
     } catch (error) {
-        
         await transaction.cancel(newTransaction);
 
         res.status(400).json({ 
