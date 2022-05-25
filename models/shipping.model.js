@@ -15,10 +15,6 @@ let Shipping = db.define("shipping", {
     endShippingWithin: {
         type: DataTypes.DATE,
         allowNull: false
-    },
-    shippingCost: {
-        type: DataTypes.INTEGER,
-        allowNull: false
     }
 }, {
     timestamps: false

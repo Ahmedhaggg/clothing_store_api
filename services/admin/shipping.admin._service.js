@@ -1,6 +1,6 @@
 let { Shipper, Shipping, Order, Address, City, Governorate } = require("../../models");
 
-exports.createShipping = async newData => await Shipper.create(newData);
+exports.createShipping = async (newData, transaction) => await Shipper.create(newData, { transaction });
 
 exports.getOrderShipping = async query => await Shipping
     .findOne({

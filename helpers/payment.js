@@ -16,13 +16,3 @@ exports.pay = async data => {
         }
     }
 }
-exports.retrieve = async chargeId => {
-    try {
-        let retrieveCharge = await stripe.charges.refunded
-        
-        return retrieveCharge;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-}

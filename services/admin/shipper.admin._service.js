@@ -2,8 +2,8 @@ let { Shipper, Shipping, Order, Address, City, Governorate } = require("../../mo
 
 exports.createShipper = async newData => await Shipper.create(newData);
 
-exports.getAllShipper = async orderBy => await Shipper
-    .findAll({ order: orderBy });
+exports.getAllShipper = async query => await Shipper
+    .findAll({ where: query });
 
 exports.getShipper = async query => await Shipper
     .findOne({
@@ -30,4 +30,10 @@ exports.getShipper = async query => await Shipper
                 }
             }
         }
-    })
+    });
+
+exports.updateShipper = async (query, newData, transaction) => {
+    let updatedShipper = await Shipper.update(newData, { where: query, transaction });
+
+    return updatedShipper[0] === 1 ? true : false;
+}

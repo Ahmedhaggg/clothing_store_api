@@ -1,6 +1,5 @@
 let { check, body } = require("express-validator");
-let isUnique = require("../custom/unique");
-let passwordIsConfirmed = require("../custom/passwordIsConfirmed")
+
 exports.validate = (action) => {
     switch (action) {
         case "create":

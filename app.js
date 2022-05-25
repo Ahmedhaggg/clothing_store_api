@@ -53,10 +53,13 @@ let {
     Governorate,
     Shipping,
     Shipper,
-    OrderProductColor
+    OrderProductColor,
+    ProductReview,
+    OfferReview
 } = require("./models");
 // db
-//   .sync({ force: true }) // create the database table for our model(s)
+//   .sync({ force: false }) 
+// create the database table for our model(s)
 
 
 // admin routes
@@ -71,6 +74,8 @@ let adminOfferRouter = require("./routes/admin/offer.admin.router");
 let adminOfferProductRouter = require("./routes/admin/offerProduct.admin.router");
 let adminGovernorateRouter = require("./routes/admin/governorate.admin.router");
 let adminCityRouter = require("./routes/admin/city.admin.router");
+let adminOrderRoutes = require("./routes/admin/order.admin.router");
+let adminShipperRoutes = require("./routes/admin/shipper.admin.router");
 
 // // using admin routes
 app.use("/api/admin/auth", adminAuthRouter); 
@@ -84,6 +89,8 @@ app.use("/api/admin/offers", adminOfferRouter)
 app.use("/api/admin/offers/offerProducts", adminOfferProductRouter);
 app.use("/api/admin/governorates", adminGovernorateRouter);
 app.use("/api/admin/cities", adminCityRouter);
+app.use("/api/admin/orders", adminOrderRoutes);
+app.use("/api/admin/shippers", adminShipperRoutes);
 
 
 // // users routes

@@ -31,81 +31,6 @@ exports.show = async (req, res, next) => {
     });
 }
 
-exports.stored = async (req, res, next) => {
-    let  userId  = req.user.id;
-    let { paymentToken, products, offers, addressId, cityShippingCost, totalPrice } = req.body
-
-    let amount = totalPrice + cityShippingCost * 100;
-
-    let newTransaction = await transaction.createTransaction();
-
-    try {
-        let updateInventoryData = [];
-        
-        let order = await orderService.createOrder(
-            {
-                userId,
-                amount,
-                addressId,
-                paymentId: "checkoutid"
-            }, 
-            newTransaction        
-        );
-    
-        let storeProducts = [];
-        let storeColors = [];
-        products.forEach( product => {
-            let newOrderProduct = orderService.createOrderProduct({
-                    productId: product.id,
-                    quantity: product.quantity,
-                    totalPrice: product.totalPrice,
-                    pricePerUnit: product.pricePerUnit,
-                    orderId: order.id
-            }, newTransaction);
-            storeProducts.push(newOrderProduct);
-            product.colors.forEach(color => {
-                updateInventoryData.push({
-                    colorId: color.id,
-                    size: color.size,
-                    quantity: color.quantity 
-                });
-                
-                color.orderProductId = newOrderProduct.id;
-                
-                storeColors.push( {
-                    quantity: color.quantity,
-                    size: color.size,
-                    productColorId: color.id
-                });
-            });
-        })
-
-        let orderProducts = await Promise.all(storeProducts);
-        orderProducts.forEach(orderProduct => {
-            storeColors.forEach(color => {
-                if (product.id)
-                color.orderProductId = orderProduct.id 
-            })
-        }) 
-        let orderProductsColors = await Promise.all(storeColors);
-
-        await transaction.saving(newTransaction);
-        res.status(200).json({
-            success: true,
-            productsss,
-            colorsss
-        })
-    } catch (error) {
-        console.log(error);
-        await transaction.cancel(newTransaction);
-
-        res.status(400).json({ 
-            success: false,
-            message: "something went wrong"
-        });
-    }
-}
-
 let updateInventories = async (inventoryData, trans) =>
     await Promise.all(inventoryData.map( async inventoryUpdate => {
         
@@ -117,61 +42,17 @@ let updateInventories = async (inventoryData, trans) =>
         return decrementInventoryColor;
     }));
 
-
-
-let processColors = colors => {
-    let updateInventoryData = []
-    let colorsData = offerProduct.colors.map(color => {
-        updateInventoryData.push({
-            colorId: color.id,
-            size: color.size,
-            quantity: color.quantity
-        });
-        
-        return {
-            orderOfferProductId: newOrderOfferProduct.id,
-            quantity: color.quantity,
-            size: color.size,
-            productColorId: color.id
-        };
-    })
-    return {
-        colorsData,
-        updateInventoryData
-    }
-}
-
-
-// "products": [
-//         {
-//             "id": 6,
-//             "quantity": 1,
-//             "pricePerUnit": 18,
-//             "totalPrice": 18,
-//             "colors": [
-//                 {
-//                     "id": 4,
-//                     "size": "l",
-//                     "quantity": 1
-//                 }
-//             ]
-//         }
-//     ],
-
-
-
-
 exports.store = async (req, res, next) => {
-    
     let  userId  = req.user.id;
     let { paymentToken, products, offers, addressId, cityShippingCost, totalPrice } = req.body
     
-    let amount = (totalPrice  + cityShippingCost) * 100;
+    // calculate amout and use it in checkout * 100
+    let amount = totalPrice  + cityShippingCost;
     
     let newTransaction = await transaction.createTransaction();
 
     try {
-
+        // store data of product in order to check and update it
         let updateInventoryData = [];
         
         let order = await orderService.createOrder(
@@ -183,7 +64,14 @@ exports.store = async (req, res, next) => {
             }, 
             newTransaction        
         );
-            
+        
+        /**
+         * 1- check product in order
+         * 2- loop 
+         * 3- insert product in db
+         * 4- loop in colors, push inventory update data and return colors data
+         * 5- insert colors in db
+        */
         if (products) {
             
             await Promise.all(products.map( async product => {
@@ -216,6 +104,15 @@ exports.store = async (req, res, next) => {
         }
 
 
+        /**
+         * 1- check offers in order
+         * 2- loop 
+         * 3- insert offer in db
+         * 4- loop product in offers
+         * 5- insert products from offer in db
+         * 4- loop in colors, push inventory update data and return colors data
+         * 5- insert colors
+        */
 
         if (offers) {
 
@@ -246,7 +143,7 @@ exports.store = async (req, res, next) => {
                             size: color.size,
                             quantity: color.quantity
                         });
-                        
+                         
                         return {
                             orderOfferProductId: newOrderOfferProduct.id,
                             quantity: color.quantity,
@@ -260,6 +157,7 @@ exports.store = async (req, res, next) => {
             }));
         }
 
+        
         let updateInventoriesResult =  await updateInventories(updateInventoryData, newTransaction);
         
         updateInventoriesResult.forEach(updateInventoryResult => {
@@ -269,7 +167,7 @@ exports.store = async (req, res, next) => {
         });
 
         let checkout = await payment.pay({
-            amount,
+            amount: amount * 100,
             source: paymentToken,
             currency: "usd",
         });
@@ -295,116 +193,3 @@ exports.store = async (req, res, next) => {
         });
     }
 }
- 
-// let processOffersData = offersData => {
-//         let offers = []
-//         let offersProducts = [];
-//         offersData.forEach(offer => {
-//             offers.push({
-//                 offerId: offer.id,
-//                 quantity: offer.quantity,
-//                 pricePerUnit: offer.pricePerUnit,
-//                 totalPrice: offer.totalPrice
-//             });
-//             offer.products.forEach(offerProduct => {
-//                 orderProduct.offerId = offer.id;
-//                 offersProducts.push(offerProduct);
-//             }) 
-//         });
-//         return {
-//             offers,
-//             offersProducts,
-//         }
-// }
-
-// exports.store = async (req, res, next) => {
-//     let { userId } = req.user;
-//     let { paymentToken, products, offers, addressId, cityShippingCost, totalPrice } = req.body
-    
-//     if (products) {
-//         let checkProductIsAvailable = await inventoryService.checkProductsIsAvailable(products);
-        
-//         if (checkProductIsAvailable !== true) 
-//             return res.status(400).json({
-//                 success: false,
-//                 message: checkProductIsAvailable.getMessage
-//             })
-//     }
-
-//     if (offers) {
-//         let checkOfferIAvailable = await inventoryService.checkProductsIsAvailable(offers);
-
-//         if (checkOfferIAvailable !== true) 
-//             return res.status(400).json({
-//                 success: false,
-//                 message: checkProductIsAvailable.getMessage
-//             })
-//     }
-
-
-//     let amount = totalPrice + cityShippingCost * 100;
-    
-//     let checkout = await payment.pay({
-//         amount,
-//         source: paymentToken,
-//         currency: "usd" 
-//     });
-
-//     if (checkout === false)
-//         return res.status(400).json({
-//             success: false,
-//             message: "something happend in payment"
-//         })
-    
-//     let order = await orderService.createOrder(
-//         {
-//             userId,
-//             totalPrice: amount,
-//             amount,
-//             addressId,
-//             paymentId: checkout.id
-//         },
-//         offers,
-//         products
-//     )
-
-//     // await inventoryService.updateInventory(products);
-//     // await inventoryService.upd
-//     res.status(200).json({
-//         success: true, 
-//         message: "your order is added successfully",
-//         order
-//     });
-// }
-//  {
-//     paymentToken: "",
-//     totalPrice,
-//     cityShippingCost,
-//     addressId,
-//     offers: {
-//         offerId,
-//         offerProducts: [
-//             {
-//                 productId,
-//                 quantity: 10,
-//                 colors: [
-//                     {color: "red", quantity: 5},
-//                     {color: "blue", quantity: 5},
-//                 ]
-//             }
-
-//         ],
-        
-//     },
-//     products: [
-//             {
-//                 productId,
-//                 quantity: 10,
-//                 colors: [
-//                     {color: "red", quantity: 5},
-//                     {color: "blue", quantity: 5},
-//                 ]
-//             }
-
-//         ],
-// }

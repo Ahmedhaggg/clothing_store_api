@@ -20,6 +20,8 @@ let Shipper = require("./shipper.model");
 let Shipping = require("./shipping.model");
 let OrderOfferProduct = require("./orderOfferProdcut.model");
 let OrderProductColor = require("./orderProductColor.model");
+let ProductReview = require("./productReview.model")
+let OfferReview = require("./offerReview.model")
 const db = require("../config/database");
 
 /* =================== realtions ====================*/
@@ -51,6 +53,10 @@ Inventory.belongsTo(Product);
 ProductColor.hasMany(Inventory, { foreignKey: "colorId", onUpdate: "cascade", onDelete: "cascade" });
 Inventory.belongsTo(ProductColor);
 
+// realtion between product and review
+Product.hasMany(ProductReview, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade"})
+ProductReview.belongsTo(Product);
+
 // user and verificationCode realtion
 User.hasOne(EmailVerification, { foreignKey: "userId", onUpdate: "cascade", onDelete: "cascade" });
 EmailVerification.belongsTo(User);
@@ -66,6 +72,10 @@ OfferProducts.belongsTo(Offer);
 // offer Products and products realtion
 Product.hasMany(OfferProducts, { foreignKey: "productId", onUpdate: "cascade", onDelete: "cascade" })
 OfferProducts.belongsTo(Product);
+
+// realtion between offer and review
+Offer.hasMany(OfferReview, { foreignKey: "offerId", onUpdate: "cascade", onDelete: "cascade"})
+OfferReview.belongsTo(Offer);
 
 // user and address realtion
 User.hasMany(Address, { foreignKey: "userId", onUpdate: "cascade", onDelete: "cascade"});
@@ -135,6 +145,16 @@ Shipping.belongsTo(Shipper);
 Address.hasMany(Order, { foreignKey: "addressId", onUpdate: "cascade", onDelete: "cascade" })
 Order.belongsTo(Address);
 
+
+
+// realtion between user and product review
+User.hasMany(ProductReview, { foreignKey: "userId", onUpdate: "cascade", onDelete: "cascade"});
+ProductReview.belongsTo(User);
+
+// realtion between user and offer review
+User.hasMany(OfferReview, { foreignKey: "userId", onUpdate: "cascade", onDelete: "cascade"});
+OfferReview.belongsTo(User);
+
 module.exports = {
     Admin,
     Category,
@@ -158,5 +178,7 @@ module.exports = {
     Shipping,
     Shipper,
     OrderProductColor,
+    ProductReview,
+    OfferReview,
     db
 };
