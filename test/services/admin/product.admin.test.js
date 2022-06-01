@@ -15,11 +15,11 @@ describe("test all method in admin product service", () => {
         productData.subcategoryId = newSubcategory.id;
     });
     
-    afterAll(async () => {
-        await db.query("DELETE FROM products", { type: QueryTypes.DELETE});
-        await db.query("DELETE FROM categories", { type: QueryTypes.DELETE});
-        await db.query("DELETE FROM subcategories", { type: QueryTypes.DELETE});
-    });
+    // afterAll(async () => {
+    //     await db.query("DELETE FROM products", { type: QueryTypes.DELETE});
+    //     await db.query("DELETE FROM categories", { type: QueryTypes.DELETE});
+    //     await db.query("DELETE FROM subcategories", { type: QueryTypes.DELETE});
+    // });
     
     it('createProduct should return object', async () => {
         let newProduct = await productService.createProduct(productData, productDiscountData, productDetails);

@@ -15,7 +15,7 @@ let checkValidationError = async (req, res, next) => {
         res.status(400).json({
             success: false,
             message: "validation error",
-            validationError: validationResultArray
+            validationErrors: validationResultArray
         });
     } catch (_) {
         res.status(500).json({

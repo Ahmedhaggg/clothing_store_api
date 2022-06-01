@@ -61,7 +61,7 @@ let {
 //   .sync({ force: false }) 
 // create the database table for our model(s)
 
-
+ 
 // admin routes
 let adminAuthRouter = require("./routes/admin/auth.admin.router");
 let adminProductRouter = require("./routes/admin/product.admin.router");
@@ -74,8 +74,11 @@ let adminOfferRouter = require("./routes/admin/offer.admin.router");
 let adminOfferProductRouter = require("./routes/admin/offerProduct.admin.router");
 let adminGovernorateRouter = require("./routes/admin/governorate.admin.router");
 let adminCityRouter = require("./routes/admin/city.admin.router");
-let adminOrderRoutes = require("./routes/admin/order.admin.router");
-let adminShipperRoutes = require("./routes/admin/shipper.admin.router");
+let adminOrderRouter = require("./routes/admin/order.admin.router");
+let adminShipperRouter = require("./routes/admin/shipper.admin.router");
+let adminOfferReviewRouter = require("./routes/admin/offerReview.admin.router");
+let adminProductReviewRouter = require("./routes/admin/productReview.admin.router");
+let adminUserRouter = require("./routes/admin/users.admin.router");
 
 // // using admin routes
 app.use("/api/admin/auth", adminAuthRouter); 
@@ -89,8 +92,11 @@ app.use("/api/admin/offers", adminOfferRouter)
 app.use("/api/admin/offers/offerProducts", adminOfferProductRouter);
 app.use("/api/admin/governorates", adminGovernorateRouter);
 app.use("/api/admin/cities", adminCityRouter);
-app.use("/api/admin/orders", adminOrderRoutes);
-app.use("/api/admin/shippers", adminShipperRoutes);
+app.use("/api/admin/orders", adminOrderRouter);
+app.use("/api/admin/shippers", adminShipperRouter);
+app.use("/api/admin", adminOfferReviewRouter);
+app.use("/api/admin", adminProductReviewRouter);
+app.use("/api/admin/users", adminUserRouter)
 
 
 // // users routes
@@ -103,9 +109,12 @@ let userSubcategoryRouter = require("./routes/users/subcategory.user.router");
 let userGovernorateRouter = require("./routes/users/governorate.user.router");
 let userCityRouter = require("./routes/users/city.user.router");
 let userOrderRouter = require("./routes/users/order.user.router");
+let userOfferReviewRouter = require("./routes/users/offerReview.user.router")
+let userProductReviewRouter = require("./routes/users/productReview.user.router")
+let userprofileReviewRouter = require("./routes/users/profile.user.router")
+let userPurchasesReviewRouter = require("./routes/users/purchases.user.router")
 
-
-// // using users routes
+// using users routes
 app.use("/api/users/auth", userAuthRouter);
 app.use("/api/users/reset-passwords", userResetPasswordRouter);
 app.use("/api/users/addresses", userAddressRouter);
@@ -114,13 +123,17 @@ app.use("/api/users/categories", userCategoryRouter);
 app.use("/api/users/subcategories", userSubcategoryRouter);
 app.use("/api/users/governorates", userGovernorateRouter);
 app.use("/api/users/cities", userCityRouter);
-app.use("/api/users/orders", userOrderRouter)
+app.use("/api/users/orders", userOrderRouter);
+app.use("/api/users/products", userProductReviewRouter);
+app.use("/api/users/offers", userOfferReviewRouter);
+app.use("/api/users", userprofileReviewRouter);
+app.use("/api/users/purchases", userPurchasesReviewRouter);
 
 
 app.use(errorHandler);
 // let port = config.PORT || 2000
-app.listen(config.PORT, () => {
-    console.log("server is running successfully");
+app.listen(config.PORT, (port) => {
+    console.log("server is running successfully", port);
 })
 
 

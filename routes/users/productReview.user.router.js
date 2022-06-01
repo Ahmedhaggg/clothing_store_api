@@ -1,8 +1,9 @@
 let router = require("express").Router();
-let userProductReviewController = require("../../controllers/users/productReview.user.controller")
-let userProductReviewValidation = require("../../validations/users/productReview.user.validation")
+let userProductReviewController = require("../../controllers/users/productReview.user.controller");
+let userProductReviewValidation = require("../../validation/users/productReview.user.validation");
 let guards = require("../../middlewares/guards");
-let use = require("../../middlewares/useMiddleware")
+let use = require("../../middlewares/useMiddleware");
+const checkValidationError = require("../../middlewares/checkValidationError");
 
 router.get("/:productId/reviews", 
     guards.isUser,
@@ -17,12 +18,14 @@ router.get("/:productId/reviews/:reviewId",
 router.post("/:productId/reviews", 
     guards.isUser,
     userProductReviewValidation.validate("create"),
+    checkValidationError,
     use(userProductReviewController.store)
 );
 
 router.put("/:productId/reviews/:reviewId", 
     guards.isUser,
     userProductReviewValidation.validate("update"),
+    checkValidationError,
     use(userProductReviewController.update)
 );
 

@@ -1,32 +1,31 @@
-const { ProductReview, User } = require("../../models");
+const { OfferReview, User } = require("../../models");
 
-exports.getProductReviews = async query => await ProductReview
+exports.getOfferReviews = async query => await OfferReview
     .findAll({ 
         where: query, 
         attributes: ["id", "comment", "rating", "createdAt", "updatedAt"],
         include: [
             {
                 model: User,
-                attributes: ["id", "userName"]
+                attributes: ["id", "name", "image"]
             }
         ]
     });
-
-exports.getReview = async query => await ProductReview
+exports.getReview = async query => await OfferReview
     .findOne({ 
         where: query,
         attributes: ["id", "comment", "rating", "createdAt", "updatedAt"]
     });
     
-exports.createReview = async newData => await ProductReview.create(newData);
+exports.createReview = async newData => await OfferReview.create(newData);
 
 exports.updateReview = async (query, newData) => {
-    let updatedReView = await ProductReview.update(newData, { where: query });
+    let updatedReView = await OfferReview.update(newData, { where: query });
 
     return updatedReView[0] === 1 ? true : false;
 }
 exports.deleteReview = async query => {
-    let deletedReview = await ProductReview.destroy({ where: query });
+    let deletedReview = await OfferReview.destroy({ where: query });
 
     return deletedReview === 1 ? true : false;
 }

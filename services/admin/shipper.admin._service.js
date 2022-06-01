@@ -10,13 +10,13 @@ exports.getShipper = async query => await Shipper
         where: query,
         include: {
             model: Shipping,
-            attributes: [],
+            attributes: ["id", "startShippingAt", "endShippingWithin"],
             include: {
                 model: Order,
-                attributes: [],
+                attributes: ["id"],
                 include: {
                     model: Address,
-                    attributes: ["id", "firstZone", "lastZone"],
+                    attributes: ["id", "firstZone", "secondZone"],
                     include: [
                         {
                             model: City,

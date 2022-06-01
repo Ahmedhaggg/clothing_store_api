@@ -1,5 +1,5 @@
 let router = require("express").Router();
-let userProductController = require("../../controllers/users/product.admin.controller");
+let userProductController = require("../../controllers/users/product.user.controller");
 let use = require("../../middlewares/useMiddleware");
 
 router.get("/", 

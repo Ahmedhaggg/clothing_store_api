@@ -6,6 +6,7 @@ exports.index = async (req, res, next) => {
     let shippers = await shipperService.getAllShipper({ status });
 
     res.status(200).json({
+        success: true,
         shippers
     });
 }

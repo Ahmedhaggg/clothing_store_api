@@ -31,7 +31,7 @@ exports.updateUser = async (query, newData) => {
 exports.getUser = async query =>  await User
     .findOne({ 
         where: query,
-        attributes: ["id", "email", "password", "verified"]
+        attributes: ["id", "email", "password", "verified", "username"]
     });
 
 

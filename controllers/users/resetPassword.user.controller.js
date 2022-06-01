@@ -10,7 +10,7 @@ exports.create = async (req, res, next) => {
     let { frontUrl, email } = req.body;
 
     let user = await authService.getUser({ email });
-
+    
     if (!user || user.verified === false)
         return res.status(404).json({
             success: false,
@@ -43,7 +43,7 @@ exports.create = async (req, res, next) => {
 }
 
 exports.verify = async (req, res, next) => {
-    let userId = req.user.id;
+    
     let { token } = req.params;
 
     let getTokenData = await resetPasswordService.getResetPassword({ token });
@@ -60,7 +60,7 @@ exports.verify = async (req, res, next) => {
             message: "token is expired"
         });
         
-    await resetPasswordService.deleteResetPassword({ userId: userId });
+    await resetPasswordService.deleteResetPassword({ userId: getTokenData.userId });
     
     let resetPasswordJwtToken = await createJwtToken({
         userId: getTokenData.userId,
@@ -85,7 +85,7 @@ exports.update = async (req, res, next) => {
         })
     
     let tokenData = await getDataFromJwtToken(resetPasswordToken);
-
+    
     let currentDate = new Date();
     if (tokenData.expiresin < currentDate)
         return res.status(400).json({
@@ -105,8 +105,8 @@ exports.update = async (req, res, next) => {
 
     let jwtToken = await createJwtToken({
         userId: tokenData.userId,
-        role: "admin"
-    }, "3d")
+        role: "user"
+    }, "3d");
 
     res.status(200).json({
         success: true,

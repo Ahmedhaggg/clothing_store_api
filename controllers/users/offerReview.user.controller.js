@@ -1,18 +1,18 @@
-let productReviewService = require("../../services/users/productReview.user._service");
+let offerReviewService = require("../../services/users/offerReview.user._service");
 let purchasesService = require("../../services/users/purchases.user._service");
 
 exports.index = async (req, res, next) => {
-    let { productId } = req.params;
-    let productReviews = await productReviewService.getProductReviews({ productId });
-
+    let { offerId } = req.params;
+    let offerReviews = await offerReviewService.getofferReviews({ offerId });
+ 
     res.status(200).json({
         success: true,
-        reviews: productReviews
+        reviews: offerReviews
     });
 }
 exports.show = async (req, res, next) => {
     let { reviewId } = req.params;
-    let review = await productReviewService.getReview({ id: reviewId });
+    let review = await offerReviewService.getReview({ id: reviewId });
 
     if (!review)
         return res.status(404).json({
@@ -24,24 +24,23 @@ exports.show = async (req, res, next) => {
         review
     });
 }
-
 exports.store = async (req, res, next) => {
-    let { productId } = req.params;
+    let { offerId } = req.params;
     let { rating, comment } = req.body;
     let userId = req.user.id;
 
-    let checkProductInUserPurchases = await purchasesService.checkProductInUserPurchases({ userId, productId });
+    let checkOfferInUserPurchases = await purchasesService.checkOfferInUserPurchases({ userId, offerId });
 
-    if (!checkProductInUserPurchases)
+    if (!checkOfferInUserPurchases)
         return res.status(400).json({
             success: false,
-            message: "can't review in this product, because is not in your purchases"
+            message: "can't review in this offer, because is not in your purchases"
         });
 
-    let newReview = await productReviewService.createReview({
+    let newReview = await offerReviewService.createReview({
         rating, 
         comment, 
-        productId,
+        offerId,
         userId
     });
 
@@ -56,7 +55,7 @@ exports.update = async (req, res, next) => {
     let { rating, comment } = req.body;
     let userId = req.user;
 
-    let updateReview = await productReviewService.updateReview({ id: reviewId, userId }, { rating, comment});
+    let updateReview = await offerReviewService.updateReview({ id: reviewId, userId }, { rating, comment});
 
     if (updateReview === false)
         return res.status(400).json({
@@ -73,7 +72,7 @@ exports.destroy = async (req, res, next) => {
     let { reviewId } = req.params;
     let userId = req.user;
 
-    let deleteReview = await productReviewService.deleteReview({ id: reviewId, userId });
+    let deleteReview = await offerReviewService.deleteReview({ id: reviewId, userId });
 
     if (deleteReview === false)
         return res.status(400).json({

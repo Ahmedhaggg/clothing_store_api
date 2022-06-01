@@ -3,23 +3,19 @@ let userResetPasswordValidation = require("../../validation/users/resetPassword.
 let userResetPasswordController = require("../../controllers/users/resetPassword.user.controller");
 let checkValidationError = require("../../middlewares/checkValidationError");
 let use = require("../../middlewares/useMiddleware");
-let guards = require("../../middlewares/guards");
 
 router.post("/", 
-    guards.isUser,
-    userResetPasswordValidation.validate("createResetPassword"),
+    userResetPasswordValidation.validate("create"),
     checkValidationError,
     use(userResetPasswordController.create)
 );
 
 router.get("/:token", 
-    guards.isUser,
     use(userResetPasswordController.verify)
 );
 
 router.put("/:resetPasswordToken", 
-    guards.isUser,
-    userResetPasswordValidation.validate("updatePassword"),
+    userResetPasswordValidation.validate("update"),
     checkValidationError,
     use(userResetPasswordController.update)
 );

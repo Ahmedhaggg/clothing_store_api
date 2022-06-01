@@ -9,7 +9,7 @@ const ProductReview = db.define("product_reviews", {
         primaryKey: true,
         allowNull: false
     },
-    ratings: {
+    rating: {
         type: DataTypes.TINYINT,
         allowNull: false
     },

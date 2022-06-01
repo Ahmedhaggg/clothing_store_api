@@ -106,7 +106,7 @@ exports.login = async (req, res, next) => {
         });
 
     await authService.updateUser({ email }, { lastLogin: new Date() })
-    
+     
     let token = await createJwtToken({
         userId: user.id,
         role: "user"
@@ -115,6 +115,7 @@ exports.login = async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: "success login",
-        token
+        token,
+        userName: user.username
     })
 }
