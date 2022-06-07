@@ -1,4 +1,4 @@
-const { ProductReview, User } = require("../../models");
+const { ProductReview, User, Product } = require("../../models");
 
 exports.getProductReviews = async query => await ProductReview
     .findAll({ 
@@ -30,3 +30,19 @@ exports.deleteReview = async query => {
 
     return deletedReview === 1 ? true : false;
 }
+
+exports.getUserReviews = async query => await ProductReview
+    .findAll({
+        where: query,
+        attributes: ["id", "comment", "rating", "createdAt", "updatedAt"],
+        include: [
+            {
+                model: User,
+                attributes: ["id", "userName"]
+            },
+            {
+                model: Product,
+                attributes: ["id", "name", "image"]
+            }
+        ]
+    })

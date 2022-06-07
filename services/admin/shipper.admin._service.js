@@ -32,8 +32,8 @@ exports.getShipper = async query => await Shipper
         }
     });
 
-exports.updateShipper = async (query, newData, transaction) => {
-    let updatedShipper = await Shipper.update(newData, { where: query, transaction });
+exports.updateShipper = async (query, newData) => {
+    let updatedShipper = await Shipper.update(newData, { where: query });
 
     return updatedShipper[0] === 1 ? true : false;
 }

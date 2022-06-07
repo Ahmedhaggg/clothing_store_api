@@ -38,6 +38,14 @@ exports.store = async (req, res, next) => {
             message: "can't review in this product, because is not in your purchases"
         });
 
+    let checkOldReview = await productReviewService.getReview({ userId, productId });
+
+    if (checkOldReview) 
+        return res.status(400).json({
+            success: false,
+            message: "can't review in this offer, because you had review in this offer"
+        });
+
     let newReview = await productReviewService.createReview({
         rating, 
         comment, 
@@ -54,7 +62,7 @@ exports.store = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     let { reviewId } = req.params;
     let { rating, comment } = req.body;
-    let userId = req.user;
+    let userId = req.user.id;
 
     let updateReview = await productReviewService.updateReview({ id: reviewId, userId }, { rating, comment});
 
@@ -71,8 +79,7 @@ exports.update = async (req, res, next) => {
 }
 exports.destroy = async (req, res, next) => {
     let { reviewId } = req.params;
-    let userId = req.user;
-
+    let userId = req.user.id;
     let deleteReview = await productReviewService.deleteReview({ id: reviewId, userId });
 
     if (deleteReview === false)

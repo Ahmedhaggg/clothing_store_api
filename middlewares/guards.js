@@ -37,12 +37,13 @@ exports.isUser = async (req, res, next) => {
                 success: false,
                 message: "invaild token"
             });
-            
+        
         req.user = {
             id: tokenData.userId
         }
         next();
     } catch (error) {
+        
         res.status(500).json({
             success: false,
             message: "something went wrong"

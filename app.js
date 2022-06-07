@@ -79,6 +79,7 @@ let adminShipperRouter = require("./routes/admin/shipper.admin.router");
 let adminOfferReviewRouter = require("./routes/admin/offerReview.admin.router");
 let adminProductReviewRouter = require("./routes/admin/productReview.admin.router");
 let adminUserRouter = require("./routes/admin/users.admin.router");
+let adminsalesRouter = require("./routes/admin/sales.admin.router")
 
 // // using admin routes
 app.use("/api/admin/auth", adminAuthRouter); 
@@ -97,7 +98,7 @@ app.use("/api/admin/shippers", adminShipperRouter);
 app.use("/api/admin", adminOfferReviewRouter);
 app.use("/api/admin", adminProductReviewRouter);
 app.use("/api/admin/users", adminUserRouter)
-
+app.use("/api/admin/sales", adminsalesRouter)
 
 // // users routes
 let userAuthRouter = require("./routes/users/auth.user.router");

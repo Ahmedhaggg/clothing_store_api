@@ -3,7 +3,7 @@ let { OfferReview, User } = require("../../models")
 exports.getOfferReviews = async query => await OfferReview
     .findAll({
         where:  query,
-        attributes: ["id", "ratings", "comment", "createdAt", "updatedAt" ],
+        attributes: ["id", "rating", "comment", "createdAt", "updatedAt" ],
         include: {
             model: User,
             attributes: ["id", "userName"]
@@ -13,7 +13,7 @@ exports.getOfferReviews = async query => await OfferReview
 exports.getOfferReview = async query => await OfferReview
     .findOne({
         where:  query,
-        attributes: ["id", "ratings", "comment", "createdAt", "updatedAt" ],
+        attributes: ["id", "rating", "comment", "createdAt", "updatedAt" ],
         include: {
             model: User,
             attributes: ["id", "userName"]

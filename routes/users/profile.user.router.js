@@ -3,9 +3,19 @@ let profileUserController = require("../../controllers/users/profile.user.contro
 let use = require("../../middlewares/useMiddleware");
 let guards = require("../../middlewares/guards");
 
-router.get("/:id/profile", 
+router.get("/:userId/profile", 
     guards.isUser,
-    use(profileUserController.show)
+    use(profileUserController.showProfile)
+); 
+
+router.get("/:userId/products/reviews", 
+    guards.isUser,
+    use(profileUserController.showProductsReviews)
+);
+
+router.get("/:userId/offers/reviews", 
+    guards.isUser,
+    use(profileUserController.showOffersReviews)
 );
 
 module.exports = router;

@@ -3,7 +3,7 @@ let purchasesService = require("../../services/users/purchases.user._service");
 
 exports.index = async (req, res, next) => {
     let { offerId } = req.params;
-    let offerReviews = await offerReviewService.getofferReviews({ offerId });
+    let offerReviews = await offerReviewService.getOfferReviews({ offerId });
  
     res.status(200).json({
         success: true,
@@ -37,6 +37,14 @@ exports.store = async (req, res, next) => {
             message: "can't review in this offer, because is not in your purchases"
         });
 
+    let checkOldReview = await offerReviewService.getReview({ userId, offerId });
+
+    if (checkOldReview) 
+        return res.status(400).json({
+            success: false,
+            message: "can't review in this offer, because you had review in this offer"
+        });
+
     let newReview = await offerReviewService.createReview({
         rating, 
         comment, 
@@ -53,7 +61,7 @@ exports.store = async (req, res, next) => {
 exports.update = async (req, res, next) => {
     let { reviewId } = req.params;
     let { rating, comment } = req.body;
-    let userId = req.user;
+    let userId = req.user.id;
 
     let updateReview = await offerReviewService.updateReview({ id: reviewId, userId }, { rating, comment});
 
@@ -70,7 +78,7 @@ exports.update = async (req, res, next) => {
 }
 exports.destroy = async (req, res, next) => {
     let { reviewId } = req.params;
-    let userId = req.user;
+    let userId = req.user.id;
 
     let deleteReview = await offerReviewService.deleteReview({ id: reviewId, userId });
 

@@ -4,7 +4,7 @@ let shippingService = require("../../services/admin/shipping.admin._service")
 let transaction = require("../../helpers/databaseTransaction");
 
 exports.index = async (req, res, next) => {
-    let orders = await orderService.getOrders(req.query);
+    let orders = await orderService.getOrders({ status: req.query.status || "recived"});
 
     res.status(200).json({
         success: true,
