@@ -89,7 +89,7 @@ app.use("/api/admin/subcategories", adminSubcategoryRouter);
 app.use("/api/admin/products", adminproductColorsRouter);
 app.use("/api/admin/products/discounts", adminProductDiscountRouter);
 app.use("/api/admin/inventories", adminInventoryRouter);
-app.use("/api/admin/offers", adminOfferRouter)
+app.use("/api/admin/offers", adminOfferRouter);
 app.use("/api/admin/offers/offerProducts", adminOfferProductRouter);
 app.use("/api/admin/governorates", adminGovernorateRouter);
 app.use("/api/admin/cities", adminCityRouter);
@@ -104,6 +104,7 @@ app.use("/api/admin/sales", adminsalesRouter)
 let userAuthRouter = require("./routes/users/auth.user.router");
 let userResetPasswordRouter = require("./routes/users/resetPassword.user.router");
 let userAddressRouter = require("./routes/users/address.user.router");
+let userOfferRouter = require("./routes/users/offer.user.router");
 let userProductRouter = require("./routes/users/product.user.router");
 let userCategoryRouter = require("./routes/users/category.user.router");
 let userSubcategoryRouter = require("./routes/users/subcategory.user.router");
@@ -120,6 +121,7 @@ app.use("/api/users/auth", userAuthRouter);
 app.use("/api/users/reset-passwords", userResetPasswordRouter);
 app.use("/api/users/addresses", userAddressRouter);
 app.use("/api/users/products", userProductRouter);
+app.use("/api/users/offers", userOfferRouter);
 app.use("/api/users/categories", userCategoryRouter);
 app.use("/api/users/subcategories", userSubcategoryRouter);
 app.use("/api/users/governorates", userGovernorateRouter);

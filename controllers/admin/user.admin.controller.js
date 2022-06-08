@@ -1,7 +1,8 @@
 let userService = require("../../services/admin/user.admin._service")
 
 exports.index = async (req, res, next) => {
-    let verified  = req.query.verified ? true : false;
+    let verified  = req.query.verified === "false" ? false : true;
+    console.log(verified)
     let users = await userService.getUsers({ verified });
     res.status(200).json({
         success: true,

@@ -26,7 +26,7 @@ exports.getOffers = async () => await Offer
                 include: {
                     required: true,
                     model: ProductColor,
-                    as: "productColors", 
+                    as: "colors", 
                     attributes: ["name"],
                     include: {
                         required: true,
@@ -44,46 +44,51 @@ exports.getOffers = async () => await Offer
 
     });
 
-exports.getOffer = async query => {
-    let product = await Offer.findAll({
-        where: query,
-        attributes: ["id", "name", "slug", "price", "image", "description", "expiresin"],
+
+exports.getOffer = async query => await Offer
+    .findOne({
         where: {
             active: true,
-            expiresin: {
-                [Op.gte]: new Date()
-            }
+            ...query
         },
-        include: {
-            required: true,
-            model: OfferProducts,
-            attributes: ["id", "quantity"],
-            as: "offerProducts",
-            include: {
+        attributes: ["id", "name", "slug", "price", "image", "description", "expiresin"],
+        include: [
+            {
                 required: true,
-                model: Product,
-                attributes: ["id", "name", "slug", "image"],
-                where: {
-                    active: true
-                },
-                include: {
-                    required: true,
-                    model: ProductColor,
-                    as: "productColors", 
-                    attributes: ["id", "name"],
-                    include: {
+                model: OfferProducts,
+                as: "offerProducts",
+                attributes: ["quantity"],
+                include: [
+                    {
                         required: true,
-                        model: Inventory,
-                        attributes: ["id", "size"],
+                        model: Product,
+                        attributes: ["id", "name", "slug", "image"],
                         where: {
-                            quantity: {
-                                [Op.gte]: db.col("offerProducts.quantity") 
+                            active: true
+                        },
+                        include: [
+                            {
+                                required: true,
+                                model: ProductColor,
+                                attributes: ["id", "name"],
+                                as: "colors",
+                                include: [
+                                    {
+                                        required: true,
+                                        model: Inventory,
+                                        attributes: ["id", "size", "quantity"],
+                                        where: {
+                                            quantity: {
+                                                [Op.gte]: db.col("offerProducts.quantity") 
+                                            }
+                                        }
+                                    }
+                                ]
                             }
-                        }
+                        ]
                     }
-                }
+                ]
+                
             }
-        }
-    });
-    return product[0];
-}
+        ]
+    })

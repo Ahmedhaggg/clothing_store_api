@@ -13,11 +13,11 @@ exports.getUser = async query => {
         include: [
             {
                 model: Order,
-                attributes: ["id", "amount", "createdAt", "paymentId"],
+                attributes: ["id", "amount", "createdAt", "paymentId", "status"],
             },
             {
                 model: OfferReview,
-                attributes: ["id", 'ratings', "comment"],
+                attributes: ["id", 'rating', "comment"],
                 include: {
                     model: Offer,
                     attributes: ["id", "name"]
@@ -25,7 +25,7 @@ exports.getUser = async query => {
             },
             {
                 model: ProductReview,
-                attributes: ["id", 'ratings', "comment"],
+                attributes: ["id", 'rating', "comment"],
                 include: {
                     model: Product,
                     attributes: ["id", "name"]
@@ -33,7 +33,7 @@ exports.getUser = async query => {
             }
         ]
     });
-
+    console.log(userData)
     let { 
         id, 
         userName,
@@ -42,12 +42,12 @@ exports.getUser = async query => {
         email,
         phoneNumber,
         lastLogin,
-        productReviews,
-        OfferReviews
+        product_reviews,
+        offer_reviews
     } = userData;
-
+    
     let orders = userData.orders.filter(order => order.status !== "completed");
-    let purchases = userData.orders.filter(order => order.status === "completed");
+    let sales = userData.orders.filter(order => order.status === "completed");
 
     return {
         id, 
@@ -57,10 +57,10 @@ exports.getUser = async query => {
         email,
         phoneNumber,
         lastLogin,
-        productReviews,
-        OfferReviews,
+        productReviews: product_reviews,
+        offerReviews: offer_reviews,
         orders,
-        purchases
+        sales
     };
 }
 exports.deleteUser = async query => {
