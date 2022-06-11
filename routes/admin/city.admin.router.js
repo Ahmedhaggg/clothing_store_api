@@ -5,6 +5,11 @@ let use = require("../../middlewares/useMiddleware");
 let guards = require("../../middlewares/guards");
 const checkValidationError = require("../../middlewares/checkValidationError");
 
+router.get("/count", 
+    guards.isAdmin,
+    use(adminCityController.count)
+);
+
 router.get("/", 
     guards.isAdmin,
     use(adminCityController.index)

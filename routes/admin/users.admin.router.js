@@ -3,6 +3,10 @@ let guards = require("../../middlewares/guards");
 let use = require("../../middlewares/useMiddleware");
 let adminUsersController = require("../../controllers/admin/user.admin.controller");
 
+router.get("/count", 
+    guards.isAdmin,
+    use(adminUsersController.count)
+);
 
 router.get("/", 
     guards.isAdmin,

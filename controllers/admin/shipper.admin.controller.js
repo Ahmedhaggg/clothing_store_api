@@ -1,5 +1,17 @@
 let shipperService = require("../../services/admin/shipper.admin._service");
 
+
+exports.count = async (req, res, next) => {
+    let query = req.query.status ? { status: req.query.status } : {};
+    let numberOfShippers = await shipperService.count(query);
+    
+    res.status(200).json({
+        success: true,
+        numberOfShippers
+    });
+}
+
+
 exports.index = async (req, res, next) => {
     let status = req.query.status || "available";
 

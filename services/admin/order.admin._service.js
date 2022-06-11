@@ -1,5 +1,13 @@
-let { Order, OrderOffer, Offer, OfferProducts, OrderOfferProduct, OrderProduct, Product, OrderProductColor, ProductColor, Address, City, Shipping, Shipper } = require("../../models");
+const { Op } = require("sequelize");
+let { Order, OrderOffer, Offer, OrderOfferProduct, OrderProduct, Product, OrderProductColor, ProductColor, Address, City, Shipping, Shipper } = require("../../models");
 
+exports.count = async query => await Order
+    .count({
+        where: {
+            status: Array.isArray(query.status) ? { [Op.in]: query.status } : query.status 
+            
+        }
+    })
 exports.getOrders = async query => await Order.findAll({ where: query });
 
 exports.getOrder = async query => await Order

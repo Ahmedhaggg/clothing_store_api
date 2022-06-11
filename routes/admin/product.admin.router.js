@@ -6,6 +6,13 @@ let adminProductValidation = require("../../validation/admin/product.admin.valid
 let guards = require("../../middlewares/guards");
 let use = require("../../middlewares/useMiddleware");
 
+router.get("/count", 
+    
+    guards.isAdmin,
+    use(adminProductController.count)
+);
+
+
 router.get("/", 
     guards.isAdmin,
     use(adminProductController.index)

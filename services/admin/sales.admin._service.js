@@ -1,5 +1,7 @@
 let { Order, User, Address, City, OrderProduct, OrderOffer, Governorate, OrderOfferProduct, OrderProductColor, Product, ProductColor, Offer } = require("../../models");
 
+exports.count = async () => await Order.count({ where: { status: "completed"}});
+
 exports.getSales = async (offset = 0, limit = 20) => await Order
     .findAll({
         where: { 
@@ -100,7 +102,7 @@ exports.createSales = async query => {
             ...query,
         }
     });
-    console.log(updateOrder)
+    
     return updateOrder[0] === 1 ? true : false;
 }
 

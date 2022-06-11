@@ -1,4 +1,7 @@
-let { User, Order, OfferReview, Product, Offer, ProductReview } = require("../../models");
+const { Op } = require("sequelize");
+let { User, Order, OfferReview, Product, Offer, ProductReview, EmailVerification } = require("../../models");
+
+exports.count = async () => await User.count();
 
 exports.getUsers = async query => await User
     .findAll({
@@ -33,7 +36,7 @@ exports.getUser = async query => {
             }
         ]
     });
-    console.log(userData)
+    
     let { 
         id, 
         userName,
@@ -67,3 +70,30 @@ exports.deleteUser = async query => {
     let deletedUser = await User.destroy({ where: query });
     return deletedUser === 1 ? true : false; 
 }
+
+exports.getUsersLoggedMonthAgo = async () => await User
+    .findAll({
+        attributes: ["id", "email", "firstName"],
+        where: {
+            lastLogin: {
+                [Op.gte]: moment().subtract(30, 'days').toDate()
+            }
+        }
+    });
+
+exports.getAllAnonymousUsers = async () => await User
+    .findAll({
+        where: {
+            verified: false
+        },
+        attributes: ["id"],
+        include: {
+            model: EmailVerification,
+            where: {
+                createdAt: {
+                    [Op.gte]: moment().subtract(1, 'days').toDate()
+                }
+            }
+        }
+    })
+

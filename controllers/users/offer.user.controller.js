@@ -2,7 +2,7 @@ let offerService = require("../../services/users/offer.user._service");
 
 
 exports.index = async (req, res, next) => {
-
+    
     let offers = await offerService.getOffers()
 
     res.status(200).json({

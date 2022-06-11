@@ -1,5 +1,7 @@
 let { Shipper, Shipping, Order, Address, City, Governorate } = require("../../models");
 
+exports.count = async query => await Shipper.count({ where: query });
+
 exports.createShipper = async newData => await Shipper.create(newData);
 
 exports.getAllShipper = async query => await Shipper
@@ -32,8 +34,15 @@ exports.getShipper = async query => await Shipper
         }
     });
 
-exports.updateShipper = async (query, newData) => {
-    let updatedShipper = await Shipper.update(newData, { where: query });
+exports.updateShipper = async (query, newData, transaction) => {
+    let updatedShipper = await Shipper.update(newData, 
+        { 
+            where: {
+                status: "available",
+                ...query
+            },
+        transaction 
+    });
 
     return updatedShipper[0] === 1 ? true : false;
 }

@@ -1,5 +1,7 @@
 let { ProductReview, User } = require("../../models")
 
+exports.count = async () => await ProductReview.count();
+
 exports.getProductReviews = async query => await ProductReview
     .findAll({
         where:  query,

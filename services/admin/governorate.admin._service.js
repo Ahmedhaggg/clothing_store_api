@@ -1,5 +1,7 @@
 let { Governorate, City } = require("../../models");
 
+exports.count = async () => await Governorate.count();
+
 exports.getAllGovernorates = async () => await Governorate.findAll();
 
 exports.getGovernorate = async query => await Governorate

@@ -1,5 +1,15 @@
 let governorateService = require("../../services/admin/governorate.admin._service");
  
+
+exports.count = async (req, res, next) => {
+    let numberOfGovernorates = await governorateService.count();
+    
+    res.status(200).json({
+        success: true,
+        numberOfGovernorates
+    });
+}
+
 exports.index = async (req, res, next) => {
     let governorates = await governorateService.getAllGovernorates();
 

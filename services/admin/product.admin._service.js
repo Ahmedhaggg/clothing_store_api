@@ -2,6 +2,8 @@ const { Op } = require("sequelize");
 let { Product, ProductColor, ProductDiscount, Inventory, Category, Subcategory } = require("../../models/index");
 let db = require("../../config/database");
 
+exports.count = async query => await Product.count({ where: query });
+
 exports.getProduct = async query => await Product.findOne({
         where: query,
         attributes: ["id", "name", "slug", "image", "price", "description", "active", "createdAt", "updatedAt"],

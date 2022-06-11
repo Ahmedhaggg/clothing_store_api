@@ -1,5 +1,15 @@
 let userService = require("../../services/admin/user.admin._service")
 
+exports.count = async (req, res, next) => {
+    
+    let numberOfusers = await userService.count();
+    
+    res.status(200).json({
+        success: true,
+        numberOfusers
+    });
+}
+
 exports.index = async (req, res, next) => {
     let verified  = req.query.verified === "false" ? false : true;
     console.log(verified)

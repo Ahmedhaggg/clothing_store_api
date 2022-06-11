@@ -1,5 +1,14 @@
 let reviewService = require("../../services/admin/productReview.admin._service");
 
+exports.count = async (req, res, next) => {
+    let numberOfProductsReviews = await reviewService.count();
+    
+    res.status(200).json({
+        success: true,
+        numberOfProductsReviews
+    });
+}
+
 exports.index = async (req, res, next) => {
     let { productId } = req.params;
     let reviews = await reviewService.getProductReviews({ productId });

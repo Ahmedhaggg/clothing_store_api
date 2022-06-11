@@ -16,12 +16,14 @@ exports.isAdmin = async (req, res, next) => {
 
         next();
     } catch (error) {
+        
         if (req.file)
             await fs.unlinkSync(path.join(req.file.destination,  req.file.filename));
 
         res.status(500).json({
             success: false,
-            message: "something went wrong"
+            authError: true,
+            message: "you are not authenticated"
         });
     }
 }
@@ -46,7 +48,8 @@ exports.isUser = async (req, res, next) => {
         
         res.status(500).json({
             success: false,
-            message: "something went wrong"
+            authError: true,
+            message: "you are not authenticated"
         });
     }
 }

@@ -1,6 +1,15 @@
 let categoryAdminService = require("../../services/admin/category.admin._service");
 let slugify = require("slugify");
 
+exports.count = async (req, res, next) => {
+    let numberOfCategories = await categoryAdminService.count();
+    
+    res.status(200).json({
+        success: true,
+        numberOfCategories
+    });
+}
+
 exports.index = async (req, res, next) => {
     let categories = await categoryAdminService.getAllCategories();
 

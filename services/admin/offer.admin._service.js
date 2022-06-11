@@ -2,6 +2,8 @@ let { Offer, OfferProducts, Product, ProductColor, ProductDiscount, Inventory} =
 let db = require("../../config/database");
 const { Op } = require("sequelize");
 
+exports.count = async query => await Offer.count({ where: query });
+
 exports.getAllOffers = async (query = {}) => {
     query.name ? 
         (query.name = { [Op.like]: `%${query.name}%` }) : false;
@@ -29,10 +31,11 @@ exports.createOffer = async (offerData, offerProductsData) => {
         await OfferProducts.bulkCreate(offerProductsData, { transaction });
 
         await transaction.commit();
+        
         return offer
     } catch (error) { 
         await transaction.rollback()
-        return null;
+        throw new Error(error)
     }
 }
 

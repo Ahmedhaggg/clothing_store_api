@@ -7,18 +7,19 @@ exports.createUser = async (newUserData, emailVerificationData) => {
     let newTransaction = await db.transaction();
     try {
         let newUser = await User.create(newUserData, { transaction: newTransaction });
+
         emailVerificationData.userId = newUser.id;
+        
         await EmailVerification.create(emailVerificationData, { transaction: newTransaction});
 
         await newTransaction.commit();
-        return {
-            id: newUser.id
-        };
+        
+        return { id: newUser.id };
     } catch (error) {
-        console.log(error);
+        
         await newTransaction.rollback();
 
-        throw new Error("something wen wrong");
+        throw new Error(error);
     }
 }
 

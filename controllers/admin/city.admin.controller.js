@@ -1,5 +1,17 @@
 let cityService = require("../../services/admin/city.admin._service");
  
+
+
+exports.count = async (req, res, next) => {
+    
+    let numberOfCities = await cityService.count();
+    
+    res.status(200).json({
+        success: true,
+        numberOfCities
+    });
+}
+
 exports.index = async (req, res, next) => {
     let cities = await cityService.getAllCities();
 

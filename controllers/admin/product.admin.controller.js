@@ -4,6 +4,20 @@ let fs = require("fs");
 let { UPLOADSDIR } = require("../../config/index");
 const path = require("path");
 
+
+exports.count = async (req, res, next) => {
+    let query = req.query.active === "true" ? { active: true}
+        : req.query.active === "false" ? { active: false }
+        : {};
+
+    let numberOfProducts = await productService.count(query);
+    
+    res.status(200).json({
+        success: true,
+        numberOfProducts
+    });
+}
+
 exports.index = async (req, res, next) => {
     let { active, name } = req.query;
 

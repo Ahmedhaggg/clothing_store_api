@@ -5,6 +5,12 @@ let use = require("../../middlewares/useMiddleware");
 let adminShipperController = require("../../controllers/admin/shipper.admin.controller");
 let adminShipperValidation = require("../../validation/admin/shipper.admin.validation");
 
+router.get("/count", 
+    guards.isAdmin,
+    use(adminShipperController.count)
+);
+
+
 router.get("/", 
     guards.isAdmin,
     use(adminShipperController.index)

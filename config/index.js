@@ -18,7 +18,8 @@ let {
     EMAIL,
     EMAIL_PASS,
     EMAIL_SERVICE,
-    STRIPE_KEY
+    STRIPE_KEY,
+    CLIENT_URL
 } = process.env;
 
 
@@ -37,5 +38,6 @@ module.exports =  {
     EMAIL_PASS,
     EMAIL_SERVICE,
     STRIPE_KEY,
-    OFFERSIMAGESDIR
+    OFFERSIMAGESDIR,
+    CLIENT_URL
 };

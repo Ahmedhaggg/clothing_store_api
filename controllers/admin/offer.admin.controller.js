@@ -4,6 +4,20 @@ let { OFFERSIMAGESDIR } = require("../../config/index")
 let slugify = require("slugify");
 const path = require("path");
 
+
+exports.count = async (req, res, next) => {
+    let query  = req.query.active === "true" ? { active: true } 
+        : req.query.active === "false" ?  {active: false } 
+        : {};
+
+    let numberOfOffers = await offerService.count(query);
+    
+    res.status(200).json({
+        success: true,
+        numberOfOffers
+    });
+}
+
 exports.index = async (req, res, next) => {
     let { active, name } = req.query;
 

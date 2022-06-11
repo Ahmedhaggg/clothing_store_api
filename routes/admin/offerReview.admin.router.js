@@ -3,6 +3,11 @@ let adminOfferReviewController = require("../../controllers/admin/offerReview.ad
 let use = require("../../middlewares/useMiddleware");
 let guards = require("../../middlewares/guards");
 
+router.get("/offers/reviews/count", 
+    guards.isAdmin,
+    use(adminOfferReviewController.count)
+);
+
 router.get("/offers/:offerId/reviews", 
     guards.isAdmin,
     use(adminOfferReviewController.index)

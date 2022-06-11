@@ -31,35 +31,8 @@ db.authenticate()
     console.log(err);
 })
 
-let {
-    Admin,
-    Category,
-    Subcategory,
-    Product,
-    ProductColor,
-    ProductDiscount,
-    Inventory,
-    User,
-    EmailVerification,
-    ResetPassword,
-    Offer,
-    OfferProducts,
-    Order,
-    OrderProduct,
-    OrderOffer,
-    OrderOfferProduct,
-    Address,
-    City,
-    Governorate,
-    Shipping,
-    Shipper,
-    OrderProductColor,
-    ProductReview,
-    OfferReview
-} = require("./models");
-// db
-//   .sync({ force: false }) 
-// create the database table for our model(s)
+
+// db.sync({ force: false });
 
  
 // admin routes
@@ -80,8 +53,9 @@ let adminOfferReviewRouter = require("./routes/admin/offerReview.admin.router");
 let adminProductReviewRouter = require("./routes/admin/productReview.admin.router");
 let adminUserRouter = require("./routes/admin/users.admin.router");
 let adminsalesRouter = require("./routes/admin/sales.admin.router")
+let adminShippingRouter = require("./routes/admin/shipping.admin.router");
 
-// // using admin routes
+// using admin routes
 app.use("/api/admin/auth", adminAuthRouter); 
 app.use("/api/admin/products", adminProductRouter)
 app.use("/api/admin/categories", adminCategoryRouter);
@@ -99,8 +73,9 @@ app.use("/api/admin", adminOfferReviewRouter);
 app.use("/api/admin", adminProductReviewRouter);
 app.use("/api/admin/users", adminUserRouter)
 app.use("/api/admin/sales", adminsalesRouter)
+app.use("/api/admin/shippings", adminShippingRouter)
 
-// // users routes
+// users routes
 let userAuthRouter = require("./routes/users/auth.user.router");
 let userResetPasswordRouter = require("./routes/users/resetPassword.user.router");
 let userAddressRouter = require("./routes/users/address.user.router");
@@ -132,10 +107,26 @@ app.use("/api/users/offers", userOfferReviewRouter);
 app.use("/api/users", userprofileReviewRouter);
 app.use("/api/users/purchases", userPurchasesReviewRouter);
 
-
+// error middleware
 app.use(errorHandler);
-// let port = config.PORT || 2000
-app.listen(config.PORT, (port) => {
+ 
+// 404 middleware
+app.use((req, res, next) => {
+    res.status(404).json({
+        success: false,
+        message: "page is not found"
+    }) 
+})
+
+
+// corn jobs
+require("./helpers/cronJobs/cleanAnonymousUsers");
+require("./helpers/cronJobs/remindUsers");
+
+
+// app.use("/")
+
+app.listen(config.PORT || 4000, (port) => {
     console.log("server is running successfully", port);
 })
 

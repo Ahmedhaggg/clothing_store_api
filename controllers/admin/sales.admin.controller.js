@@ -2,6 +2,15 @@ let salesService = require("../../services/admin/sales.admin._service");
 let shippingService = require("../../services/admin/shipping.admin._service")
 let shipperService = require("../../services/admin/shipper.admin._service");
 
+exports.count = async (req, res, next) => {
+    let numberSales = await salesService.count();
+    
+    res.status(200).json({
+        success: true,
+        numberSales
+    });
+}
+
 
 exports.index = async (req, res, next) => {
     let { offset, limit} = req.query

@@ -1,4 +1,5 @@
 let offerProductService = require("../../services/admin/offerProduct.admin._service")
+
 exports.store = async (req, res, next) => {
     let { productId, offerId, quantity } = req.body;
 

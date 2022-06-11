@@ -3,6 +3,16 @@ let shipperService = require("../../services/admin/shipper.admin._service")
 let shippingService = require("../../services/admin/shipping.admin._service")
 let transaction = require("../../helpers/databaseTransaction");
 
+
+exports.count = async (req, res, next) => {
+    let numberOfOrders = await orderService.count({ status : req.query.status || ["received", "shipped"]});
+    
+    res.status(200).json({
+        success: true,
+        numberOfOrders
+    });
+}
+
 exports.index = async (req, res, next) => {
     let orders = await orderService.getOrders({ status: req.query.status || "recived"});
 
@@ -67,13 +77,14 @@ exports.update = async (req, res, next) => {
             success: true,
             message: "order is shippered successfully"
         });
+        
     } catch (error) {
         console.log(error)
         await transaction.cancel(newTransaction);
 
-        res.status(200).json({
-            success: true,
-            message: error
+        res.status(400).json({
+            success: false,
+            message: error.message
         });
     }
 }

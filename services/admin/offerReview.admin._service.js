@@ -1,5 +1,7 @@
 let { OfferReview, User } = require("../../models")
 
+exports.count = async () => await OfferReview.count();
+
 exports.getOfferReviews = async query => await OfferReview
     .findAll({
         where:  query,

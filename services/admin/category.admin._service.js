@@ -1,8 +1,8 @@
-const { Sequelize } = require("sequelize");
 let { Category, Subcategory, Product } = require("../../models/index");
-let db = require("../../config/database")
-exports.getAllCategories = async () => await Category.findAll();
 
+exports.count = async () => await Category.count(); 
+
+exports.getAllCategories = async () => await Category.findAll();
 
 exports.getCategory = async query => await Category
     .findOne({ 

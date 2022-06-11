@@ -18,11 +18,13 @@ let User = db.define("users", {
     },
     userName: {
         type: DataTypes.STRING(40),
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     email: {
         type: DataTypes.STRING(100),
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     password: {
         type: DataTypes.STRING(200),
@@ -35,7 +37,8 @@ let User = db.define("users", {
     },
     phoneNumber: {
         type: DataTypes.STRING(11),
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     birthDay: {
         type: DataTypes.DATE,

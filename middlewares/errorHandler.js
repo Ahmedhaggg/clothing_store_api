@@ -1,10 +1,9 @@
 const errorHandler = async (err, req, res, next) => {
+
     console.log(err);
-    let status = err.status || 500;
-    let error = err.message || "something went wrong";
-    res.status(status).json({
+    res.status(500).json({
         success: false,
-        error
+        error: "something went wrong"
     });
 }
 

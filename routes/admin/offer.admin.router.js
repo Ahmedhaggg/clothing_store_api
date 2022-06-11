@@ -5,6 +5,12 @@ let guards = require("../../middlewares/guards");
 let use = require("../../middlewares/useMiddleware");
 let uploader = require("../../middlewares/uploader");
 const checkValidationError = require("../../middlewares/checkValidationError");
+
+router.get("/count", 
+    guards.isAdmin,
+    use(adminOfferController.count)
+);
+
 router.get("/", 
     guards.isAdmin,
     use(adminOfferController.index)

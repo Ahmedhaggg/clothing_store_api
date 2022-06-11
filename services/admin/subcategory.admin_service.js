@@ -1,6 +1,8 @@
 const { Op } = require("sequelize");
 let { Subcategory, Category, Product, ProductDiscount } = require("../../models/index");
 
+exports.count = async () => await Subcategory.count();
+
 exports.getAllSubcategories = async () => await Subcategory
     .findAll({ 
         attributes: ["id", "name"],

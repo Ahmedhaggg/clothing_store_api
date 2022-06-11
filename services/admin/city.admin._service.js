@@ -1,5 +1,6 @@
 let { City, Governorate } = require("../../models");
 
+exports.count = async () => await City.count();
 exports.getAllCities = async () => await City
     .findAll({ 
         include: [{ 
