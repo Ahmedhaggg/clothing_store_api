@@ -32,7 +32,7 @@ db.authenticate()
 })
 
 
-// db.sync({ force: false });
+db.sync({ force: false });
 
  
 // admin routes

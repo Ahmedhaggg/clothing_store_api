@@ -1,5 +1,5 @@
 let router = require("express").Router();
-let userOfferReviewController = require("../../controllers/users/OfferReview.user.controller");
+let userOfferReviewController = require("../../controllers/users/offerReview.user.controller");
 let userOfferReviewValidation = require("../../validation/users/offerReview.user.validation");
 let guards = require("../../middlewares/guards");
 let use = require("../../middlewares/useMiddleware");
