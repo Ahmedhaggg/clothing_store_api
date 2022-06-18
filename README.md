@@ -90,7 +90,7 @@ npx sequelize-cli db:migrate
 - then can your show database before run project
 
 ## architecture 
-router
-validation : return array of rules 
-controller : call services to handle with db 
-services : to separte database logic about controller 
+- router
+- validation : return array of rules 
+- controller : call services to handle with db 
+- services : to separte database logic about controller 
