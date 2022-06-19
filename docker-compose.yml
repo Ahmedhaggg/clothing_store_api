@@ -24,10 +24,10 @@ services:
       - DB=mysql
       - BCRYPT_SALT=10
       - JWT_SECRET=thi uffgh kjj
-      - EMAIL={your email}
-      - EMAIL_PASS={your email password}
+      - EMAIL=${EMAIL}
+      - EMAIL_PASS=${EMAIL_PASS}
       - EMAIL_SERVICE=gmail
-      - STRIPE_KEY=sk_test_51HkkefDHNiYh4mtD1YXl3fpM6wfVvRTWD81ANICazNdPOYb2mwik18G4dbTNfZK0E7oJq7JbW5r5qXPHrRqS0lkI00VgwQTR2V
+      - STRIPE_KEY=${STRIPE_KEY}
       - CLIENT_URL=localhost:3000
 
 volumes: 
